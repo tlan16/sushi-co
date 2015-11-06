@@ -209,7 +209,7 @@ abstract class LabelPrinter
             }
         }
         $mNutritions = array_values($mNutritions);
-        usort($mNutritions, function($a, $b) { return $a->getOrder() < $b->getOrder(); });
+        usort($mNutritions, array('MaterialNutrition', 'sortMe'));
         return $mNutritions;
     }
     /**

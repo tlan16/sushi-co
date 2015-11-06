@@ -3,13 +3,13 @@
 class MaterialNutrition extends BaseEntityAbstract
 {
 	protected $material;
-	
+
 	protected $nutrition;
-	
+
 	protected $qty;
-	
+
 	protected $serveMeasurement;
-	
+
 	/**
 	 * Getter function for Material
 	 * @return Material
@@ -19,7 +19,7 @@ class MaterialNutrition extends BaseEntityAbstract
 		$this->loadManyToOne('material');
 		return $this->material;
 	}
-	
+
 	/**
 	 * Setter function for Material
 	 * @param Material $material
@@ -30,7 +30,7 @@ class MaterialNutrition extends BaseEntityAbstract
 		$this->material = $material;
 		return $this;
 	}
-	
+
 	/**
 	 * Getter function for Nutrition
 	 * @return Nutrition
@@ -40,7 +40,7 @@ class MaterialNutrition extends BaseEntityAbstract
 		$this->loadManyToOne('nutrition');
 		return $this->nutrition;
 	}
-	
+
 	/**
 	 * Setter function for Nutrition
 	 * @param Nutrition $nutrition
@@ -51,7 +51,7 @@ class MaterialNutrition extends BaseEntityAbstract
 		$this->nutrition = $nutrition;
 		return $this;
 	}
-	
+
 	/**
 	 * Getter function for Qty
 	 */
@@ -59,11 +59,11 @@ class MaterialNutrition extends BaseEntityAbstract
 	{
 		return $this->qty;
 	}
-	
+
 	/**
 	 * Setter function for Qty
 	 * @param int $qty
-	 * 
+	 *
 	 * @throws Exception
 	 * @return MaterialNutrition
 	 */
@@ -71,11 +71,11 @@ class MaterialNutrition extends BaseEntityAbstract
 	{
 		if(!is_numeric($qty))
 			throw new Exception('Quantity must be numeric');
-		
+
 		$this->qty = $qty;
 		return $this;
 	}
-	
+
 	/**
 	 * Getter function for ServeManagement
 	 * @return ServeMeasurement
@@ -85,7 +85,7 @@ class MaterialNutrition extends BaseEntityAbstract
 		$this->loadManyToOne('serveMeasurement');
 		return $this->serveMeasurement;
 	}
-	
+
 	/**
 	 * Setter function for ServeManagement
 	 * @param ServeMeasurement $serveMeasurement
@@ -96,14 +96,14 @@ class MaterialNutrition extends BaseEntityAbstract
 		$this->serveMeasurement = $serveMeasurement;
 		return $this;
 	}
-	
+
 	/**
 	 * This is the create function for MaterialNutrition
 	 * @param Material $material
 	 * @param Nutrition $nutrition
 	 * @param int $qty
 	 * @param ServeMeasurement $serveMeasurement
-	 * 
+	 *
 	 * @throws Exception
 	 * @return MaterialNutrition
 	 */
@@ -111,17 +111,22 @@ class MaterialNutrition extends BaseEntityAbstract
 	{
 		if(!is_numeric($qty) || $qty <= 0)
 			throw new Exception('Qty must be a non-zero numeric value');
-		
+
 		$mn = new MaterialNutrition();
 		$mn->setMaterial($material)
 		   ->setNutrition($nutrition)
 		   ->setQty($qty)
 		   ->setServeMeasurement($serveMeasurement)
 		   ->save();
-		
+
 		return $mn;
 	}
-	
+
+	public static function sortMe(MaterialNutrition $a, MaterialNutrition $b)
+	{
+	    return $a->getNutrition()->getOrder() < $b->getNutrition()->getOrder();
+	}
+
 	/**
 	 * (non-PHPdoc)
 	 * @see BaseEntity::__loadDaoMap()
@@ -133,10 +138,10 @@ class MaterialNutrition extends BaseEntityAbstract
 		DaoMap::setManyToOne("nutrition", "Nutrition", "nut");
 		DaoMap::setManyToOne("serveMeasurement", "ServeMeasurement", "srv_mgm");
 		DaoMap::setIntType('qty', 'int', 5);
-	
+
 		parent::__loadDaoMap();
-	
+
 		DaoMap::commit();
 	}
-	
+
 }
