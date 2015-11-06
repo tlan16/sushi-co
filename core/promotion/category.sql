@@ -1,7 +1,21 @@
 TRUNCATE TABLE `category`;
-INSERT INTO `category` (`id`, `name`, `description`, `active`, `created`, `createdById`, `updated`, `updatedById`) VALUES
-(1, 'Handroll', '', 1, '2015-09-29 11:04:18', 10, '2015-09-29 01:04:18', 10),
-(2, 'Sashimi & Nigiri', '', 1, '2015-09-29 11:04:18', 10, '2015-09-29 01:04:18', 10),
-(3, 'Appetiser & Summer', '', 1, '2015-09-29 11:04:18', 10, '2015-09-29 01:04:18', 10),
-(4, 'Combo', '', 1, '2015-09-29 11:04:18', 10, '2015-09-29 01:04:18', 10),
-(5, 'Platters', '', 1, '2015-09-29 11:04:18', 10, '2015-09-29 01:04:18', 10);
+insert into `category` (`id`, `name`, `description`, `active`, `created`, `createdById`, `updated`, `updatedById`) values
+(1, 'Handrolls', 'Handrolls', 1, NOW(), 10, NOW(), 10),
+(2, 'Sushi Pack / URAMAKI', 'Sushi Pack / URAMAKI', 1, NOW(), 10, NOW(), 10),
+(3, 'Sushi Pack / SASHIMI', 'Sushi Pack / SASHIMI', 1, NOW(), 10, NOW(), 10),
+(4, 'Sushi Pack / NIGIRI', 'Sushi Pack / NIGIRI', 1, NOW(), 10, NOW(), 10),
+(5, 'Sushi Pack / DRAGON ROLL', 'Sushi Pack / DRAGON ROLL', 1, NOW(), 10, NOW(), 10),
+(6, 'Sushi Pack / CRUNCHY ROLL', 'Sushi Pack / CRUNCHY ROLL', 1, NOW(), 10, NOW(), 10),
+(7, 'Sushi Pack / HOSO MAKI', 'Sushi Pack / HOSO MAKI', 1, NOW(), 10, NOW(), 10),
+(8, 'Sushi Pack / FLOWER PLATE', 'Sushi Pack / FLOWER PLATE', 1, NOW(), 10, NOW(), 10),
+(9, 'Sushi Pack / QUINOA', 'Sushi Pack / QUINOA', 1, NOW(), 10, NOW(), 10),
+(10, 'Sushi Pack / HALF DRAGON ROLL', 'Sushi Pack / HALF DRAGON ROLL', 1, NOW(), 10, NOW(), 10),
+(11, 'Sushi Pack / HALF CRUNCHY ROLL', 'Sushi Pack / HALF CRUNCHY ROLL', 1, NOW(), 10, NOW(), 10),
+(12, 'Sushi Pack / TIGER ROLL', 'Sushi Pack / TIGER ROLL', 1, NOW(), 10, NOW(), 10),
+(13, 'Sushi Pack / INARI', 'Sushi Pack / INARI', 1, NOW(), 10, NOW(), 10),
+(14, 'Sushi Platter', 'Sushi Platter', 1, NOW(), 10, NOW(), 10),
+(15, 'Other Items / salad', 'Other Items / salad', 1, NOW(), 10, NOW(), 10),
+(16, 'Other Items / GYOZA', 'Other Items / GYOZA', 1, NOW(), 10, NOW(), 10),
+(17, 'Other Items / WRAP', 'Other Items / WRAP', 1, NOW(), 10, NOW(), 10),
+(18, 'Other Items / APPLETIZER', 'Other Items / APPLETIZER', 1, NOW(), 10, NOW(), 10),
+(19, 'Other Items / CUSTOMISE HANDROLL PACK', 'Other Items / CUSTOMISE HANDROLL PACK', 1, NOW(), 10, NOW(), 10);
