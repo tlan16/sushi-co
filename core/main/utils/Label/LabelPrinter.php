@@ -202,12 +202,14 @@ abstract class LabelPrinter
         foreach($product->getMaterials() as $item) {
             if(!isset($item['material']) || !($material = $item['material']) instanceof Material)
         		continue;
-            foreach($material->getAllMaterialNutritions() as $mNutrition) {
+            foreach($material->getAllMaterialNutritions(true, null, DaoQuery::DEFAUTL_PAGE_SIZE, array('')) as $mNutrition) {
                 if(!$mNutrition->getNutrition() instanceof Nutrition || !$mNutrition->getServeMeasurement() instanceof ServeMeasurement)
                     continue;
                 $mNutritions[$mNutrition->getNutrition()->getId() . '|' . $mNutrition->getServeMeasurement()->getId() . '|' . intval($mNutrition->getQty())] = $mNutrition;
             }
         }
+        $mNutritions = array_values($mNutritions);
+        usort($mNutritions, function($a, $b) { return $a->getOrder() < $b->getOrder(); });
         return $mNutritions;
     }
     /**
