@@ -146,14 +146,17 @@ class ListController extends CRUDPageAbstract
 			$focusEntity = trim($this->_focusEntity);
 			if (!isset ( $params->CallbackParameter->id ) || !($entity = $focusEntity::get(intval($params->CallbackParameter->id))) instanceof $focusEntity )
 				throw new Exception ( 'System Error: invalid id passed in.' );
+			if (!isset ( $params->CallbackParameter->utcOffset ))
+				throw new Exception ( 'System Error: invalid id passed in.' );
+			$utcOffset = intval($params->CallbackParameter->utcOffset);
 			$newLabel = null;
 			$entity->printLabel(null, null, $newLabel);
-			$imgFile = LabelPrinter::generateHTML($newLabel, 270, 800);
+			$imgFile = LabelPrinter::generateHTML($newLabel, 270, 800, $utcOffset * 60);
 			$results['item'] = $imgFile;
 		}
 		catch(Exception $ex)
 		{
-			$errors[] = $ex->getMessage();
+			$errors[] = $ex->getMessage() . $ex->getTraceAsString();
 		}
 		$params->ResponseData = StringUtilsAbstract::getJson($results, $errors);
 	}

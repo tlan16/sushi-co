@@ -1,7 +1,7 @@
 <?php
 abstract class LabelPrinter
 {
-    public static function generateHTML(Label $label, $width, $height)
+    public static function generateHTML(Label $label, $width, $height, $utcOffsetSeconds = 0)
     {
         $bottomBoxHeight = 270;
         $topBoxHeight = 320;
@@ -26,7 +26,7 @@ abstract class LabelPrinter
             $html .= "</div>";
 
             $html .= "<div style='text-align: left; font-size: 16px; font-weight: bold;'>";
-                $html .= 'Use By: &nbsp;&nbsp;' . $label->getUseByDate()->format('d / m / Y');
+                $html .= 'Use By: &nbsp;&nbsp;' . $label->getUseByDate()->setTimeZone(self::_getTimeZoneFromOffset($utcOffsetSeconds))->format('d / m / Y');
             $html .= "</div>";
             $html .= "<div style='text-align: center; font-size: 12px;'>Keep Refrigerated</div>";
 
@@ -78,7 +78,7 @@ abstract class LabelPrinter
      * @param int     $height
      * @return string
      */
-    public static function generateImg(Label $label, $width, $height)
+    public static function generateImg(Label $label, $width, $height, $utcOffsetSeconds = 0)
     {
         $img = imagecreatetruecolor($width, $height);
         $white = imagecolorallocate($img, 255, 255, 255);
@@ -105,7 +105,7 @@ abstract class LabelPrinter
         imagecopy($img, $qrCodeImg, ($width - $qrCodeImg_width)/2, $yPos, 0, 0, $qrCodeImg_width, $qrCodeImg_height);
         $startY = $yPos + $qrCodeImg_height + 10;
         $lineNo = 0;
-        imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Use By: ' . $label->getUseByDate()->format('d/m/Y'));
+        imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Use By: ' . $label->getUseByDate()->setTimeZone(self::_getTimeZoneFromOffset($utcOffsetSeconds))->format('d/m/Y'));
         self::_imagecenteredstring($img, $baseFont +2, $width, $startY + $lineHeight * ($lineNo++), 'Keep Refrigerated', $black, $fontFile);
         imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Allergent Warning:');
         $alleNames = self::_getAllergentNames($label->getProduct());
@@ -148,10 +148,42 @@ abstract class LabelPrinter
         unlink($qrImgFile);
         return $file;
     }
+    /**
+     * Getting QR code image
+     *
+     * @param string $text
+     *
+     * @return Resource
+     */
     private static function _qrCodeImage($text) {
         $file = '/tmp/label_qr_' . md5($text . trim(UDate::now()) . (Core::getUser() instanceof UserAccount ? Core::getUser()->getId() : rand(0, 1000)));
         QRcode::png($text, $file);
         return $file;
+    }
+    /**
+     * Getting the timezone
+     *
+     * @param number $utcOffsetSeconds
+     *
+     * @return DateTimezone
+     */
+    private static function _getTimeZoneFromOffset($utcOffsetSeconds = 0)
+    {
+        var_dump($utcOffsetSeconds);
+        $offset = $utcOffsetSeconds; // convert hour offset to seconds
+        $abbrarray = timezone_abbreviations_list();
+        foreach ($abbrarray as $abbr)
+        {
+            foreach ($abbr as $city)
+            {
+                if ($city['offset'] == $offset)
+                {
+                    return $city['timezone_id'];
+                }
+            }
+        }
+
+        return FALSE;
     }
     /**
      * getting the ingredient names

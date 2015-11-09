@@ -15,27 +15,35 @@ echo create database %DBNAME% if not exists
 %MYSQLPATH% -h %DBHOST% -u %DBUSERNAME% -p%DBPASSWORD% -e "CREATE DATABASE IF NOT EXISTS %DBNAME% DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
 
 echo import sql files
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../structure.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../store.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../useraccount.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../person.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../role.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../useraccountinfotype.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../useraccountinfo.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../systemsettings.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../ingredientinfotype.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../ingredient.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../ingredientinfo.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../materialinfotype.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../material.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../materialinfo.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../productinfotype.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../allergent.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../servemeasurement.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../category.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../nutrition.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../products.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../productinfo.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../productinfotype.sql
-%MYSQLPATH% -h%DBHOST% -u%DBUSERNAME% -p%DBPASSWORD% %DBNAME% < %BASEDIR%/../storeinfotype.sql
+call:importDBFunc structure
+call:importDBFunc store
+call:importDBFunc useraccount
+call:importDBFunc person
+call:importDBFunc role
+call:importDBFunc useraccountinfotype
+call:importDBFunc useraccountinfo
+call:importDBFunc systemsettings
+call:importDBFunc ingredientinfotype
+call:importDBFunc ingredient
+call:importDBFunc ingredientinfo
+call:importDBFunc materialinfotype
+call:importDBFunc material
+call:importDBFunc materialinfo
+call:importDBFunc productinfotype
+call:importDBFunc allergent
+call:importDBFunc servemeasurement
+call:importDBFunc category
+call:importDBFunc nutrition
+call:importDBFunc products
+call:importDBFunc productinfo
+call:importDBFunc productinfotype
+call:importDBFunc storeinfotype
 echo done
+echo.&pause&goto:eof
+
+
+:importDBFunc
+echo Processing %~1 ...
+%MYSQLPATH% --host=%DBHOST% --user=%DBUSERNAME% --password=%DBPASSWORD% %DBNAME% < %BASEDIR%/../%~1.sql
+echo DONE.
+goto:eof

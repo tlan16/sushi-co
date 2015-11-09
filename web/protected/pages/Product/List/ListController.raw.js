@@ -160,7 +160,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		var tmp = {};
 		tmp.me = this;
 		tmp.me._signRandID(btn);
-		tmp.me.postAjax(tmp.me.getCallbackId('printLabel'), {'id': item.id}, {
+		tmp.me.postAjax(tmp.me.getCallbackId('printLabel'), {'id': item.id, 'utcOffset': moment().utcOffset()}, {
 			'onLoading': function () {
 				jQuery(btn).button('loading');
 			}
