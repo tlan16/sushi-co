@@ -1,7 +1,7 @@
 <?php
 /**
  * This is the listing page for manufacturer
- * 
+ *
  * @package    Web
  * @subpackage Controller
  * @author     lhe<helin16@gmail.com>
@@ -20,8 +20,6 @@ class ListController extends BPCPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessDevelopingPage(Core::getRole()))
-			die('You do NOT have access to this page');
 	}
 	/**
 	 * (non-PHPdoc)
@@ -35,7 +33,7 @@ class ListController extends BPCPageAbstract
 		$js .= 'pageJs.setHTMLID("main-form", "' . $this->getPage()->getForm()->getClientID() . '"); ';
 		$js .= $this->_preGetEndJs();
 		$js .= '}';
-		
+
 		$js .= "if(pageJs.init) {pageJs.init();}";
 		$js .= "pageJs";
 		$js .= ";";
