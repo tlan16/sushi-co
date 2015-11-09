@@ -24,7 +24,7 @@ class DetailsController extends DetailsPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessAllergentDetailPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
 	/**
@@ -63,25 +63,25 @@ class DetailsController extends DetailsPageAbstract
 			$focusEntity = $this->getFocusEntity ();
 			if (! isset ( $params->CallbackParameter->name ) || ($name = trim ( $params->CallbackParameter->name )) === '')
 				throw new Exception ( 'System Error: invalid name passed in.' );
-			
+
 			$description = '';
 			if (isset ( $params->CallbackParameter->description ))
 				$description = trim ( $params->CallbackParameter->description );
-			
+
 			$order= 0;
 			if (isset ( $params->CallbackParameter->order ) && ($tmp = intval($params->CallbackParameter->order)) > 0)
 				$order = intval($tmp);
-			
+
 			if (isset ( $params->CallbackParameter->id ) && ! ($entity = $focusEntity::get ( intval ( $params->CallbackParameter->id ) )) instanceof $focusEntity)
 				throw new Exception ( 'System Error: invalid id passed in.' );
-			
+
 			Dao::beginTransaction ();
-			
+
 			if (! isset ( $entity ) || ! $entity instanceof $focusEntity)
 				$entity = $focusEntity::create ( $name, $description );
 			else
 				$entity->setName ( $name )->setDescription ( $description );
-			
+
 			$results ['item'] = $entity->setOrder($order)->save ()->getJson ();
 			Dao::commitTransaction ();
 		} catch ( Exception $ex ) {

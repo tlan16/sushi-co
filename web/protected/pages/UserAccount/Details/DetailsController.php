@@ -24,7 +24,7 @@ class DetailsController extends DetailsPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessAllergentDetailPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
 	/**
@@ -64,32 +64,32 @@ class DetailsController extends DetailsPageAbstract
 		try
 		{
 			$focusEntity = $this->getFocusEntity ();
-			
+
 			if (! isset ( $params->CallbackParameter->username ) || ($username = trim ( $params->CallbackParameter->username )) === '')
 				throw new Exception ( 'System Error: invalid username passed in.' );
-			
+
 			if (! isset ( $params->CallbackParameter->firstname ) || ($firstName = trim ( $params->CallbackParameter->firstname )) === '')
 				throw new Exception ( 'System Error: invalid firstname passed in.' );
-			
+
 			if (! isset ( $params->CallbackParameter->lastname ) || ($lastName = trim ( $params->CallbackParameter->lastname )) === '')
 				throw new Exception ( 'System Error: invalid lastname passed in.' );
-			
+
 			$password = '';
 			if (isset ( $params->CallbackParameter->password ))
 				$password = trim ( $params->CallbackParameter->password );
-			
+
 			$store_roles = array();
 			if (isset ( $params->CallbackParameter->store_roles ) && is_array($tmp = $params->CallbackParameter->store_roles) )
 				$store_roles = $tmp;
 			if(!is_array($store_roles) || count($store_roles) === 0)
 				throw new Exception ( 'System Error: at least one role must be given to the user account.' );
-				
+
 			if (isset ( $params->CallbackParameter->id ) && ! ($entity = $focusEntity::get ( intval ( $params->CallbackParameter->id ) )) instanceof $focusEntity)
 				throw new Exception ( 'System Error: invalid id passed in.' );
-			
+
 			$transStarted = false;
 			try {Dao::beginTransaction();} catch(Exception $e) {$transStarted = true;}
-			
+
 			if (! isset ( $entity ) || ! $entity instanceof $focusEntity)
 			{
 				if($password === '')
@@ -114,7 +114,7 @@ class DetailsController extends DetailsPageAbstract
 				if(trim($password) !== '')
 					$entity->setPassword($password);
 			}
-			
+
 			$entity->clearRoles();
 			$count = 0;
 			foreach ($store_roles as $store_role)
@@ -128,7 +128,7 @@ class DetailsController extends DetailsPageAbstract
 			}
 			if($count === 0)
 				throw new Exception ( 'System Error: at least one role must be given to the user account.' );
-			
+
 			$results ['item'] = $entity->save ()->getJson ();
 			if($transStarted === false)
 				Dao::commitTransaction();

@@ -24,7 +24,7 @@ class DetailsController extends DetailsPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessAllergentDetailPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
 	/**
@@ -76,14 +76,14 @@ class DetailsController extends DetailsPageAbstract
 				$ingredientIds = explode(',', $tmp);
 			if (isset ( $params->CallbackParameter->id ) && !($entity = $focusEntity::get(intval($params->CallbackParameter->id))) instanceof $focusEntity )
 				throw new Exception ( 'System Error: invalid id passed in.' );
-			
+
 			$ingredients = array();
 			foreach ($ingredientIds as $ingredientId)
 			{
 				if(($ingredientId = intval($ingredientId)) !== 0 && ($ingredient = Ingredient::get($ingredientId)) instanceof Ingredient)
 					$ingredients[] = $ingredient;
 			}
-				
+
 			$material_nutritions = array();
 			foreach ($params->CallbackParameter->material_nutrition as $material_nutrition)
 			{
@@ -95,9 +95,9 @@ class DetailsController extends DetailsPageAbstract
 					continue;
 				$material_nutritions[] = array('nutrition' => $nutrition, 'qty' => $qty, 'serveMeasurement' => $serveMeasurement);
 			}
-				
+
 			Dao::beginTransaction();
-			
+
 			if(!isset($entity) || !$entity instanceof $focusEntity)
 				$entity = $focusEntity::createWithParams($name, $description, $ingredients);
 			else {
@@ -105,11 +105,11 @@ class DetailsController extends DetailsPageAbstract
 				foreach ($ingredients as $ingredient)
 					$entity->addIngredient($ingredient);
 			}
-			
+
 			$entity->clearMaterialNutrition();
 			foreach ($material_nutritions as $material_nutrition)
 				$entity->addNutrition($material_nutrition['nutrition'], $material_nutrition['qty'], $material_nutrition['serveMeasurement']);
-			
+
 			$results ['item'] = $entity->save()->getJson ();
 			Dao::commitTransaction ();
 		}

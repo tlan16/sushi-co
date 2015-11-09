@@ -24,7 +24,7 @@ class DetailsController extends DetailsPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessAllergentDetailPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
 	/**
@@ -69,40 +69,40 @@ class DetailsController extends DetailsPageAbstract
 		try
 		{
 			$focusEntity = $this->getFocusEntity();
-			
+
 			$contactName = '';
 			if (isset ( $params->CallbackParameter->contactName ) )
 				$contactName = trim($params->CallbackParameter->contactName);
-			
+
 			$contactNo = '';
 			if (isset ( $params->CallbackParameter->contactNo ) )
 				$contactNo = trim($params->CallbackParameter->contactNo);
-			
+
 			$street = '';
 			if (isset ( $params->CallbackParameter->street ) )
 				$street = trim($params->CallbackParameter->street);
-			
+
 			$city = '';
 			if (isset ( $params->CallbackParameter->city ) )
 				$city = trim($params->CallbackParameter->city);
-			
+
 			$region = '';
 			if (isset ( $params->CallbackParameter->region ) )
 				$region = trim($params->CallbackParameter->region);
-			
+
 			$country = '';
 			if (isset ( $params->CallbackParameter->country ) )
 				$country = trim($params->CallbackParameter->country);
-			
+
 			$postCode = '';
 			if (isset ( $params->CallbackParameter->postCode ) )
 				$postCode = trim($params->CallbackParameter->postCode);
-			
+
 			if (isset ( $params->CallbackParameter->id ) && !($entity = $focusEntity::get(intval($params->CallbackParameter->id))) instanceof $focusEntity )
 				throw new Exception ( 'System Error: invalid id passed in.' );
-			
+
 			Dao::beginTransaction();
-			
+
 			if(!isset($entity) || !$entity instanceof $focusEntity)
 				$entity = $focusEntity::create($street, $city, $region, $country, $postCode, $contactName, $contactNo);
 			else $entity->setStreet($street)
@@ -112,7 +112,7 @@ class DetailsController extends DetailsPageAbstract
 						->setPostCode($postCode)
 						->setContactName($contactName)
 						->setContactNo($contactNo);
-			
+
 			$results ['item'] = $entity->save()->getJson ();
 			Dao::commitTransaction ();
 		}

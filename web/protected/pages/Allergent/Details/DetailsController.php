@@ -24,7 +24,7 @@ class DetailsController extends DetailsPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessAllergentDetailPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
 	/**

@@ -19,13 +19,15 @@ class Menu extends TTemplateControl
 	{
 		$pageItem = trim($this->getPage()->menuItem);
 		$array = array(
-			'' => array('url' => '/', 'name' => 'Home', 'icon' => '<span class="glyphicon glyphicon-home"></span>')
-			,'product' => array(
+// 			'' => array('url' => '/', 'name' => 'Products', 'icon' => '<span class="glyphicon glyphicon-home"></span>')
+			'product' => array(
 				'name' => 'Products',
 				'url' => '/products.html',
 				'icon' => '<span class="glyphicon glyphicon-tag"></span>'
 			)
-			,'Resources' => array(
+		);
+		if(AccessControl::canAccessResourcePage(Core::getRole()) === true) {
+		    $array['Resources'] = array(
 				'icon' => '<span class="glyphicon glyphicon-th-list"></span>'
 				,'ingredients' => array('url' => '/ingredients.html', 'name' => 'Ingredients', 'icon' => '')
 				,'allergents' => array('url' => '/allergents.html', 'name' => 'Allergents', 'icon' => '')
@@ -35,17 +37,19 @@ class Menu extends TTemplateControl
 				,'materials' => array('url' => '/materials.html', 'name' => 'Materials', 'icon' => '')
 // 				,'addresses' => array('url' => '/addresses.html', 'name' => 'Addresses', 'icon' => '')
 				,'categorie' => array('url' => '/categories.html', 'name' => 'Category', 'icon' => '')
-			)
-			,'System' => array(
+			);
+		}
+		if(AccessControl::canAccessUserPage(Core::getRole()) === true) {
+    		$array['System'] = array(
 				'icon' => '<span class="glyphicon glyphicon-cog"></span>'
 				,'useraccounts' => array('url' => '/useraccounts.html', 'name' => 'User Accounts', 'icon' => '')
 				,'stores' => array('url' => '/stores.html', 'name' => 'Stores', 'icon' => '')
-			)
-			,'help' => array(
-				'name' => 'Help',
-				'url' => '/help.html',
-				'icon' => '<span class="glyphicon glyphicon-info-sign"></span>'
-			)
+			);
+		}
+		$array['help'] = array(
+			'name' => 'Help',
+			'url' => '/help.html',
+			'icon' => '<span class="glyphicon glyphicon-info-sign"></span>'
 		);
 		$html = "<ul class='nav navbar-nav'>";
 			foreach($array as $key => $item)

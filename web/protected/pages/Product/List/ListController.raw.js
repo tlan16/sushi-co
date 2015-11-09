@@ -3,7 +3,14 @@
  */
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new CRUDPageJs(), {
-	_getTitleRowData: function() {
+	_canEdit: false
+	,_setCanEdit: function(canEdit) {
+		var tmp = {}
+		tmp.me = this;
+		tmp.me._canEdit = canEdit;
+		return tmp.me;
+	}
+	,_getTitleRowData: function() {
 		return {'id': "ID", 'active': 'Active', 'name': 'Name', 'description': 'Description', 'barcode': 'Barcode', 'unitPrice': 'Unit Price', 'size': 'Size', 'categories': 'Categories'};
 	}
 	,_bindSearchKey: function() {
@@ -94,13 +101,13 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 								tmp.me._printItem(this, row);
 							})
 						})
-						.insert({'bottom': tmp.editBtn = new Element('span', {'class': 'btn btn-primary', 'title': 'Edit'})
+						.insert({'bottom': tmp.me._canEdit === false ? '' : tmp.editBtn = new Element('span', {'class': 'btn btn-primary', 'title': 'Edit'})
 							.insert({'bottom': new Element('span', {'class': 'glyphicon glyphicon-pencil'}) })
 							.observe('click', function(){
 								tmp.me._openDetailsPage(row);
 							})
 						})
-						.insert({'bottom': new Element('span')
+						.insert({'bottom':  tmp.me._canEdit === false ? '' : new Element('span')
 							.addClassName( (row.active === false && tmp.isTitle === false ) ? 'btn btn-success' : 'btn btn-danger')
 							.writeAttribute('title', ((row.active === false && tmp.isTitle === false ) ? 'Re-activate' : 'De-activate') )
 							.insert({'bottom': new Element('span')

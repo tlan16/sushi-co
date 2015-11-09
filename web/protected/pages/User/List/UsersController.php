@@ -7,7 +7,7 @@ class UsersController extends BPCPageAbstract
 	 */
 	public function __construct()
 	{
-		if(!AccessControl::canAccessUserPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die(BPCPageAbstract::show404Page('Access Denied', 'You have no access to this page!'));
 		parent::__construct();
 	}
@@ -29,10 +29,10 @@ class UsersController extends BPCPageAbstract
 	}
 	/**
 	 * Getting the list of users
-	 * 
+	 *
 	 * @param unknown $sender
 	 * @param unknown $params
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public function getUsers($sender, $param)
@@ -42,7 +42,7 @@ class UsersController extends BPCPageAbstract
 		{
 			if(!isset($param->CallbackParameter->searchCriteria) || ($serachCriteria = trim($param->CallbackParameter->searchCriteria)) === '')
 				$serachCriteria = '';
-				
+
 			$pageNo = 1;
 			$pageSize = DaoQuery::DEFAUTL_PAGE_SIZE;
 			if(isset($param->CallbackParameter->pagination))
@@ -50,7 +50,7 @@ class UsersController extends BPCPageAbstract
 				$pageNo = $param->CallbackParameter->pagination->pageNo;
 				$pageSize = $param->CallbackParameter->pagination->pageSize;
 			}
-			
+
 			$where = '`ua`.id != :sysId';
 			$params = array('sysId' => UserAccount::ID_SYSTEM_ACCOUNT);
 			if($serachCriteria !== '')
@@ -61,7 +61,7 @@ class UsersController extends BPCPageAbstract
 				$where .= ' OR `ua`.username like :username';
 				$params['username'] = $serachCriteria . '%';
 			}
-			
+
 			$stats = array();
 			$users = UserAccount::getAllByCriteria($where, $params, true, $pageNo, $pageSize, array(), $stats);
 			$results['pageStats'] = $stats;
@@ -77,10 +77,10 @@ class UsersController extends BPCPageAbstract
 	}
 	/**
 	 * deactive a user
-	 * 
+	 *
 	 * @param unknown $sender
 	 * @param unknown $params
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public function deleteUser($sender, $param)

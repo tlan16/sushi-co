@@ -24,7 +24,7 @@ class DetailsController extends DetailsPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessAllergentDetailPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
 	/**
@@ -74,20 +74,20 @@ class DetailsController extends DetailsPageAbstract
 				$allergentIds = explode(',', $tmp);
 			if (isset ( $params->CallbackParameter->id ) && !($entity = $focusEntity::get(intval($params->CallbackParameter->id))) instanceof $focusEntity )
 				throw new Exception ( 'System Error: invalid id passed in.' );
-			
+
 			Dao::beginTransaction();
-			
+
 			if(!isset($entity) || !$entity instanceof $focusEntity)
 				$entity = $focusEntity::create($name,$description);
 			else $entity->setName($name)->setDescription($description);
-			
+
 			$entity->clearAllergents();
 			foreach ($allergentIds as $allergentId)
 			{
 				if(($allergent = Allergent::get($allergentId)) instanceof Allergent)
 					$entity->addAllergent($allergent);
 			}
-				
+
 			$results ['item'] = $entity->save()->getJson ();
 			Dao::commitTransaction ();
 		}

@@ -1,7 +1,7 @@
 <?php
 /**
  * This is the listing page for manufacturer
- * 
+ *
  * @package    Web
  * @subpackage Controller
  * @author     lhe<helin16@gmail.com>
@@ -20,7 +20,7 @@ class ListController extends CRUDPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessProductsPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
 	/**
@@ -56,9 +56,9 @@ class ListController extends CRUDPageAbstract
 				$pageNo = $param->CallbackParameter->pagination->pageNo;
 				$pageSize = $param->CallbackParameter->pagination->pageSize;
 			}
-			
+
 			$serachCriteria = isset($param->CallbackParameter->searchCriteria) ? json_decode(json_encode($param->CallbackParameter->searchCriteria), true) : array();
-				
+
 			$where = array(1);
 			$params = array();
 			if(isset($serachCriteria['log.msg']) && ($type = trim($serachCriteria['log.msg'])) !== '')

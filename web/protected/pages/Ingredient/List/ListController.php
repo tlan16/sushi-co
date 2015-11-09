@@ -1,7 +1,7 @@
 <?php
 /**
  * This is the listing page for ProductCodeType
- * 
+ *
  * @package    Web
  * @subpackage Controller
  * @author     lhe<helin16@gmail.com>
@@ -20,7 +20,7 @@ class ListController extends CRUDPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessAllergentListingPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
 	/**
@@ -57,16 +57,16 @@ class ListController extends CRUDPageAbstract
 				$pageNo = $param->CallbackParameter->pagination->pageNo;
 				$pageSize = $param->CallbackParameter->pagination->pageSize;
 			}
-			
+
 			$serachCriteria = isset($param->CallbackParameter->searchCriteria) ? json_decode(json_encode($param->CallbackParameter->searchCriteria), true) : array();
-				
+
 			$where = array(1);
 			$params = array();
 			foreach($serachCriteria as $field => $value)
 			{
 				if((is_array($value) && count($value) === 0) || (is_string($value) && ($value = trim($value)) === ''))
 					continue;
-				
+
 				$query = $class::getQuery();
 				switch ($field)
 				{
@@ -81,7 +81,7 @@ class ListController extends CRUDPageAbstract
 								$params[$key] = '%' . implode('%', $tokenArray) . '%';
 								$likeArray[] = $field . " like :" . $key;
 							}
-							
+
 							$where[] = '(' . implode(' OR ', $likeArray) . ')';
 							break;
 						}
@@ -117,7 +117,7 @@ class ListController extends CRUDPageAbstract
 				}
 			}
 			$stats = array();
-			
+
 			$objects = $class::getAllByCriteria(implode(' AND ', $where), $params, false, $pageNo, $pageSize, array('id' => 'desc'), $stats);
 			$results['pageStats'] = $stats;
 			$results['items'] = array();

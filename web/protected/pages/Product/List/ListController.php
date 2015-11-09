@@ -2,10 +2,19 @@
 
 class ListController extends CRUDPageAbstract
 {
+    /**
+     * The menu item identifier
+     *
+     * @var string
+     */
+    public $menuItem = 'product';
+    /**
+     * Constructor
+     */
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_focusEntity = 'Product';
+		$this->_focusEntity = 'product';
 	}
 	/**
 	 * (non-PHPdoc)
@@ -14,11 +23,12 @@ class ListController extends CRUDPageAbstract
 	protected function _getEndJs()
 	{
 		$js = parent::_getEndJs();
-		$js .= "pageJs.getResults(true, " . $this->pageSize . ");";
 		$js .= "pageJs.loadSelect2();";
 		$js .= "pageJs._bindSearchKey();";
+		$js .= "pageJs._setCanEdit(" . (AccessControl::isAdminUser(Core::getRole()) === true ? 'true' : 'false') . ");";
 		$js .= 'pageJs.setCallbackId("printLabel", "' . $this->printLabelBtn->getUniqueID(). '")';
 		$js .= '.setCallbackId("updateItem", "' . $this->updateItemBtn->getUniqueID(). '");';
+		$js .= "pageJs.getResults(true, " . $this->pageSize . ");";
 		return $js;
 	}
 	/**

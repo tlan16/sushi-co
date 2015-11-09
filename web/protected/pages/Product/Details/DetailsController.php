@@ -12,7 +12,7 @@ class DetailsController extends DetailsPageAbstract
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$menuItem
 	 */
-	public $menuItem = 'product.detail';
+	public $menuItem = 'product';
 	/**
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$_focusEntityName
@@ -24,7 +24,7 @@ class DetailsController extends DetailsPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessAllergentDetailPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
 	/**
@@ -85,7 +85,7 @@ class DetailsController extends DetailsPageAbstract
 			$allStores = (isset ( $params->CallbackParameter->allStores ) && intval($params->CallbackParameter->allStores) === 1);
 			$categories = $this->_idsToObjs($params->CallbackParameter, 'categories', 'Category');
 			$stores = $this->_idsToObjs($params->CallbackParameter, 'stores', 'Store');
-			
+
 			$materials = array();
 			if(isset($params->CallbackParameter->materials) && is_array($combos = $params->CallbackParameter->materials))
 			{

@@ -7,7 +7,7 @@ class UsersController extends BPCPageAbstract
 	 */
 	public function __construct()
 	{
-		if(!AccessControl::canAccessUserPage(Core::getRole()))
+		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die(BPCPageAbstract::show404Page('Access Denied', 'You have no access to this page!'));
 		parent::__construct();
 	}
@@ -54,7 +54,7 @@ class UsersController extends BPCPageAbstract
 				throw new Exception('System Error: userName is mandatory!');
 			if(!isset($params->CallbackParameter->roleid) || !($role = Role::get($params->CallbackParameter->roleid)) instanceof Role)
 				throw new Exception('System Error: role is mandatory!');
-			
+
 			$newpassword = trim($params->CallbackParameter->newpassword);
 			if(!isset($params->CallbackParameter->userid) || !($userAccount = UserAccount::get($params->CallbackParameter->userid)) instanceof UserAccount)
 			{
@@ -72,21 +72,21 @@ class UsersController extends BPCPageAbstract
 				else
 					$newpassword = sha1($newpassword);
 			}
-			
+
 			//double check whether the username has been used
 			$users = UserAccount::getAllByCriteria('username=? and id!=?', array($userName, $userAccount->getId()), false, 1, 1);
 			if(count($users) > 0)
 				throw new Exception('Username(=' . $userName . ') has been used by another user, please choose another one!');
-			
+
 			$person->setFirstName($firstName)
 				->setLastName($lastName)
 				->save();
-			
+
 			$userAccount->setUserName($userName)
 				->setPassword($newpassword)
 				->setPerson($person)
 				->save();
-			
+
 			$results = $userAccount->clearRoles()
 				->addRole($role)
 				->getJson();
