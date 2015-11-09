@@ -44,4 +44,5 @@ importDBFunc products;
 importDBFunc productinfo;
 importDBFunc productinfotype;
 importDBFunc storeinfotype;
+importDBFunc nutrition_material;
 echo done

@@ -38,6 +38,7 @@ call:importDBFunc products
 call:importDBFunc productinfo
 call:importDBFunc productinfotype
 call:importDBFunc storeinfotype
+call:importDBFunc nutrition_material
 echo done
 echo.&pause&goto:eof
 
