@@ -15,28 +15,33 @@ echo create database $DBNAME if not exists
 $MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD -e "CREATE DATABASE IF NOT EXISTS $DBNAME DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
 
 echo import sql files
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../structure.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../store.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../useraccount.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../person.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../role.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../useraccountinfotype.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../useraccountinfo.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../systemsettings.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../ingredientinfotype.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../ingredient.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../ingredientinfo.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../materialinfotype.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../material.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../materialinfo.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../productinfotype.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../allergent.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../servemeasurement.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../category.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../nutrition.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../products.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../productinfo.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../productinfotype.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../storeinfotype.sql
-$MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../order_in_nutrition.sql
+importDBFunc() {
+    echo Processing $1 ...
+    $MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../$1.sql;
+    echo DONE.
+}
+
+importDBFunc structure;
+importDBFunc store;
+importDBFunc useraccount;
+importDBFunc person;
+importDBFunc role;
+importDBFunc useraccountinfotype;
+importDBFunc useraccountinfo;
+importDBFunc systemsettings;
+importDBFunc ingredientinfotype;
+importDBFunc ingredient;
+importDBFunc ingredientinfo;
+importDBFunc materialinfotype;
+importDBFunc material;
+importDBFunc materialinfo;
+importDBFunc productinfotype;
+importDBFunc allergent;
+importDBFunc servemeasurement;
+importDBFunc category;
+importDBFunc nutrition;
+importDBFunc products;
+importDBFunc productinfo;
+importDBFunc productinfotype;
+importDBFunc storeinfotype;
 echo done
