@@ -14,7 +14,7 @@ class ListController extends CRUDPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_focusEntity = 'product';
+		$this->_focusEntity = 'Product';
 	}
 	/**
 	 * (non-PHPdoc)
