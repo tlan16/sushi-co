@@ -27,13 +27,15 @@ Abstract class AccessControl
 	}
 	public static function isAdminUser(Role $role)
 	{
-	    return intval($role->getId()) === Role::ID_ADMIN_USER;
+	    return in_array(intval($role->getId()), array(Role::ID_ADMIN_USER, Role::ID_SYSTEM_ADMIN, Role::ID_SYSTEM_DEVELOPER));
 	}
 	public static function canAccessResourcePage(Role $role)
 	{
 		switch($role->getId())
 		{
 			case Role::ID_ADMIN_USER:
+			case Role::ID_SYSTEM_ADMIN:
+			case Role::ID_SYSTEM_DEVELOPER:
 			{
 				return true;
 			}
