@@ -416,6 +416,10 @@ abstract class BaseEntityAbstract
         DaoMap::setManyToOne('createdBy', 'UserAccount');
         DaoMap::setDateType('updated', 'timestamp', false, 'CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP');
         DaoMap::setManyToOne('updatedBy', 'UserAccount');
+
+        DaoMap::createIndex('active');
+        DaoMap::createIndex('created');
+        DaoMap::createIndex('updated');
     }
     /**
      * validates all rules before save in EntityDao!!!
@@ -640,7 +644,7 @@ abstract class BaseEntityAbstract
     	}
     	return $result;
     }
-    public static function getCreatedCounts(UDate $from, UDate $to, $interval = "1 day") 
+    public static function getCreatedCounts(UDate $from, UDate $to, $interval = "1 day")
     {
     	$result = array();
     	$date = $from;

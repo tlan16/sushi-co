@@ -9,7 +9,7 @@ class Nutrition extends ResourceAbstract
 {
 	/**
 	 * The display order of the nutrition
-	 * 
+	 *
 	 * @var integer
 	 */
 	private $order = 0;
@@ -39,11 +39,12 @@ class Nutrition extends ResourceAbstract
 	public function __loadDaoMap()
 	{
 		DaoMap::begin($this, 'nut');
-		DaoMap::setIntType('order', 'TINYINT', 1, true, false, 0);		
-		
+		DaoMap::setIntType('order', 'int', 10, true, false, 0);
+
 		parent::__loadDaoMap();
 
+		DaoMap::createIndex('order');
 		DaoMap::commit();
 	}
-	
+
 }
