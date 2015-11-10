@@ -27,18 +27,15 @@ class WebUserManager extends TModule implements IUserManager
 	{
 		if($username === null)
 			return new WebUser($this);
-		
-		if(!($userAccount = (Core::getUser() instanceof UserAccount ? Core::getUser(): UserAccount::getUserByUsername($username))) instanceof UserAccount)
+
+		if(!($userAccount = (Core::getUser() instanceof UserAccount ? Core::getUser(): UserAccount::get($username))) instanceof UserAccount)
 			return null;
-		
 		$user = new WebUser($this);
-		$user->setUserAccount($userAccount);
-		$user->setName($userAccount->getUsername());
+		$user->setName($userAccount->getId());
 		$user->setIsGuest(false);
-		$user->setRoles($userAccount->getRoles());
 		return $user;
 	}
-	
+
 	/**
 	 * validate a user providing $username and $password
 	 *
@@ -53,21 +50,26 @@ class WebUserManager extends TModule implements IUserManager
 			$userAccount = UserAccount::getUserByUsernameAndPassword($username, $password);
 			if(!$userAccount instanceof UserAccount)
 				return false;
+
 			$role = $store = null;
 			if(!Core::getRole() instanceof Role) {
 				if(count($roles = $userAccount->getRoles()) > 0)
 					$role = $roles[0];
+			} else {
+			    $role = Core::getRole();
 			}
-			
+
 			if(!Core::getStore() instanceof Store) {
 				if(count($stores = $userAccount->getStores($role)) > 0)
 					$store = $stores[0];
+			} else {
+			    $store = Core::getStore();
 			}
 			Core::setUser($userAccount, $role, $store);
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Save a TUser to cookie
 	 *

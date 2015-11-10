@@ -19,13 +19,24 @@ class Controller extends BPCPageAbstract
 		$user = Core::getUser();
 		$currentStoreId = intval(Core::getStore()->getId());
 		$stores = $user->getStores();
+
 		$storesJson = array();
 		foreach ($stores as $store)
-			$storesJson[] = $store->getJson(intval($store->getId()) === $currentStoreId ? array('selected' => true) : array());
-		
+		{
+		    $roles = $user->getRoles($store);
+		    foreach($roles as $role)
+		    {
+    		    $extraInfo = array();
+    		    $extraInfo['role'] = $role->getJson();
+    		    if(intval($store->getId()) === $currentStoreId)
+    		        $extraInfo['selected'] = true;
+    		    $storesJson[$store->getName() . ' - ' . $role->getName()] = $store->getJson($extraInfo);
+		    }
+		}
+		ksort($storesJson);
 		$js = parent::_getEndJs();
 		$js .= 'pageJs._preData=(' . json_encode(array(
-				'stores' => $storesJson
+				'stores' => array_values($storesJson)
 				,'containerId' => 'resultDiv'
 		)) . ');';
 		$js .= 'pageJs.load();';
@@ -37,9 +48,13 @@ class Controller extends BPCPageAbstract
 		$results = $errors = array();
 		try
 		{
-			if(!isset($param->CallbackParameter->store) || !($store = Store::get(intval($param->CallbackParameter->store))) instanceof Store)
+			if(!isset($param->CallbackParameter->storeId) || !($store = Store::get(intval($param->CallbackParameter->storeId))) instanceof Store)
 				throw new Exception('Invalid Store Passed in');
-			Core::setUser(Core::getUser(), Core::getRole(), $store);
+			if(!isset($param->CallbackParameter->roleId) || !($role = Role::get(intval($param->CallbackParameter->roleId))) instanceof Role)
+				throw new Exception('Invalid Role Passed in');
+			Core::setUser(Core::getUser(), $role, $store);
+			$authManager=$this->Application->getModule('auth');
+			$authManager->updateSessionUser($this->User);
 			$results['item'] = $store;
 		}
 		catch(Exception $ex)

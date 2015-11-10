@@ -10,18 +10,18 @@ abstract class Core
 {
     /**
      * The storage for the Core at the runtime level
-     * 
+     *
      * @var array
      */
-	private static $_storage = array('user' => null, 'role' => null, 'store' => null);
+	private static $_storage = array('userId' => null, 'roleId' => null, 'storeId' => null);
     /**
      * Setting the role in the core
-     * 
+     *
      * @param Role $role The role
      */
 	public static function setRole(Role $role)
 	{
-		self::setUser(self::getUser(), $role);
+		self::setUser(self::getUser(), $role, self::getStore());
 	}
 	/**
 	 * removing core role
@@ -29,6 +29,7 @@ abstract class Core
 	public static function rmRole()
 	{
 	    self::$_storage['role'] = null;
+	    self::rmStore();
 	}
 	/**
 	 * removing core store
@@ -36,25 +37,26 @@ abstract class Core
 	public static function rmStore()
 	{
 	    self::$_storage['store'] = null;
+	    self::rmRole();
 	}
 	/**
 	 * Set the active user on the core for auditing purposes
-	 * 
+	 *
 	 * @param UserAccount $userAccount The useraccount
 	 * @param Role        $role        The role
 	 */
 	public static function setUser(UserAccount $userAccount, Role $role = null, Store $store = null)
 	{
-		self::$_storage['user'] = $userAccount;
-		self::$_storage['role'] = $role;
-		self::$_storage['store'] = $store;
+		self::$_storage['userId'] = $userAccount->getId();
+		self::$_storage['roleId'] = $role instanceof Role ? $role->getId() : null;
+		self::$_storage['storeId'] = $store instanceof Store ? $store->getId() : null;
 	}
 	/**
 	 * removing core user
 	 */
 	public static function rmUser()
 	{
-	    self::$_storage['user'] = null;
+	    self::$_storage['userId'] = null;
 	    self::rmRole();
 	    self::rmStore();
 	}
@@ -65,7 +67,7 @@ abstract class Core
 	 */
 	public static function getUser()
 	{
-		return self::$_storage['user'];
+		return UserAccount::get(self::$_storage['userId']);
 	}
 	/**
 	 * Get the current user role set against the System for Dao filtering purposes
@@ -74,7 +76,7 @@ abstract class Core
 	 */
 	public static function getRole()
 	{
-		return self::$_storage['role'] instanceof Role ? self::$_storage['role'] : null;
+		return Role::get(self::$_storage['roleId']);
 	}
 	/**
 	 * Get the current store set against the System for Dao filtering purposes
@@ -83,11 +85,11 @@ abstract class Core
 	 */
 	public static function getStore()
 	{
-		return self::$_storage['store'] instanceof Store ? self::$_storage['store'] : null;
+		return Store::get(self::$_storage['storeId']);
 	}
     /**
      * serialize all the components in core
-     * 
+     *
      * @return string
      */
 	public static function serialize()
@@ -96,13 +98,17 @@ abstract class Core
 	}
 	/**
 	 * unserialize all the components and store them in Core
-	 * 
+	 *
 	 * @param string $string The serialized core storage string
 	 */
 	public static function unserialize($string)
 	{
 		self::$_storage = unserialize($string);
-		Core::setUser(self::$_storage['user'], self::$_storage['role'], self::$_storage['store']);
+		$userAccount = UserAccount::get(self::$_storage['userId']);
+		$role = ($role = Role::get(self::$_storage['roleId'])) instanceof Role ? $role : null;
+		$store = ($store = Store::get(self::$_storage['storeId'])) instanceof Store ? $store : null;
+
+		Core::setUser($userAccount, $role, $store);
 		return self::$_storage;
 	}
 }

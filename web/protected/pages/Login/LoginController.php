@@ -1,7 +1,7 @@
 <?php
 /**
  * The login page
- * 
+ *
  * @package    Web
  * @subpackage Controller
  * @author     lhe<helin16@gmail.com>
@@ -18,7 +18,7 @@ class LoginController extends BPCPageAbstract
 	        $this->getPage()->getClientScript()->registerScriptFile('pageJs', $this->publishAsset($lastestJs));
 	    if (isset($cScripts['css']) && ($lastestCss = trim($cScripts['css'])) !== '')
 	        $this->getPage()->getClientScript()->registerStyleSheetFile('pageCss', $this->publishAsset($lastestCss));
-	    
+
 	    if(!$this->IsPostBack)
 	    {
 	    	$this->username->focus();
@@ -27,10 +27,10 @@ class LoginController extends BPCPageAbstract
 	}
 	/**
 	 * Login action
-	 * 
+	 *
 	 * @param unknown $sender
 	 * @param unknown $params
-	 * 
+	 *
 	 * @throws Exception
 	 */
     public function login($sender, $params)

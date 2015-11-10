@@ -1,7 +1,7 @@
 <?php
 /**
  * This is the me page
- * 
+ *
  * @package    Web
  * @subpackage Controller
  * @author     lhe<helin16@gmail.com>
@@ -35,7 +35,7 @@ class MeController extends BPCPageAbstract
 				throw new Exception("New passwrod and confirm password NOT match!");
 			Core::getUser()->setPassword(sha1($newPwd))
 				->save();
-			Core::setUser(UserAccount::get(Core::getUser()->getId()), Core::getRole());
+			Core::setUser(UserAccount::get(Core::getUser()->getId()), Core::getRole(), Core::getStore());
 			$results['succ'] = true;
 		}
 		catch(Exception $ex)
@@ -57,7 +57,7 @@ class MeController extends BPCPageAbstract
 				->setFirstName($firstName)
 				->setLastName($lastName)
 				->save();
-			Core::setUser(UserAccount::get(Core::getUser()->getId()), Core::getRole());
+			Core::setUser(UserAccount::get(Core::getUser()->getId()), Core::getRole(), Core::getStore());
 			$results['succ'] = true;
 		}
 		catch(Exception $ex)

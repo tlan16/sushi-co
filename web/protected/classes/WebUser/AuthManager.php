@@ -2,7 +2,7 @@
 Prado::using('System.Security.TAuthManager');
 /**
  * customized AuthManager
- * 
+ *
  * @package    Hydra-web
  * @subpackage Classes
  * @author     lhe<lhe@bytecraft.com.au>
@@ -33,13 +33,9 @@ class AuthManager extends TAuthManager
 	        //exit application do not process the futher part
 	        exit;
 	    }
-        parent::onAuthorize($param);
-        $u = Core::getUser();
-        if ($u instanceof UserAccount)
-        {
-            $r = Core::getRole();
-            Core::setUser($u, $r, Core::getStore());
-        }
+	    parent::onAuthorize($param);
+        if (Core::getUser() instanceof UserAccount)
+            Core::setUser(Core::getUser(), Core::getRole(), Core::getStore());
 	}
 }
 ?>

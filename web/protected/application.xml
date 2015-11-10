@@ -50,11 +50,12 @@
 			<!-- FrontEnd:: Material Detail page -->
 			<url ServiceParameter="Material.Details.DetailsController" pattern="material/{id}.html" parameters.id="new|\d+"/>
 
-			<!-- FrontEnd:: Label list page -->
+			<!-- FrontEnd:: Label list page
 			<url ServiceParameter="Label.List.ListController" pattern="labels.html" />
-			<!-- FrontEnd:: Label Detail page -->
+			FrontEnd:: Label Detail page
 			<url ServiceParameter="Label.Details.DetailsController" pattern="label/{id}.html" parameters.id="new|\d+"/>
 			<url ServiceParameter="Label.Print.Controller" pattern="print/label/{id}.html" parameters.id="\d+"/>
+			-->
 
 			<!-- FrontEnd:: ServeMeasurement list page -->
 			<url ServiceParameter="ServeMeasurement.List.ListController" pattern="servemeasurements.html" />
