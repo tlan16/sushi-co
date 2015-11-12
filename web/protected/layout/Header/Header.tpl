@@ -11,9 +11,8 @@
     <div class="collapse navbar-collapse mainMenu">
 	    <com:Application.layout.Menu.Menu ID="Menu"/>
 		<ul class="nav navbar-nav navbar-right">
+			<%= $this->getStoreChangeBtn() %>
 			<li><a href='/me.html'><%= Core::getRole()->getName() %>: <%= Core::getUser()->getPerson() %></a></li>
-			<li><a>Current Store: <%= Core::getStore()->getName() %></a></li>
-			<li><a href='/store/switch.html'>Change Store</a></li>
 			<li><com:TLinkButton Text="Logout" onClick="logout" CssClass="logoutBtn"/></li>
 		</ul>
 	</div>
