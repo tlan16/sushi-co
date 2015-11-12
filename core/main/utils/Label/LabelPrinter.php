@@ -198,7 +198,7 @@ abstract class LabelPrinter
         	if(!isset($item['material']) || !($material = $item['material']) instanceof Material)
         		continue;
             foreach($material->getIngredients() as $ingredient)
-                $ingredientsTxtArr[] = $ingredient->getName();
+                $ingredientsTxtArr[] = $ingredient->getName() . (($description = $ingredient->getDescription()) === '' ? '' : '(' . $description . ')');
         }
         return array_unique($ingredientsTxtArr);
     }
