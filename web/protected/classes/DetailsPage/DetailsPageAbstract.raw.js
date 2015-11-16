@@ -205,13 +205,13 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 		tmp.me._signRandID(tmp.select2);
 
 		tmp.data = [];
-		if(tmp.me._item && tmp.me._item.id) {
+//		if(tmp.me._item && tmp.me._item.id) {
 			if(Array.isArray(value)) {
 				value.each(function(item){
 					tmp.data.push({'id': item.id, 'text': item.name, 'data': item});
 				});
 			} else tmp.data = value;
-		}
+//		}
 
 		tmp.selectBox = jQuery('#'+tmp.select2.id).select2(tmp.select2Options ? tmp.select2Options : {
 			multiple: true,
@@ -241,6 +241,7 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 			tmp.selectBox.attr('dirty', tmp.selectBox.val() !== tmp.me._getNamesString(value,'id',','));
 			tmp.me._refreshDirty()._getSaveBtn();
 		});
+
 		if(tmp.data)
 			tmp.selectBox.select2('data', tmp.data);
 		return tmp.me;

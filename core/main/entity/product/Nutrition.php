@@ -62,6 +62,16 @@ class Nutrition extends ResourceAbstract
 	}
 	/**
 	 * (non-PHPdoc)
+	 * @see BaseEntityAbstract::getJson()
+	 */
+	public function getJson($extra = array(), $reset = false)
+	{
+	    $array = $extra;
+	    $array['defaultServeMeasurement'] = ($this->getDefaultServeMeasurement() instanceof ServeMeasurement ? $this->getDefaultServeMeasurement()->getJson() : null);
+	    return parent::getJson($array, $reset);
+	}
+	/**
+	 * (non-PHPdoc)
 	 * @see BaseEntity::__loadDaoMap()
 	 */
 	public function __loadDaoMap()
