@@ -21,7 +21,38 @@ PageJs.prototype = Object.extend(new DetailsPageJs(), {
 		tmp.me._item.infos.material_nutrition.each(function(item){
 			tmp.me._addNutritionRow(item, $(tmp.me._containerIds.material_nutrition));
 		});
+	
+		tmp.me._fillDefautNutrition();
 		return tmp.me;
+	}
+	,_fillDefautNutrition: function() {
+		var tmp = {};
+		tmp.me = this;
+		
+		jQuery.get('/ajax/getAll', {'entityName': 'DefaultNutrition'})
+			.done(function(data){
+				if(data.succ === true && data.resultData && data.resultData.items && Array.isArray(data.resultData.items)) {
+					data = data.resultData.items;
+					data.each(function(item){
+						if(tmp.me._checkNutritionExist(item.nutrition.id) !== true)
+							tmp.me._addNutritionRow(item, $(tmp.me._containerIds.material_nutrition));
+					});
+				}
+			});
+		return tmp.me;
+	}
+	,_checkNutritionExist: function(nutritionId) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.result = false;
+		$(tmp.me.getHTMLID('itemDiv')).getElementsBySelector('.material_nutrition[material_nutrition_id]').each(function(item){
+			if(tmp.result === true)
+				return tmp.result;
+			tmp.material_nutrition = tmp.me._collectFormData($(item), 'save-item');
+			if(tmp.material_nutrition && tmp.material_nutrition.nutrition && parseInt(nutritionId) === parseInt(tmp.material_nutrition.nutrition))
+				tmp.result = true;
+		});
+		return tmp.result;
 	}
 	,_addNewNutritionBtn: function(container) {
 		var tmp = {};

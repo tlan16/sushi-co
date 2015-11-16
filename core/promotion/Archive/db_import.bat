@@ -39,6 +39,7 @@ call:importDBFunc productinfo
 call:importDBFunc productinfotype
 call:importDBFunc storeinfotype
 call:importDBFunc nutrition_material
+call:importDBFunc [new_table]defaultnutrition
 echo done
 echo.&pause&goto:eof
 

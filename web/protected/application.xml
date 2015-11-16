@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<application id="Sushi-Co-System" mode="Performance">
+<application id="Sushi-Co-System" mode="Debug">
 	<!-- alias definitions and namespace usings <paths> <alias id="myalias"
 		path="./lib" /> <using namespace="Application.common.*" /> </paths> -->
 
@@ -11,7 +11,7 @@
 
 	<!-- configurations for modules -->
 	<modules>
-		<module id="cache" class="System.Caching.TAPCCache" />
+		<!--module id="cache" class="System.Caching.TAPCCache" /-->
 		<module id="Session" class="Application.classes.Session.SessionDb" UseCustomStorage="true" />
 		<module id="security" class="TSecurityManager" EncryptionKey="BPCinternal" ValidationKey="bfb9e1b24ba6308e39495a4a78f35d70" />
 		<module id="request" class="THttpRequest" UrlManager="friendly-url" />
@@ -23,6 +23,11 @@
 			<!-- FrontEnd:: Help page -->
 			<url ServiceParameter="Help.ListController" pattern="help.html" />
 
+			<!-- FrontEnd:: DefaultNutrition list page -->
+			<url ServiceParameter="DefaultNutrition.List.ListController" pattern="defaultnutrition.html" />
+			<!-- FrontEnd:: DefaultNutrition Detail page -->
+			<url ServiceParameter="DefaultNutrition.Details.DetailsController" pattern="defaultnutrition/{id}.html" parameters.id="new|\d+"/>
+			
 			<!-- FrontEnd:: Store list page -->
 			<url ServiceParameter="Store.List.ListController" pattern="stores.html" />
 			<!-- FrontEnd:: Store Detail page -->

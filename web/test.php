@@ -17,7 +17,8 @@ try {
 	$transStarted = false;
 	try {Dao::beginTransaction();} catch(Exception $e) {$transStarted = true;}
 
-	createEntity('Ingredient', 100);
+	$obj = DefaultNutrition::create(Nutrition::get(1), ServeMeasurement::get(1));
+	print_r($obj);
 	
 	if($transStarted === false)
 		Dao::commitTransaction();
