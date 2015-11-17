@@ -24,7 +24,7 @@ PageJs.prototype = Object.extend(new DetailsPageJs(), {
 			});
 		}
 
-		tmp.me._fillDefautNutrition();
+//		tmp.me._fillDefautNutrition();
 		return tmp.me;
 	}
 	,_fillDefautNutrition: function() {
