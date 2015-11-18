@@ -132,22 +132,31 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 		});
 		return tmp.me;
 	}
+	,__validateContainer: function(container) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.container = (container || null);
+		if(!tmp.container)
+			return null;
+		if(!tmp.container.id)
+			tmp.me._signRandID(tmp.container);
+		if(!tmp.container.id || jQuery('#'+tmp.container.id).length === 0)
+			return null;
+		return tmp.container;
+	}
 	,_getInputDiv:function(saveItem, value, container, title, required, className, isCurrency, placeholder) {
 		var tmp = {};
 		tmp.me = this;
+		tmp.container = tmp.me.__validateContainer(container);
 		tmp.title = (title || tmp.me.ucfirst(saveItem));
 		tmp.required = (required === true);
 		tmp.className = (className || 'col-xs-12');
 		tmp.isCurrency = (isCurrency === true);
 		tmp.placeholder = (placeholder || '');
 
-		if(!container)
-			return tmp.me;
-		if(!container.id)
-			tmp.me._signRandID(container);
-		tmp.container = $(container.id);
 		if(!tmp.container)
 			return tmp.me;
+		
 		tmp.input = new Element('input')
 			.writeAttribute({
 				'required': tmp.required
@@ -185,17 +194,17 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 	,_getSelect2Div:function(searchEntityName, saveItem, value, container, title, required, select2Options, className) {
 		var tmp = {};
 		tmp.me = this;
+		tmp.container = tmp.me.__validateContainer(container);
 		tmp.title = (title || tmp.me.ucfirst(saveItem));
 		tmp.required = (required === true);
 		tmp.select2Options = (select2Options || null);
 		tmp.className = (className || 'col-xs-12');
 
-		if(!container.id)
-			tmp.me._signRandID(container);
-		tmp.container = $(container.id);
 		if(!tmp.container)
-			return;
+			return tmp.me;
+		
 		tmp.select2 = new Element('input')
+//			.addClassName('hidden')
 			.writeAttribute('required', tmp.required)
 			.writeAttribute('placeholder', 'Please select a ' + searchEntityName)
 			.writeAttribute('save-item', saveItem);
