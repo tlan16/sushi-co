@@ -204,10 +204,10 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 			return tmp.me;
 		
 		tmp.select2 = new Element('input')
-//			.addClassName('hidden')
 			.writeAttribute('required', tmp.required)
 			.writeAttribute('placeholder', 'Please select a ' + searchEntityName)
 			.writeAttribute('save-item', saveItem);
+		tmp.input = tmp.select2;
 
 		tmp.container.update(tmp.me._getFormGroup(tmp.title, tmp.select2).addClassName(tmp.className) );
 
@@ -253,6 +253,7 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 
 		if(tmp.data)
 			tmp.selectBox.select2('data', tmp.data);
+		tmp.input.addClassName('transfered-to-select2');
 		return tmp.me;
 	}
 
