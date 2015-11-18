@@ -5,7 +5,7 @@ SET FPASSWORD=
 SET DBNAME=sushico
 SET DBHOST=localhost
 SET DBUSERNAME=root
-SET DBPASSWORD=
+SET DBPASSWORD=root
 SET MYSQLPATH=C:\wamp\bin\mysql\mysql5.6.17\bin\mysql.exe
 
 echo Directory: %BASEDIR%
@@ -39,7 +39,7 @@ call:importDBFunc productinfo
 call:importDBFunc productinfotype
 call:importDBFunc storeinfotype
 call:importDBFunc nutrition_material
-call:importDBFunc [new_table]defaultnutrition
+call:importDBFunc defaultSM
 echo done
 echo.&pause&goto:eof
 
