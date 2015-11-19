@@ -114,7 +114,6 @@ PageJs.prototype = Object.extend(new DetailsPageJs(), {
 		tmp.container = (container || null);
 		if(!tmp.container || !tmp.container.id)
 			return tmp.me;
-		console.debug(tmp.material_nutrition);
 		tmp.container
 			.insert({'bottom': tmp.row = new Element('div', {'class': 'material_nutrition col-xs-12', 'material_nutrition_id': ((tmp.material_nutrition && tmp.material_nutrition.id) ? tmp.material_nutrition.id : 'new'), 'active': (tmp.material_nutrition ? tmp.material_nutrition.active : true) })
 				.insert({'bottom': new Element('div', {'class': 'row '})
