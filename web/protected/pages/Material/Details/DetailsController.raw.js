@@ -3,21 +3,7 @@
  */
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new DetailsPageJs(), {
-	_nutritions: []
-	,_serveMeasurements: []
-	,setNutrition: function(nutritions) {
-		var tmp = {};
-		tmp.me = this;
-		tmp.me._nutritions = nutritions
-		return tmp.me;
-	}
-	,setServeMeasurements: function(measurements) {
-		var tmp = {};
-		tmp.me = this;
-		tmp.me._serveMeasurements = measurements
-		return tmp.me;
-	}
-	,load: function () {
+	load: function () {
 		var tmp = {};
 		tmp.me = this;
 		tmp.me._init();
@@ -32,23 +18,27 @@ PageJs.prototype = Object.extend(new DetailsPageJs(), {
 
 		tmp.me._addNewNutritionBtn($(tmp.me._containerIds.new_material_nutrition));
 
-		if(tmp.me._item && tmp.me._item.infos) {
-			tmp.me._item.infos.material_nutrition.each(function(item){
-				tmp.me._addNutritionRow(item, $(tmp.me._containerIds.material_nutrition));
-			});
-		}
-
+		tmp.me._item.infos.material_nutrition.each(function(item){
+			tmp.me._addNutritionRow(item, $(tmp.me._containerIds.material_nutrition));
+		});
+	
 		tmp.me._fillDefautNutrition();
 		return tmp.me;
 	}
 	,_fillDefautNutrition: function() {
 		var tmp = {};
 		tmp.me = this;
-		tmp.me._nutritions.each(function(item) {
-			if(tmp.me._checkNutritionExist(item.id) !== true) {
-				tmp.me._addNutritionRow({'nutrition': item, 'serveMeasurement': item.defaultServeMeasurement, 'qty': 0, 'active': true}, $(tmp.me._containerIds.material_nutrition));
-			}
-		});
+		
+		jQuery.get('/ajax/getAll', {'entityName': 'DefaultNutrition'})
+			.done(function(data){
+				if(data.succ === true && data.resultData && data.resultData.items && Array.isArray(data.resultData.items)) {
+					data = data.resultData.items;
+					data.each(function(item){
+						if(tmp.me._checkNutritionExist(item.nutrition.id) !== true)
+							tmp.me._addNutritionRow(item, $(tmp.me._containerIds.material_nutrition));
+					});
+				}
+			});
 		return tmp.me;
 	}
 	,_checkNutritionExist: function(nutritionId) {
@@ -115,7 +105,7 @@ PageJs.prototype = Object.extend(new DetailsPageJs(), {
 		if(!tmp.container || !tmp.container.id)
 			return tmp.me;
 		tmp.container
-			.insert({'bottom': tmp.row = new Element('div', {'class': 'material_nutrition col-xs-12', 'material_nutrition_id': ((tmp.material_nutrition && tmp.material_nutrition.id) ? tmp.material_nutrition.id : 'new'), 'active': (tmp.material_nutrition ? tmp.material_nutrition.active : true) })
+			.insert({'bottom': new Element('div', {'class': 'material_nutrition col-xs-12', 'material_nutrition_id': (tmp.material_nutrition ? tmp.material_nutrition.id : 'new'), 'active': (tmp.material_nutrition ? tmp.material_nutrition.active : true) })
 				.insert({'bottom': new Element('div', {'class': 'row '})
 					.insert({'bottom': tmp.nutrition = new Element('div', {'class': 'nutrition col-md-7 col-sm-4 col-xs-12'}) })
 					.insert({'bottom': tmp.qty = new Element('div', {'class': 'qty col-md-2 col-sm-3 col-xs-12'}) })
@@ -124,10 +114,58 @@ PageJs.prototype = Object.extend(new DetailsPageJs(), {
 				})
 			});
 
+		tmp.nutritionSelect2Options = {
+			multiple: false,
+			width: "100%",
+			ajax: {
+				delay: 250
+				,url: '/ajax/getAll'
+				,type: 'GET'
+				,data: function (params) {
+					return {"searchTxt": 'name like ?', 'searchParams': ['%' + params + '%'], 'entityName': 'Nutrition', 'pageNo': 1};
+				}
+				,results: function(data, page, query) {
+					tmp.result = [];
+					if(data.resultData && data.resultData.items) {
+						data.resultData.items.each(function(item){
+							tmp.result.push({'id': item.id, 'text': item.name, 'data': item});
+						});
+					}
+					return { 'results' : tmp.result };
+				}
+			}
+			,cache: true
+			,escapeMarkup: function (markup) { return markup; } // let our custom formatter work
+			};
+
+		tmp.serveMeasurementSelect2Options = {
+			multiple: false,
+			width: "100%",
+			ajax: {
+				delay: 250
+				,url: '/ajax/getAll'
+				,type: 'GET'
+				,data: function (params) {
+					return {"searchTxt": 'name like ?', 'searchParams': ['%' + params + '%'], 'entityName': 'ServeMeasurement', 'pageNo': 1};
+				}
+				,results: function(data, page, query) {
+					tmp.result = [];
+					if(data.resultData && data.resultData.items) {
+						data.resultData.items.each(function(item){
+							tmp.result.push({'id': item.id, 'text': item.name, 'data': item});
+						});
+					}
+					return { 'results' : tmp.result };
+				}
+			}
+			,cache: true
+			,escapeMarkup: function (markup) { return markup; } // let our custom formatter work
+			};
+
 		tmp.me
-			._getSelectDiv('nutrition', tmp.me._nutritions, (tmp.material_nutrition && tmp.material_nutrition.nutrition ? tmp.material_nutrition.nutrition.id : ''), tmp.row.down('.nutrition'), ' ', true)
-			._getInputDiv('qty', (tmp.material_nutrition ? tmp.material_nutrition.qty : ''), tmp.qty, ' ' , false, '', false, 'Qty')
-			._getSelectDiv('serveMeasurement', tmp.me._serveMeasurements, (tmp.material_nutrition && tmp.material_nutrition.serveMeasurement ? tmp.material_nutrition.serveMeasurement.id : ''), tmp.row.down('.servemeasurement'), ' ', true)
+			._getSelect2Div('Nutrition', 'nutrition', (tmp.material_nutrition ? {'id': tmp.material_nutrition.nutrition.id, 'text': tmp.material_nutrition.nutrition.name, 'data': tmp.material_nutrition.nutrition} : null), tmp.nutrition, ' ', true, tmp.nutritionSelect2Options)
+			._getInputDiv('qty', (tmp.material_nutrition ? tmp.material_nutrition.qty : ''), tmp.qty, ' ' , true, '', false, 'Qty')
+			._getSelect2Div('ServeMeasurement', 'serveMeasurement', (tmp.material_nutrition ? {'id': tmp.material_nutrition.serveMeasurement.id, 'text': tmp.material_nutrition.serveMeasurement.name, 'data': tmp.material_nutrition.serveMeasurement} : null), tmp.servemeasurement, ' ', true, tmp.serveMeasurementSelect2Options)
 		;
 		return tmp.me;
 	}

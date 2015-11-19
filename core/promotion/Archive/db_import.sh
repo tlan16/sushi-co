@@ -45,5 +45,5 @@ importDBFunc productinfo;
 importDBFunc productinfotype;
 importDBFunc storeinfotype;
 importDBFunc nutrition_material;
-importDBFunc defaultSM;
+importDBFunc [new_table]defaultnutrition;
 echo done

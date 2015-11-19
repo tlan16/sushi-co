@@ -14,12 +14,6 @@ class Nutrition extends ResourceAbstract
 	 */
 	private $order = 0;
 	/**
-	 * The default of the ServeMeasurement
-	 *
-	 * @var ServeMeasurement
-	 */
-	protected $defaultServeMeasurement = null;
-	/**
 	 * getter for order
 	 *
 	 * @return int
@@ -39,38 +33,6 @@ class Nutrition extends ResourceAbstract
 	    return $this;
 	}
 	/**
-	 * Getter for defaultServeMeasurement
-	 *
-	 * @return ServeMeasurement
-	 */
-	public function getDefaultServeMeasurement()
-	{
-	    $this->loadManyToOne('defaultServeMeasurement');
-	    return $this->defaultServeMeasurement;
-	}
-	/**
-	 * Setter for defaultServeMeasurement
-	 *
-	 * @param unkown $value The defaultServeMeasurement
-	 *
-	 * @return Nutrition
-	 */
-	public function setDefaultServeMeasurement($value)
-	{
-	    $this->defaultServeMeasurement = $value;
-	    return $this;
-	}
-	/**
-	 * (non-PHPdoc)
-	 * @see BaseEntityAbstract::getJson()
-	 */
-	public function getJson($extra = array(), $reset = false)
-	{
-	    $array = $extra;
-	    $array['defaultServeMeasurement'] = ($this->getDefaultServeMeasurement() instanceof ServeMeasurement ? $this->getDefaultServeMeasurement()->getJson() : null);
-	    return parent::getJson($array, $reset);
-	}
-	/**
 	 * (non-PHPdoc)
 	 * @see BaseEntity::__loadDaoMap()
 	 */
@@ -78,7 +40,6 @@ class Nutrition extends ResourceAbstract
 	{
 		DaoMap::begin($this, 'nut');
 		DaoMap::setIntType('order', 'int', 10, true, false, 0);
-		DaoMap::setManyToOne('defaultServeMeasurement', 'ServeMeasurement', 'nut_dsm', true);
 
 		parent::__loadDaoMap();
 

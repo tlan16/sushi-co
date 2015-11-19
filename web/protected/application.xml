@@ -23,6 +23,11 @@
 			<!-- FrontEnd:: Help page -->
 			<url ServiceParameter="Help.ListController" pattern="help.html" />
 
+			<!-- FrontEnd:: DefaultNutrition list page -->
+			<url ServiceParameter="DefaultNutrition.List.ListController" pattern="defaultnutrition.html" />
+			<!-- FrontEnd:: DefaultNutrition Detail page -->
+			<url ServiceParameter="DefaultNutrition.Details.DetailsController" pattern="defaultnutrition/{id}.html" parameters.id="new|\d+"/>
+			
 			<!-- FrontEnd:: Store list page -->
 			<url ServiceParameter="Store.List.ListController" pattern="stores.html" />
 			<!-- FrontEnd:: Store Detail page -->
