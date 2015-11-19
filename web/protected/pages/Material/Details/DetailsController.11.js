@@ -168,9 +168,9 @@ PageJs.prototype = Object.extend(new DetailsPageJs(), {
 		};
 		if(tmp.row && tmp.row.id) {
 			tmp.me
-				._getSelect2Div('Nutrition', 'nutrition', (tmp.material_nutrition && tmp.material_nutrition.nutrition ? {'id': tmp.material_nutrition.nutrition.id, 'text': tmp.material_nutrition.nutrition.name, 'data': tmp.material_nutrition.nutrition} : null), $(tmp.row.id).down('.nutrition'), ' ', true, tmp.nutritionSelect2Options)
+				._getSelect2Div('Nutrition', 'nutrition', (tmp.material_nutrition && tmp.material_nutrition.nutrition ? {'id': tmp.material_nutrition.nutrition.id, 'text': tmp.material_nutrition.nutrition.name, 'data': tmp.material_nutrition.nutrition} : null), $(tmp.row.id).down('.nutrition'), ' ', false, tmp.nutritionSelect2Options)
 				._getInputDiv('qty', (tmp.material_nutrition ? tmp.material_nutrition.qty : ''), tmp.qty, ' ' , false, '', false, 'Qty')
-				._getSelect2Div('ServeMeasurement', 'serveMeasurement', (tmp.material_nutrition && tmp.material_nutrition.serveMeasurement ? {'id': tmp.material_nutrition.serveMeasurement.id, 'text': tmp.material_nutrition.serveMeasurement.name, 'data': tmp.material_nutrition.serveMeasurement} : null), $(tmp.row.id).down('.servemeasurement'), ' ', true, tmp.serveMeasurementSelect2Options)
+				._getSelect2Div('ServeMeasurement', 'serveMeasurement', (tmp.material_nutrition && tmp.material_nutrition.serveMeasurement ? {'id': tmp.material_nutrition.serveMeasurement.id, 'text': tmp.material_nutrition.serveMeasurement.name, 'data': tmp.material_nutrition.serveMeasurement} : null), $(tmp.row.id).down('.servemeasurement'), ' ', false, tmp.serveMeasurementSelect2Options)
 			;
 		}
 		return tmp.me;
