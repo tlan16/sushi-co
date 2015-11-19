@@ -198,7 +198,7 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 		tmp.title = (title || tmp.me.ucfirst(saveItem));
 		tmp.required = (required === true);
 		tmp.select2Options = (select2Options || null);
-		tmp.className = (className || '');
+		tmp.className = (className || 'col-xs-12');
 
 		if(!tmp.container)
 			return tmp.me;
