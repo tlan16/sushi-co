@@ -178,6 +178,40 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 
 		return tmp.me;
 	}
+	,_getSelectDiv:function(saveItem, options, selectedValues, container, title, required, className) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.container = tmp.me.__validateContainer(container);
+		tmp.title = (title || tmp.me.ucfirst(saveItem));
+		tmp.required = (required === true);
+		tmp.className = (className || 'col-xs-12');
+		if(!tmp.container)
+			return tmp.me;
+
+		tmp.input = new Element('select')
+			.writeAttribute({
+				'required': tmp.required
+				,'save-item': saveItem
+				,'dirty': false
+			});
+
+		if(Array.isArray(selectedValues)) {
+			tmp.input.writeAttribute({'multiple': true});
+		}
+
+		options.each(function(option) {
+			tmp.input.insert({'bottom': tmp.option = new Element('option', {'value': option.id}).update(option.name) });
+			if((Array.isArray(selectedValues) && selectedValues.indexOf(option.id) > -1) || (option.id == selectedValues)) {
+				tmp.option.writeAttribute('selected', true);
+			}
+		});
+		tmp.input.observe('keyup',function(e){
+			tmp.input.writeAttribute('dirty', $F(tmp.input) );
+			tmp.me._refreshDirty()._getSaveBtn();
+		});
+		tmp.container.update(tmp.me._getFormGroup(tmp.title, tmp.input).addClassName(tmp.className) );
+		return tmp.me;
+	}
 	,_refreshDirty: function() {
 		var tmp = {};
 		tmp.me = this;
@@ -209,19 +243,18 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 			.writeAttribute('save-item', saveItem);
 		tmp.input = tmp.select2;
 
-		console.debug(tmp.container);
 		tmp.container.insert({'bottom': tmp.me._getFormGroup(tmp.title, tmp.select2).addClassName(tmp.className) });
 
 		tmp.me._signRandID(tmp.select2);
 
 		tmp.data = [];
-//		if(tmp.me._item && tmp.me._item.id) {
+		if(tmp.me._item && tmp.me._item.id) {
 			if(Array.isArray(value)) {
 				value.each(function(item){
 					tmp.data.push({'id': item.id, 'text': item.name, 'data': item});
 				});
 			} else tmp.data = value;
-//		}
+		}
 
 		tmp.selectBox = jQuery('#'+tmp.select2.id).select2(tmp.select2Options ? tmp.select2Options : {
 			multiple: true,

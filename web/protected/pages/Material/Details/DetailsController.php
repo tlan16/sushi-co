@@ -45,8 +45,9 @@ class DetailsController extends DetailsPageAbstract
 				,'comments' => 'comments_div'
 				,'saveBtn' => 'save_btn'
 		)) . ";";
-		$js .= "pageJs.setNutrition(" . json_encode(array_map(create_function('$a', 'return $a->getJson();'), Nutrition::getAll())) . ");";
-		$js .= "pageJs.load();";
+		$js .= "pageJs.setNutrition(" . json_encode(array_map(create_function('$a', 'return $a->getJson();'), Nutrition::getAll())) . ")";
+		    $js .= ".setServeMeasurements(" . json_encode(array_map(create_function('$a', 'return $a->getJson();'), ServeMeasurement::getAll())) . ")";
+		    $js .= ".load();";
 		$js .= "pageJs.bindAllEventNObjects();";
 		if(!AccessControl::canEditAllergentDetailPage(Core::getRole()))
 			$js .= "pageJs.readOnlyMode();";
