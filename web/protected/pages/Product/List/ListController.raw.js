@@ -4,6 +4,7 @@
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new CRUDPageJs(), {
 	_canEdit: false
+	,_preValue: {}
 	,_setCanEdit: function(canEdit) {
 		var tmp = {}
 		tmp.me = this;
@@ -12,6 +13,15 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 	}
 	,_getTitleRowData: function() {
 		return {'id': "ID", 'active': 'Active', 'name': 'Name', 'description': 'Description', 'barcode': 'Barcode', 'unitPrice': 'Unit Price', 'size': 'Size', 'categories': 'Categories'};
+	}
+	,setPreValues: function(preValue){
+		var tmp = {}
+		tmp.me = this;
+		tmp.me._preValue = preValue;
+		if(tmp.me._preValue.categories && $$('[search_field="pro.categories"]').size() > 0) {
+			$$('[search_field="pro.categories"]')[0].store('preValue', tmp.me._preValue.categories);
+		}
+		return tmp.me;
 	}
 	,_bindSearchKey: function() {
 		var tmp = {}
@@ -60,6 +70,17 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 			,cache: true
 			,escapeMarkup: function (markup) { return markup; } // let our custom formatter work
 		});
+
+		if($$('[search_field="pro.categories"]')[0]) {
+			tmp.preValue = $$('[search_field="pro.categories"]')[0].retrieve('preValue');
+			if(Array.isArray(tmp.preValue) && tmp.preValue.size() > 0) {
+				tmp.data = [];
+				tmp.preValue.each(function(item){
+					tmp.data.push({'id': item.id, 'text': item.name, 'data': item});
+				})
+				tmp.selectBox.select2('data', tmp.data);
+			}
+		}
 	}
 	,_getOjbNames: function (objects) {
 		var tmp = {};

@@ -23,12 +23,18 @@ class ListController extends CRUDPageAbstract
 	protected function _getEndJs()
 	{
 		$js = parent::_getEndJs();
+		if(isset($this->Request['cateId'])) {
+		    if (!($category = Category::get(trim($this->Request['cateId']))) instanceof Category)
+		        die("invalid category provided.");
+		    $preValues = array('categories' => array($category->getJson()));
+		    $js .= "pageJs.setPreValues(" . json_encode($preValues) . ");";
+		}
 		$js .= "pageJs.loadSelect2();";
 		$js .= "pageJs._bindSearchKey();";
 		$js .= "pageJs._setCanEdit(" . (AccessControl::isAdminUser(Core::getRole()) === true ? 'true' : 'false') . ");";
 		$js .= 'pageJs.setCallbackId("printLabel", "' . $this->printLabelBtn->getUniqueID(). '")';
 		$js .= '.setCallbackId("updateItem", "' . $this->updateItemBtn->getUniqueID(). '");';
-		$js .= "pageJs.getResults(true, " . $this->pageSize . ");";
+		$js .= "pageJs.getSearchCriteria().getResults(true, " . $this->pageSize . ");";
 		return $js;
 	}
 	/**
