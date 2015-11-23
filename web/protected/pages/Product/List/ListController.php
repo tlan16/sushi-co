@@ -114,7 +114,7 @@ class ListController extends CRUDPageAbstract
 								}
 								$key = md5($field . '_' . 'entityName');
 								$ps[$key] = 'Category';
-								$query->eagerLoad('Product.infos', 'inner join', 'pro_info_cat', 'pro.id = pro_info_cat.productId and pro_info_cat.entityName = :' . $key . ' and pro_info_cat.entityId in (' . implode(',', $keys) . ') and pro_info_cat.typeId = ' . ProductInfoType::ID_CATEGORY);
+								$query->eagerLoad('Product.infos', 'inner join', 'pro_info_cat', 'pro_info_cat.active = 1 and pro.id = pro_info_cat.productId and pro_info_cat.entityName = :' . $key . ' and pro_info_cat.entityId in (' . implode(',', $keys) . ') and pro_info_cat.typeId = ' . ProductInfoType::ID_CATEGORY);
 								$params = array_merge($params, $ps);
 							}
 							break;
@@ -132,7 +132,7 @@ class ListController extends CRUDPageAbstract
 			$keys['pro_info.entityId'] = md5('pro_info.entityId');
 			$params[$keys['pro_info.entityId']] = Core::getStore()->getId();
 
-			$query->eagerLoad('Product.infos', 'inner join', 'pro_info', '(pro_info.productId = pro.id and pro_info.active = 1 and pro_info.typeId = :' . $keys['pro_info.typeId'] . ' and pro_info.entityName = :' . $keys['pro_info.entityName'] . ' and (pro_info.entityId = :' . $keys['pro_info.entityId'] . ' or pro_info.entityId = 0))');
+			$query->eagerLoad('Product.infos', 'inner join', 'pro_info_store', '(pro_info_store.active = 1 and pro_info_store.productId = pro.id and pro_info_store.active = 1 and pro_info_store.typeId = :' . $keys['pro_info.typeId'] . ' and pro_info_store.entityName = :' . $keys['pro_info.entityName'] . ' and (pro_info_store.entityId = :' . $keys['pro_info.entityId'] . ' or pro_info_store.entityId = 0))');
 
 			Dao::$debug = true;
 			$objects = $class::getAllByCriteria(implode(' AND ', $where), $params, true, $pageNo, $pageSize, array('name' => 'desc'), $stats);
