@@ -134,9 +134,7 @@ class ListController extends CRUDPageAbstract
 
 			$query->eagerLoad('Product.infos', 'inner join', 'pro_info_store', '(pro_info_store.active = 1 and pro_info_store.productId = pro.id and pro_info_store.active = 1 and pro_info_store.typeId = :' . $keys['pro_info.typeId'] . ' and pro_info_store.entityName = :' . $keys['pro_info.entityName'] . ' and (pro_info_store.entityId = :' . $keys['pro_info.entityId'] . ' or pro_info_store.entityId = 0))');
 
-			Dao::$debug = true;
 			$objects = $class::getAllByCriteria(implode(' AND ', $where), $params, true, $pageNo, $pageSize, array('name' => 'desc'), $stats);
-			Dao::$debug = false;
 			$results['pageStats'] = $stats;
 			$results['items'] = array();
 			foreach($objects as $obj)
