@@ -81,7 +81,7 @@ class DetailsController extends DetailsPageAbstract
 			$barcode = isset ( $params->CallbackParameter->barcode ) ? trim($params->CallbackParameter->barcode) : '';
 			$labelVersionNo = isset ( $params->CallbackParameter->labelVersionNo ) ? trim($params->CallbackParameter->labelVersionNo) : '';
 			$useByVariance = isset ( $params->CallbackParameter->useByVariance ) ? intval($params->CallbackParameter->useByVariance) : '';
-			$unitPrice = StringUtilsAbstract::getValueFromCurrency(isset ( $params->CallbackParameter->unitPrice ) ? trim(isset ( $params->CallbackParameter->unitPrice)) : 0);
+			$unitPrice = StringUtilsAbstract::getValueFromCurrency(isset ( $params->CallbackParameter->unitPrice ) ? trim($params->CallbackParameter->unitPrice) : 0);
 			$allStores = (isset ( $params->CallbackParameter->allStores ) && intval($params->CallbackParameter->allStores) === 1);
 			$categories = $this->_idsToObjs($params->CallbackParameter, 'categories', 'Category');
 			$stores = $this->_idsToObjs($params->CallbackParameter, 'stores', 'Store');
