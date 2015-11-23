@@ -114,7 +114,7 @@ class ListController extends CRUDPageAbstract
 								}
 								$key = md5($field . '_' . 'entityName');
 								$ps[$key] = 'Category';
-								$query->eagerLoad('Product.infos', 'inner join', 'pro_info_cat', 'pro.id = pro_info_cat.productId and pro_info_cat.entityName = :' . $key . ' and pro_info_cat.entityId in (' . implode(',', $keys) . ')');
+								$query->eagerLoad('Product.infos', 'inner join', 'pro_info_cat', 'pro.id = pro_info_cat.productId and pro_info_cat.entityName = :' . $key . ' and pro_info_cat.entityId in (' . implode(',', $keys) . ') and pro_info_cat.typeId = ' . ProductInfoType::ID_CATEGORY);
 								$params = array_merge($params, $ps);
 							}
 							break;
