@@ -19,5 +19,19 @@ class ServeMeasurement extends ResourceAbstract
 
 		DaoMap::commit();
 	}
+	/**
+	 * Getting a ServeMeasurement
+	 * 
+	 * @param int $id
+	 * 
+	 * @return ServeMeasurement
+	 */
+	public static function get($id)
+	{
+		if(!self::cacheExsits($id)) {
+			self::addCache($id, parent::get($id));
+		}
+		return self::getCache($id);
+	}
 	
 }
