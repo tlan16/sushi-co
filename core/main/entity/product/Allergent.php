@@ -19,4 +19,18 @@ class Allergent extends ResourceAbstract
 
 		DaoMap::commit();
 	}
+	/**
+	 * Getting a Allergent
+	 *
+	 * @param int $id
+	 *
+	 * @return Allergent
+	 */
+	public static function get($id)
+	{
+		if(!self::cacheExsits($id)) {
+			self::addCache($id, parent::get($id));
+		}
+		return self::getCache($id);
+	}
 }

@@ -19,5 +19,18 @@ class Category extends ResourceAbstract
 
 		DaoMap::commit();
 	}
-	
+	/**
+	 * Getting a Category
+	 *
+	 * @param int $id
+	 *
+	 * @return Category
+	 */
+	public static function get($id)
+	{
+		if(!self::cacheExsits($id)) {
+			self::addCache($id, parent::get($id));
+		}
+		return self::getCache($id);
+	}
 }

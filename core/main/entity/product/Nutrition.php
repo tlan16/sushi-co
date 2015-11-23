@@ -85,5 +85,19 @@ class Nutrition extends ResourceAbstract
 		DaoMap::createIndex('order');
 		DaoMap::commit();
 	}
+	/**
+	 * Getting a Nutrition
+	 *
+	 * @param int $id
+	 *
+	 * @return Nutrition
+	 */
+	public static function get($id)
+	{
+		if(!self::cacheExsits($id)) {
+			self::addCache($id, parent::get($id));
+		}
+		return self::getCache($id);
+	}
 
 }
