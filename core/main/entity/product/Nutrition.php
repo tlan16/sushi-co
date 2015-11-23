@@ -67,7 +67,7 @@ class Nutrition extends ResourceAbstract
 	public function getJson($extra = array(), $reset = false)
 	{
 	    $array = $extra;
-	    $array['defaultServeMeasurement'] = ($this->getDefaultServeMeasurement() instanceof ServeMeasurement ? $this->getDefaultServeMeasurement()->getJson() : null);
+	    $array['defaultServeMeasurement'] = (($defaultSM = $this->getDefaultServeMeasurement()) instanceof ServeMeasurement ? $defaultSM->getJson() : null);
 	    return parent::getJson($array, $reset);
 	}
 	/**
