@@ -112,6 +112,7 @@ class DetailsController extends DetailsPageAbstract
 					->clearStore()
 					->setName($name)
 					->setDescription($description)
+					->setUnitPrice($unitPrice)
 					->save();
 				$entity->clearCategory();
 				foreach($categories as $category)
