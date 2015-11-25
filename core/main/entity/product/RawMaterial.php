@@ -73,7 +73,7 @@ class RawMaterial extends InfoEntityAbstract
 	{
 		$array = $extra;
 		$measurement = $unitPrice = null;
-		if (count($rawMaterialInfo = RawMaterialInfo::getAllByCriteria('rawMaterialId = ? and typeId = ? and entityName=>', array($this->getId(), RawMaterialInfoType::ID_SERVEMESUREMENT, 'ServeMeasurement'), true, 1,1)) > 0) {
+		if (count($rawMaterialInfo = RawMaterialInfo::getAllByCriteria('rawMaterialId = ? and typeId = ? and entityName= ?', array($this->getId(), RawMaterialInfoType::ID_SERVEMESUREMENT, 'ServeMeasurement'), true, 1,1)) > 0) {
 		    $measurement = $rawMaterialInfo[0]->getJson();
 		    $unitPrice = StringUtilsAbstract::getValueFromCurrency($rawMaterialInfo[0]->getValue());
 		}
