@@ -8,7 +8,6 @@
 class RawMaterialInfoType extends InfoTypeAbstract
 {
 	const ID_SERVEMESUREMENT = 1;
-	const ID_COST = 2;
 	/**
 	 * (non-PHPdoc)
 	 * @see BaseEntity::__loadDaoMap()

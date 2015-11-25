@@ -38,7 +38,7 @@ class RawMaterial extends InfoEntityAbstract
 			foreach($array as $infoObj)
 				$ids[] = ((trim($infoObj->getEntityId()) !== '') ? trim($infoObj->getEntityId()) : trim($infoObj->getValue()));
 			$ids = array_unique($ids);
-			$objArray = Allergent::getAllByCriteria('id IN (' . implode(", ", array_fill(0, count($ids), '?')) . ')', $ids);
+			$objArray = ServeMeasurement::getAllByCriteria('id IN (' . implode(", ", array_fill(0, count($ids), '?')) . ')', $ids);
 		}
 		return $objArray;
 	}
