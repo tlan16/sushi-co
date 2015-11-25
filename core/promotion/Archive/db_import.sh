@@ -17,7 +17,7 @@ $MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD -e "CREATE DATABASE IF NOT EX
 echo import sql files
 importDBFunc() {
     echo Processing $1 ...
-    $MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/../$1.sql;
+    $MYSQLPATH -h $DBHOST -u $DBUSERNAME -p$DBPASSWORD $DBNAME < $BASEDIR/$1.sql;
     echo DONE.
 }
 
@@ -46,4 +46,6 @@ importDBFunc productinfotype;
 importDBFunc storeinfotype;
 importDBFunc nutrition_material;
 importDBFunc defaultSM;
+importDBFunc ../newMessageTable;
+importDBFunc ../rawMaterialTable;
 echo done

@@ -40,6 +40,8 @@ call:importDBFunc productinfotype
 call:importDBFunc storeinfotype
 call:importDBFunc nutrition_material
 call:importDBFunc defaultSM
+call:importDBFunc ../defaultSM
+call:importDBFunc ../rawMaterialTable
 echo done
 echo.&pause&goto:eof
 
