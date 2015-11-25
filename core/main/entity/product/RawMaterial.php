@@ -81,4 +81,13 @@ class RawMaterial extends InfoEntityAbstract
 		$array['unitPrice'] = $unitPrice;
 		return parent::getJson($array, $reset);
 	}
+	/**
+	 * (non-PHPdoc)
+	 * @see InfoEntityAbstract::create()
+	 * @return RawMaterial
+	 */
+	public static function create($name, $description = '')
+	{
+		return parent::create($name, $description);
+	}
 }
