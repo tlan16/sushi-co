@@ -59,3 +59,8 @@ CREATE TABLE `rawmaterialinfotype` (
     ,INDEX (`updated`)
     ,INDEX (`name`)
 ) ENGINE=innodb DEFAULT CHARSET=utf8;
+
+TRUNCATE TABLE `rawmaterialinfotype`;
+INSERT INTO `rawmaterialinfotype` (`id`, `name`, `description`, `active`, `created`, `createdById`, `updated`, `updatedById`) VALUES
+(1, 'ServeMesurement', '', 1, '2015-11-25 04:34:11', 10, '2015-11-24 17:34:34', 10),
+(2, 'Cost', '', 1, '2015-11-25 04:35:37', 10, '2015-11-24 17:35:37', 10);
