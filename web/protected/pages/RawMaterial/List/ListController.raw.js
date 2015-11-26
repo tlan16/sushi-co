@@ -3,92 +3,15 @@
  */
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new CRUDPageJs(), {
-	loadSelect2: function() {
-		var tmp = {};
-		tmp.me = this;
-		
-		jQuery('select.select2').each(function(){
-			tmp.options = {};
-			if($(this).readAttribute('data-minimum-results-for-search') === 'Infinity' || $(this).readAttribute('data-minimum-results-for-search') === 'infinity' || $(this).readAttribute('data-minimum-results-for-search') == -1)
-				tmp.options['minimumResultsForSearch'] = 'Infinity';
-			jQuery(this).select2(tmp.options);
-		});
-		
-		tmp.selectBox = jQuery('[search_field="mat.ingredients"]').select2({
-			allowClear: true,
-			multiple: true,
-			width: "100%",
-			ajax: {
-				delay: 250
-				,url: '/ajax/getAll'
-				,type: 'GET'
-				,data: function (params) {
-					return {"searchTxt": 'name like ?', 'searchParams': ['%' + params + '%'], 'entityName': 'Ingredient', 'pageNo': 1};
-				}
-				,results: function(data, page, query) {
-					tmp.result = [];
-					if(data.resultData && data.resultData.items) {
-						data.resultData.items.each(function(item){
-							tmp.result.push({'id': item.id, 'text': item.name, 'data': item});
-						});
-					}
-					return { 'results' : tmp.result };
-				}
-			}
-			,cache: true
-			,escapeMarkup: function (markup) { return markup; } // let our custom formatter work
-		});
-		
-		tmp.selectBox = jQuery('[search_field="mat.nutritions"]').select2({
-			allowClear: true,
-			multiple: true,
-			width: "100%",
-			ajax: {
-				delay: 250
-				,url: '/ajax/getAll'
-				,type: 'GET'
-				,data: function (params) {
-					return {"searchTxt": 'name like ?', 'searchParams': ['%' + params + '%'], 'entityName': 'Nutrition', 'pageNo': 1};
-				}
-				,results: function(data, page, query) {
-					tmp.result = [];
-					if(data.resultData && data.resultData.items) {
-						data.resultData.items.each(function(item){
-							tmp.result.push({'id': item.id, 'text': item.name, 'data': item});
-						});
-					}
-					return { 'results' : tmp.result };
-				}
-			}
-			,cache: true
-			,escapeMarkup: function (markup) { return markup; } // let our custom formatter work
-		});
-	}
-	,_getNutritionNameString: function(row) {
-		var tmp = {};
-		tmp.me = this;
-		tmp.result = '';
-		tmp.names = [];
-		tmp.glue = ', ';
-		
-		if(row.infos.material_nutrition && Array.isArray(row.infos.material_nutrition) && row.infos.material_nutrition.length > 0) {
-			row.infos.material_nutrition.each(function(item){
-				if(item.nutrition && item.nutrition.name) {
-					tmp.name = item.nutrition.name;
-					if(item.qty && item.serveMeasurement && item.serveMeasurement.name)
-						tmp.name += '(' + item.qty + ' ' + item.serveMeasurement.name + ')';
-					tmp.names.push(tmp.name);
-				}
-			});
-		}
-		
-		if(tmp.names.length > 0)
-			tmp.result = tmp.names.join(tmp.glue);
-		return tmp.result;
+	_getTitleRowData: function() {
+		this._titleRowData.serverMeasurement = {'ServeMeasurement': {'name': 'Server Measurement'}};
+		this._titleRowData.unitPrice = 'Unit Price';
+		return this._titleRowData;
 	}
 	,_getResultRow: function(row, isTitle) {
 		var tmp = {};
 		tmp.me = this;
+		console.debug(row);
 		tmp.isTitle = (isTitle || false);
 		tmp.tag = (tmp.isTitle === true ? 'strong' : 'span');
 		tmp.row = new Element('span', {'class': 'row'})
@@ -99,8 +22,8 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 			.writeAttribute('item_id', row.id)
 			.insert({'bottom': new Element(tmp.tag, {'class': 'name col-sm-4 col-xs-12'}).update(row.name) })
 			.insert({'bottom': new Element(tmp.tag, {'class': 'description col-sm-2 col-xs-12'}).update(row.description) })
-			.insert({'bottom': new Element(tmp.tag, {'class': 'ingredients col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Ingredients' : tmp.me._getNamesString(row.infos.ingredients)) })
-			.insert({'bottom': new Element(tmp.tag, {'class': 'nutritions col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Nutritions' : tmp.me._getNutritionNameString(row) ) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'serverMeasurement col-sm-2 col-xs-12'}).update(row.serverMeasurement.ServeMeasurement.name) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'unitPrice col-sm-2 col-xs-12'}).update(row.unitPrice) })
 			.insert({'bottom': new Element(tmp.tag, {'class': 'text-right btns col-sm-2 col-xs-12'}).update(
 				tmp.isTitle === true ?  
 					(new Element('span', {'class': 'btn btn-primary btn-xs', 'title': 'New'})

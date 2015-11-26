@@ -12,12 +12,12 @@ class DetailsController extends DetailsPageAbstract
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$menuItem
 	 */
-	public $menuItem = 'material.detail';
+	public $menuItem = 'rawmaterial.detail';
 	/**
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$_focusEntityName
 	 */
-	protected $_focusEntity = 'Material';
+	protected $_focusEntity = 'RawMaterial';
 	/**
 	 * constructor
 	 */
@@ -39,16 +39,12 @@ class DetailsController extends DetailsPageAbstract
 		$js .= "pageJs._containerIds=" . json_encode(array(
 				'name' => 'name_div'
 				,'description' => 'description_div'
-				,'ingredients' => 'ingredients_div'
-				,'new_material_nutrition' => 'new_material_nutrition_div'
-				,'material_nutrition' => 'material_nutrition_div'
+				,'serverMeasurement' => 'serverMeasurement_div'
+				,'unitPrice' => 'unitPrice_div'
 				,'comments' => 'comments_div'
 				,'saveBtn' => 'save_btn'
 		)) . ";";
-		$js .= "pageJs.setNutrition(" . json_encode(array_map(create_function('$a', 'return $a->getJson();'), Nutrition::getAll())) . ")";
-		    $js .= ".setServeMeasurements(" . json_encode(array_map(create_function('$a', 'return $a->getJson();'), ServeMeasurement::getAll())) . ")";
-		    $js .= ".load();";
-		$js .= "pageJs.bindAllEventNObjects();";
+	    $js .= "pageJs.load();";
 		if(!AccessControl::canEditAllergentDetailPage(Core::getRole()))
 			$js .= "pageJs.readOnlyMode();";
 		return $js;
@@ -68,49 +64,30 @@ class DetailsController extends DetailsPageAbstract
 		try
 		{
 			$focusEntity = $this->getFocusEntity();
+			
+			$entity = null;
+			if (isset ( $params->CallbackParameter->id ) && !($entity = $focusEntity::get(intval($params->CallbackParameter->id))) instanceof $focusEntity )
+				throw new Exception ( 'System Error: invalid id passed in.' );
+			
 			if (!isset ( $params->CallbackParameter->name ) || ($name = trim ( $params->CallbackParameter->name )) === '')
 				throw new Exception ( 'System Error: invalid name passed in.' );
+			if(!isset($params->CallbackParameter->serveMeasurement) || !($serveMeasurement = ServeMeasurement::get(intval($params->CallbackParameter->serveMeasurement))) instanceof ServeMeasurement)
+				throw new Exception ( 'System Error: invalid Serve Measurement (unit) passed in.' );
 			$description = '';
 			if (isset ( $params->CallbackParameter->description ) )
 				$description = trim($params->CallbackParameter->description);
-			$ingredientIds = array();
-			if (isset ( $params->CallbackParameter->ingredients ) && ($tmp = trim($params->CallbackParameter->ingredients)) !== '' )
-				$ingredientIds = explode(',', $tmp);
-			if (isset ( $params->CallbackParameter->id ) && !($entity = $focusEntity::get(intval($params->CallbackParameter->id))) instanceof $focusEntity )
-				throw new Exception ( 'System Error: invalid id passed in.' );
-
-			$ingredients = array();
-			foreach ($ingredientIds as $ingredientId)
-			{
-				if(($ingredientId = intval($ingredientId)) !== 0 && ($ingredient = Ingredient::get($ingredientId)) instanceof Ingredient)
-					$ingredients[] = $ingredient;
-			}
-
-			$material_nutritions = array();
-			foreach ($params->CallbackParameter->material_nutrition as $material_nutrition)
-			{
-				if (!isset ($material_nutrition->nutrition) || ($nutritionId = intval( $material_nutrition->nutrition )) === 0 || !($nutrition = Nutrition::get($nutritionId)) instanceof Nutrition)
-					continue;
-				if (!isset ($material_nutrition->qty) || ($qty = trim ( $material_nutrition->qty )) === '')
-					continue;
-				if (!isset ($material_nutrition->serveMeasurement) || ($serveMeasurementId = intval ( $material_nutrition->serveMeasurement )) === 0 || !($serveMeasurement = ServeMeasurement::get($serveMeasurementId)) instanceof ServeMeasurement)
-					continue;
-				$material_nutritions[] = array('nutrition' => $nutrition, 'qty' => $qty, 'serveMeasurement' => $serveMeasurement);
-			}
-
+			$unitPrice = doubleval(0);
+			if (isset ( $params->CallbackParameter->unitPrice ) )
+				$unitPrice = StringUtilsAbstract::getValueFromCurrency($params->CallbackParameter->unitPrice);
+			
 			Dao::beginTransaction();
 
 			if(!isset($entity) || !$entity instanceof $focusEntity)
-				$entity = $focusEntity::createWithParams($name, $description, $ingredients);
-			else {
-				$entity->setName($name)->setDescription($description)->clearIngredients();
-				foreach ($ingredients as $ingredient)
-					$entity->addIngredient($ingredient);
-			}
-
-			$entity->clearMaterialNutrition();
-			foreach ($material_nutritions as $material_nutrition)
-				$entity->addNutrition($material_nutrition['nutrition'], $material_nutrition['qty'], $material_nutrition['serveMeasurement']);
+				$entity = $focusEntity::create($name, $description);
+			else
+				$entity->setName($name)->setDescription($description);
+			
+			$entity->clearServeMeasurements()->addServeMeasurement($serveMeasurement, $unitPrice);
 
 			$results ['item'] = $entity->save()->getJson ();
 			Dao::commitTransaction ();

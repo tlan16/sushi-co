@@ -12,8 +12,8 @@ class ListController extends CRUDPageAbstract
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$menuItem
 	 */
-	public $menuItem = 'material';
-	protected $_focusEntity = 'Material';
+	public $menuItem = 'rawmaterial';
+	protected $_focusEntity = 'RawMaterial';
 	/**
 	 * constructor
 	 */
@@ -70,8 +70,8 @@ class ListController extends CRUDPageAbstract
 				$query = $class::getQuery();
 				switch ($field)
 				{
-					case 'mat.name':
-					case 'mat.description':
+					case 'raw_mat.name':
+					case 'raw_mat.description':
 						{
 							$searchTokens = array();
 							StringUtilsAbstract::permute(preg_split("/[\s,]+/", $value), $searchTokens);
@@ -85,7 +85,7 @@ class ListController extends CRUDPageAbstract
 							$where[] = '(' . implode(' OR ', $likeArray) . ')';
 							break;
 						}
-					case 'mat.active':
+					case 'raw_mat.active':
 						{
 							$value = intval($value);
 							if($value === 0 || $value === 1)
@@ -95,7 +95,7 @@ class ListController extends CRUDPageAbstract
 							}
 							break;
 						}
-					case 'mat.ingredients':
+					case 'raw_mat.ingredients':
 						{
 							$ingredients = explode(',', trim($value));
 							if(count($value) > 0)
@@ -109,20 +109,20 @@ class ListController extends CRUDPageAbstract
 								}
 								$key = md5($field . '_' . 'entityName');
 								$ps[$key] = 'Ingredient';
-								$query->eagerLoad('Material.infos', 'inner join', 'mat_info_ingr', 'mat.id = mat_info_ingr.materialId and mat_info_ingr.entityName = :' . $key . ' and mat_info_ingr.entityId in (' . implode(',', $keys) . ')');
+								$query->eagerLoad('Material.infos', 'inner join', 'mat_info_ingr', 'raw_mat.id = mat_info_ingr.materialId and mat_info_ingr.entityName = :' . $key . ' and mat_info_ingr.entityId in (' . implode(',', $keys) . ')');
 								$params = array_merge($params, $ps);
 							}
 							break;
 						}
-					case 'mat.serveMeasurements':
+					case 'raw_mat.serveMeasurements':
 						{
 							break;
 						}
-					case 'mat.nutritions':
+					case 'raw_mat.nutritions':
 						{
 							break;
 						}
-					case 'mat.qty':
+					case 'raw_mat.qty':
 						{
 							break;
 						}

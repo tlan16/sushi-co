@@ -6,9 +6,8 @@
 	<div class="pagewrapper productdetailswraper" id='item-div'>
 		<div id='name_div'></div>
 		<div id='description_div'></div>
-		<div id='ingredients_div'></div>
-		<div id='new_material_nutrition_div'></div>
-		<div id='material_nutrition_div'></div>
+		<div id='serverMeasurement_div'></div>
+		<div id='unitPrice_div'></div>
 		<div id='comments_div'></div>
 		<div id='save_btn'></div>
 	</div>

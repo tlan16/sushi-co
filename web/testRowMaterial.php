@@ -15,10 +15,6 @@ function readData($filePath)
 }
 function importRowData($filePath)
 {
-	// create RawMaterialInfoTypes
-	RawMaterialInfoType::create('Serve Measurement');
-	RawMaterialInfoType::create('Cost');
-	
 	$data = readData($filePath);
 	foreach ($data as $row)
 	{
