@@ -26,7 +26,7 @@ class Menu extends TTemplateControl
 				'icon' => '<span class="glyphicon glyphicon-tag"></span>'
 			)
 		);
-		if(AccessControl::canAccessResourcePage(Core::getRole()) === true) {
+		if (AccessControl::canAccessResourcePage(Core::getRole()) === true) {
 		    $array['Resources'] = array(
 				'icon' => '<span class="glyphicon glyphicon-th-list"></span>'
 				,'ingredients' => array('url' => '/ingredients.html', 'name' => 'Ingredients', 'icon' => '')
@@ -40,11 +40,12 @@ class Menu extends TTemplateControl
 				,'rawmaterial' => array('url' => '/rawmaterials.html', 'name' => 'Raw Materials', 'icon' => '')
 			);
 		}
-		if(AccessControl::canAccessUserPage(Core::getRole()) === true) {
+		if (AccessControl::canAccessUserPage(Core::getRole()) === true) {
     		$array['System'] = array(
 				'icon' => '<span class="glyphicon glyphicon-cog"></span>'
 				,'useraccounts' => array('url' => '/useraccounts.html', 'name' => 'User Accounts', 'icon' => '')
 				,'stores' => array('url' => '/stores.html', 'name' => 'Stores', 'icon' => '')
+				,'messages' => array('url' => '/messages.html', 'name' => 'Messages', 'icon' => '')
 			);
 		}
 		$array['help'] = array(
@@ -53,19 +54,16 @@ class Menu extends TTemplateControl
 			'icon' => '<span class="glyphicon glyphicon-info-sign"></span>'
 		);
 		$html = "<ul class='nav navbar-nav'>";
-			foreach($array as $key => $item)
-			{
+			foreach ($array as $key => $item) {
 				$hasNextLevel = !isset($item['name']) && is_array($item) && count($item) > 0;
 				$activeClass = ($pageItem === $key || array_key_exists($pageItem, $item) ? 'active' : '');
 				$html .= "<li class='" . $activeClass . " visible-xs visible-sm visible-md visible-lg'>";
 				$html .= "<a href='" . ($hasNextLevel === true ? '#' : $item['url']) . "' " . ($hasNextLevel === true ? 'class="dropdown-toggle" data-toggle="dropdown"' : '') . ">";
 					$html .= (isset($item['icon']) ? $item['icon'] . ' ' : '') . ($hasNextLevel === true ? $key .'<span class="caret"></span>' : $item['name']);
 				$html .= "</a>";
-					if($hasNextLevel === true)
-					{
+					if ($hasNextLevel === true) {
 						$html .= "<ul class='dropdown-menu'>";
-						foreach($item as $k => $i)
-						{
+						foreach ($item as $k => $i) {
 							if(is_string($i) || !isset($i['url']))
 								continue;
 							$html .= "<li class='" . ($pageItem === $k ? 'active' : '') . "'><a href='" . $i['url'] . "'>" . (isset($i['icon']) ? $i['icon'] . ' ' : '') .$i['name'] . "</a></li>";
