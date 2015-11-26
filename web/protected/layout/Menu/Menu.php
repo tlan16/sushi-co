@@ -48,6 +48,11 @@ class Menu extends TTemplateControl
 				,'messages' => array('url' => '/messages.html', 'name' => 'Messages', 'icon' => '')
 			);
 		}
+		$array['stocktake'] = array(
+		        'name' => 'Stocktake',
+		        'url' => '/stocktake.html',
+		        'icon' => '<span class="glyphicon glyphicon-tag"></span>'
+		);
 		$array['help'] = array(
 			'name' => 'Help',
 			'url' => '/help.html',

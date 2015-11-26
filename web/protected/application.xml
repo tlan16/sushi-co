@@ -23,6 +23,9 @@
 			<!-- FrontEnd:: Help page -->
 			<url ServiceParameter="Help.ListController" pattern="help.html" />
 
+			<!-- FrontEnd:: Stocktake list page -->
+			<url ServiceParameter="Stocktake.List.ListController" pattern="stocktake.html" />
+
 			<!-- FrontEnd:: RawMaterial list page -->
 			<url ServiceParameter="RawMaterial.List.ListController" pattern="rawmaterials.html" />
 			<!-- FrontEnd:: RawMaterial Detail page -->
