@@ -29,17 +29,22 @@ class Menu extends TTemplateControl
 		if(AccessControl::canAccessResourcePage(Core::getRole()) === true) {
 		    $array['Resources'] = array(
 				'icon' => '<span class="glyphicon glyphicon-th-list"></span>'
-				,'ingredients' => array('url' => '/ingredients.html', 'name' => 'Ingredients', 'icon' => '')
-				,'allergents' => array('url' => '/allergents.html', 'name' => 'Allergents', 'icon' => '')
-				,'nutritions' => array('url' => '/nutritions.html', 'name' => 'Nutritions', 'icon' => '')
-				,'servemeasurements' => array('url' => '/servemeasurements.html', 'name' => 'Serve Measurements', 'icon' => '')
+				,'ingredient' => array('url' => '/ingredients.html', 'name' => 'Ingredients', 'icon' => '')
+				,'allergent' => array('url' => '/allergents.html', 'name' => 'Allergents', 'icon' => '')
+				,'nutrition' => array('url' => '/nutritions.html', 'name' => 'Nutritions', 'icon' => '')
+				,'serve_measurement' => array('url' => '/servemeasurements.html', 'name' => 'Serve Measurements', 'icon' => '')
 // 				,'labels' => array('url' => '/labels.html', 'name' => 'Labels', 'icon' => '')
-				,'materials' => array('url' => '/materials.html', 'name' => 'Materials', 'icon' => '')
+				,'material' => array('url' => '/materials.html', 'name' => 'Materials', 'icon' => '')
 // 				,'addresses' => array('url' => '/addresses.html', 'name' => 'Addresses', 'icon' => '')
-				,'categorie' => array('url' => '/categories.html', 'name' => 'Category', 'icon' => '')
+				,'category' => array('url' => '/categories.html', 'name' => 'Category', 'icon' => '')
 				,'rawmaterial' => array('url' => '/rawmaterials.html', 'name' => 'Raw Materials', 'icon' => '')
 			);
 		}
+		$array['stocktake'] = array(
+			'name' => 'Stocktake',
+			'url' => '/stocktake.html',
+			'icon' => '<span class="glyphicon glyphicon-tag"></span>'
+		);
 		if(AccessControl::canAccessUserPage(Core::getRole()) === true) {
     		$array['System'] = array(
 				'icon' => '<span class="glyphicon glyphicon-cog"></span>'
