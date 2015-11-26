@@ -8,9 +8,8 @@
  */
 class SystemSettings extends BaseEntityAbstract
 {
-	CONST TYPE_FORUM_API_REST = "forum_api_rest";
-	CONST TYPE_FORUM_API_REST_USERNAME = "forum_api_rest_username";
-	CONST TYPE_FORUM_API_REST_PASSWORD = "forum_api_rest_password";
+	const TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL = 'sys_email_addr';
+	const TYPE_EMAIL_SENDING_SERVER = 'sending_server_conf';
 	/**
 	 * The value of the setting
 	 * 

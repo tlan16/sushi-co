@@ -1,0 +1,50 @@
+<com:TContent ID="MainContent">
+<com:Application.controls.select2.select2 />
+<com:Application.controls.fancybox.FancyBox />
+<com:TCallback ID="stocktakeBtn" OnCallback="stocktake" />
+	<div class="pagewrapper item-list-wrapper">
+		<div class="panel panel-default hidden" id="searchPanel">
+			<div class="panel-heading">
+				<label for="showSearch">Show Search Criteria?</label>
+				<input id="showSearch" type="checkbox" checked onclick="$(this).up('#searchPanel').down('.panel-body').toggle();$(this).up('#searchPanel').down('#searchBtn').toggle();">
+				<span id="searchBtn" class="pull-right btn btn-primary btn-sm" data-loading-text="searching ..." onclick="pageJs.getSearchCriteria().getResults(true, <%= $this->pageSize %>);" >Search</span>
+			</div>
+			<div class="panel-body search-panel" style="/**display: none;**/">
+				<div class="row">
+					<div class="col-md-5">
+						<div class="form-group form-group-sm input-group">
+                           <label for="raw_mat.name" class="input-group-addon">Name:</label>
+                           <input type="text" class="form-control input-sm" search_field="raw_mat.name" placeholder="The Name of the <%= $this->getFocusEntity() %>">
+                       </div>
+					</div>
+					<div class="col-md-5">
+						<div class="form-group form-group-sm input-group">
+                           <label for="raw_mat.description" class="input-group-addon">Description:</label>
+                           <input type="text" class="form-control input-sm" search_field="raw_mat.description" placeholder="The Description of the <%= $this->getFocusEntity() %>">
+                       </div>
+					</div>
+					<div class="col-md-2">
+						<div class="form-group form-group-sm input-group">
+                           <label for="raw_mat.active" class="control-label input-group-addon">Active?</label>
+                           <select class="form-control input-sm select2" search_field="raw_mat.active" data-minimum-results-for-search="Infinity" data-width="100%">
+                           		<option value="1">YES</option>
+                           		<option value="0">NO</option>
+                           		<option value="3">ALL</option>
+                           </select>
+                       </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading" style="min-height:30px;">
+				<label class="hidden" id="total-found-count">0</label>
+				<i type="submit" class="pull-right btn btn-md btn-success" style="padding: 3px 9px; margin-top: -5px;">Submit</i>
+				Stock Take Form
+			</div>
+			<div class="panel-body" style="padding: 0;">
+                <div id="item-list" style="margin-bottom: 0;"></div>
+            </div>
+		</div> 
+	</div>
+</com:TContent>
