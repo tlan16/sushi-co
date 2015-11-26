@@ -37,7 +37,7 @@ class Menu extends TTemplateControl
 				,'materials' => array('url' => '/materials.html', 'name' => 'Materials', 'icon' => '')
 // 				,'addresses' => array('url' => '/addresses.html', 'name' => 'Addresses', 'icon' => '')
 				,'categorie' => array('url' => '/categories.html', 'name' => 'Category', 'icon' => '')
-				,'rawmaterial' => array('url' => '/rawmaterials.html', 'name' => 'RawMaterial', 'icon' => '')
+				,'rawmaterial' => array('url' => '/rawmaterials.html', 'name' => 'Raw Materials', 'icon' => '')
 			);
 		}
 		if(AccessControl::canAccessUserPage(Core::getRole()) === true) {
