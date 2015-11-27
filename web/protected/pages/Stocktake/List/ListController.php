@@ -41,8 +41,40 @@ class ListController extends CRUDPageAbstract
 		$result = $errors = array();
 		try
 		{
-			var_dump($param->CallbackParameter);
-// 			if(!isset($param->CallbackParameter));
+// 			print_r($param->CallbackParameter);
+			if(!is_array($data = $param->CallbackParameter) || count($data) === 0)
+				throw new Exception('Invalid Form Data');
+			foreach ($data as $row)
+			{
+				if(!isset($row->item) || !isset($row->item->id) || !($rawMaterial = RawMaterial::get($row->item->id)) instanceof RawMaterial
+					|| !isset($row->item->serverMeasurement) || !isset($row->item->serverMeasurement->id) || !($info = RawMaterialInfo::get($row->item->serverMeasurement->id)) instanceof RawMaterialInfo )
+					continue;
+				
+				$unitPrice = $info->getValue();
+				$serveMeasurement = ServeMeasurement::get(intval($info->getEntityId()));
+				if($info->getEntityName() !== 'ServeMeasurement' || !$serveMeasurement instanceof ServeMeasurement)
+					continue;
+					
+				$stocktakeShop = 0;
+				if(isset($row->stocktakeShop))
+					$stocktakeShop = doubleval($row->stocktakeShop);
+				
+				$stocktakeStoreRoom = 0;
+				if(isset($row->stocktakeStoreRoom))
+					$stocktakeStoreRoom = doubleval($row->stocktakeStoreRoom);
+				
+				$result[] = array('Raw Material' => $rawMaterial->getName(), 
+									'Unit' => $serveMeasurement->getName(), 
+									'Unit Price' => $unitPrice,
+									'Shop Qty' => $stocktakeShop,
+									'Store Room Qty' => $stocktakeStoreRoom
+				);
+			}
+			array_unshift($result, array_keys($result[0])); // header row
+			$objPHPExcel = new PHPExcel();
+			$objPHPExcel->getActiveSheet()->fromArray($result, NULL, 'A1');
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV');
+			$objWriter->save('test.csv');
 		}
 		catch(Exception $ex)
 		{

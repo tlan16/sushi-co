@@ -20,7 +20,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		tmp.btn.observe('click', function(){
 			if(tmp.btn.readAttribute('disabled'))
 				return tmp.me;
-			tmp.btn.writeAttribute('disabled', true);
+//			tmp.btn.writeAttribute('disabled', true);
 			tmp.me._submit(tmp.me._collectData());
 		});
 		return tmp.me;
