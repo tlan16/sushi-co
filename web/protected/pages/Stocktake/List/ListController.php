@@ -43,6 +43,7 @@ class ListController extends CRUDPageAbstract
 		{
 			if(!is_array($data = $param->CallbackParameter) || count($data) === 0)
 				throw new Exception('Invalid Form Data');
+			$dataArray = array();
 			foreach ($data as $row) {
 				if (!isset($row->item) || !isset($row->item->id)
 					|| !($rawMaterial = RawMaterial::get($row->item->id)) instanceof RawMaterial
@@ -65,7 +66,7 @@ class ListController extends CRUDPageAbstract
 				if(isset($row->stocktakeStoreRoom))
 					$stocktakeStoreRoom = doubleval($row->stocktakeStoreRoom);
 
-				$result[] = array('Raw Material' => $rawMaterial->getName(),
+				$dataArray[] = array('Raw Material' => $rawMaterial->getName(),
 									'Unit' => $serveMeasurement->getName(),
 									'Unit Price' => StringUtilsAbstract::getValueFromCurrency($unitPrice),
 									'Shop Qty' => $stocktakeShop,
@@ -75,7 +76,7 @@ class ListController extends CRUDPageAbstract
 // 			array_unshift($result, array_keys($result[0])); // header row
 			$filePath = '/tmp/test.xls';
 			$title = "Stock Take for [" . Core::getStore()->getName() . ']';
-			$this->_genFile($filePath, $title, $result);
+			$this->_genFile($filePath, $title, $dataArray);
 			if(!is_file($filePath))
 			    throw new Exception("No file can't generated.");
 			$to = 'helin16@gmail.com';
@@ -84,6 +85,8 @@ class ListController extends CRUDPageAbstract
 			$assets = array(Asset::registerAsset(basename($filePath), file_get_contents($filePath), Asset::TYPE_TMP));
 			EmailSender::addEmail('', $to, $subject, $body, $assets);
 			unlink($filePath);
+			
+			$result['success'] = true;
 		}
 		catch(Exception $ex)
 		{
