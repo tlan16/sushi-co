@@ -41,15 +41,18 @@ class ListController extends CRUDPageAbstract
 		$result = $errors = array();
 		try
 		{
-// 			print_r($param->CallbackParameter);
 			if(!is_array($data = $param->CallbackParameter) || count($data) === 0)
 				throw new Exception('Invalid Form Data');
 			foreach ($data as $row) {
-				if(!isset($row->item) || !isset($row->item->id) || !($rawMaterial = RawMaterial::get($row->item->id)) instanceof RawMaterial
-					|| !isset($row->item->serverMeasurement) || !isset($row->item->serverMeasurement->id) || !($info = RawMaterialInfo::get($row->item->serverMeasurement->id)) instanceof RawMaterialInfo )
+				if (!isset($row->item) || !isset($row->item->id)
+					|| !($rawMaterial = RawMaterial::get($row->item->id)) instanceof RawMaterial
+					|| !isset($row->item->serverMeasurement) 
+					|| !isset($row->item->serverMeasurement->id) 
+					|| !($info = RawMaterialInfo::get($row->item->serverMeasurement->id)) instanceof RawMaterialInfo
+				)
 					continue;
 
-				$unitPrice = $info->getValue();
+				$unitPrice = StringUtilsAbstract::getCurrency($info->getValue());
 				$serveMeasurement = ServeMeasurement::get(intval($info->getEntityId()));
 				if($info->getEntityName() !== 'ServeMeasurement' || !$serveMeasurement instanceof ServeMeasurement)
 					continue;
@@ -64,31 +67,91 @@ class ListController extends CRUDPageAbstract
 
 				$result[] = array('Raw Material' => $rawMaterial->getName(),
 									'Unit' => $serveMeasurement->getName(),
-									'Unit Price' => $unitPrice,
+									'Unit Price' => StringUtilsAbstract::getValueFromCurrency($unitPrice),
 									'Shop Qty' => $stocktakeShop,
 									'Store Room Qty' => $stocktakeStoreRoom
 				);
 			}
-			array_unshift($result, array_keys($result[0])); // header row
-			$objPHPExcel = new PHPExcel();
-			$objPHPExcel->getActiveSheet()->fromArray($result, NULL, 'A1');
-			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV');
-			$filePath = '/tmp/test.csv';
-			$objWriter->save($filePath);
-
+// 			array_unshift($result, array_keys($result[0])); // header row
+			$filePath = '/tmp/test.xls';
+			$title = "Stock Take for [" . Core::getStore()->getName() . ']';
+			$this->_genFile($filePath, $title, $result);
 			if(!is_file($filePath))
 			    throw new Exception("No file can't generated.");
 			$to = 'helin16@gmail.com';
-			$subject = "Stock Take for [" . Core::getStore()->getName() . ']';
+			$subject = $title;
 			$body = $subject . "\n An Stocktake has been submitted by " . Core::getUser()->getPerson()->getFullName() . "\n Please see attached file for details.";
 			$assets = array(Asset::registerAsset(basename($filePath), file_get_contents($filePath), Asset::TYPE_TMP));
 			EmailSender::addEmail('', $to, $subject, $body, $assets);
+			unlink($filePath);
 		}
 		catch(Exception $ex)
 		{
 			$errors[] = $ex->getMessage();
 		}
 		$param->ResponseData = StringUtilsAbstract::getJson($result, $errors);
+	}
+	private function _genFile($filePath, $title, array $data = array())
+	{
+		$objPHPExcel = new PHPExcel();
+		$objPHPExcel->getProperties()
+			->setTitle($title)
+			->setSubject($title)
+			->setDescription($title);
+		
+		$activeSheet = $objPHPExcel->setActiveSheetIndex(0);
+		$startColNo = 1;
+		$rowNo = 1;
+		$colNo = $startColNo;
+		//store row
+		$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, 'SUSHI STOCKTAKE SHEET')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Store:')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, Core::getStore()->getName())
+			->mergeCellsByColumnAndRow($colNo, $rowNo, $colNo + 3, $rowNo);
+		//date row
+		$rowNo++;
+		$colNo = $startColNo;
+		$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, '')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Date:')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, UDate::now()->format('d/m/Y'))
+			->mergeCellsByColumnAndRow($colNo, $rowNo, $colNo + 3, $rowNo);
+		//title row
+		$rowNo++;
+		$colNo = $startColNo;
+		$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, 'Product')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Unit')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Cost')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Stocktak Qty (Shop)')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Stocktak Qty (Store Room)')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Value');
+		$totalValueSum = 0;
+		foreach($data as $rowData) {
+			$rowNo++;
+			$colNo = $startColNo;
+			$unitPrice = StringUtilsAbstract::getValueFromCurrency($rowData['Unit']);
+			$totalValue = (intval($rowData['Shop Qty']) + intval($rowData['Store Room Qty'])) * $unitPrice;
+			$totalValueSum += $totalValue;
+			$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Raw Material'])
+				->setCellValueByColumnAndRow($colNo++, $rowNo, StringUtilsAbstract::getCurrency($rowData['Unit']))
+				->setCellValueByColumnAndRow($colNo++, $rowNo, StringUtilsAbstract::getCurrency($unitPrice))
+				->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Shop Qty'])
+				->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Store Room Qty'])
+				->setCellValueByColumnAndRow($colNo++, $rowNo, StringUtilsAbstract::getCurrency($totalValue));
+		}
+		$rowNo++;
+		$colNo = $startColNo;
+		$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, 'Total')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
+			->setCellValueByColumnAndRow($colNo++, $rowNo, StringUtilsAbstract::getCurrency($totalValueSum));
+	
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		$objWriter->save($filePath);
+		return $this;
 	}
 	/**
 	 * Getting the items
