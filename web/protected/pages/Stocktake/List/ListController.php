@@ -44,27 +44,26 @@ class ListController extends CRUDPageAbstract
 // 			print_r($param->CallbackParameter);
 			if(!is_array($data = $param->CallbackParameter) || count($data) === 0)
 				throw new Exception('Invalid Form Data');
-			foreach ($data as $row)
-			{
+			foreach ($data as $row) {
 				if(!isset($row->item) || !isset($row->item->id) || !($rawMaterial = RawMaterial::get($row->item->id)) instanceof RawMaterial
 					|| !isset($row->item->serverMeasurement) || !isset($row->item->serverMeasurement->id) || !($info = RawMaterialInfo::get($row->item->serverMeasurement->id)) instanceof RawMaterialInfo )
 					continue;
-				
+
 				$unitPrice = $info->getValue();
 				$serveMeasurement = ServeMeasurement::get(intval($info->getEntityId()));
 				if($info->getEntityName() !== 'ServeMeasurement' || !$serveMeasurement instanceof ServeMeasurement)
 					continue;
-					
+
 				$stocktakeShop = 0;
 				if(isset($row->stocktakeShop))
 					$stocktakeShop = doubleval($row->stocktakeShop);
-				
+
 				$stocktakeStoreRoom = 0;
 				if(isset($row->stocktakeStoreRoom))
 					$stocktakeStoreRoom = doubleval($row->stocktakeStoreRoom);
-				
-				$result[] = array('Raw Material' => $rawMaterial->getName(), 
-									'Unit' => $serveMeasurement->getName(), 
+
+				$result[] = array('Raw Material' => $rawMaterial->getName(),
+									'Unit' => $serveMeasurement->getName(),
 									'Unit Price' => $unitPrice,
 									'Shop Qty' => $stocktakeShop,
 									'Store Room Qty' => $stocktakeStoreRoom
@@ -74,7 +73,17 @@ class ListController extends CRUDPageAbstract
 			$objPHPExcel = new PHPExcel();
 			$objPHPExcel->getActiveSheet()->fromArray($result, NULL, 'A1');
 			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV');
-			$objWriter->save('test.csv');
+			$filePath = 'test.csv';
+			$objWriter->save($filePath);
+
+			if(!is_file($filePath))
+			    throw new Exception("No file can't generated.");
+			$to = 'ljddfoodsupply@gmail.com';
+			$subject = "Stock Take for [" . Core::getStore()->getName() . ']';
+			$body = $subject . "\n An Stocktake has been submitted by " . Core::getUser()->getPerson()->getFullName() . "\n Please see attached file for details.";
+			$assetId = Asset::registerAsset(basename($filePath), $filePath, Asset::TYPE_TMP);
+			$assets = Asset::getAllByCriteria('assetId = ?', array($assetId));
+			EmailSender::addEmail('', $to, $subject, $body, $assets);
 		}
 		catch(Exception $ex)
 		{
