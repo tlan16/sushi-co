@@ -73,7 +73,7 @@ class ListController extends CRUDPageAbstract
 			$objPHPExcel = new PHPExcel();
 			$objPHPExcel->getActiveSheet()->fromArray($result, NULL, 'A1');
 			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'CSV');
-			$filePath = 'test.csv';
+			$filePath = '/tmp/test.csv';
 			$objWriter->save($filePath);
 
 			if(!is_file($filePath))
