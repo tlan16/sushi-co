@@ -134,7 +134,7 @@ class ListController extends CRUDPageAbstract
 			$totalValue = (intval($rowData['Shop Qty']) + intval($rowData['Store Room Qty'])) * $unitPrice;
 			$totalValueSum += $totalValue;
 			$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Raw Material'])
-				->setCellValueByColumnAndRow($colNo++, $rowNo, StringUtilsAbstract::getCurrency($rowData['Unit']))
+				->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Unit'])
 				->setCellValueByColumnAndRow($colNo++, $rowNo, StringUtilsAbstract::getCurrency($unitPrice))
 				->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Shop Qty'])
 				->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Store Room Qty'])

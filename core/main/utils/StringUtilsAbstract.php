@@ -53,7 +53,7 @@ abstract class StringUtilsAbstract
 	 */
 	public static function getCurrency($currencyValue, $prefix = '$', $decimal = '.', $thousand = ',')
 	{
-		return $prefix . number_format($currencyValue, 2, $decimal, $thousand);
+		return $prefix . number_format(doubleval($currencyValue), 2, $decimal, $thousand);
 	}
 	/**
 	 * Tokenizing a string
