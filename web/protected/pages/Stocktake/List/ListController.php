@@ -111,7 +111,7 @@ class ListController extends CRUDPageAbstract
 			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
 			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Store:')
 			->setCellValueByColumnAndRow($colNo++, $rowNo, Core::getStore()->getName())
-			->mergeCellsByColumnAndRow($colNo, $rowNo, $colNo + 3, $rowNo);
+			->mergeCellsByColumnAndRow($colNo - 1, $rowNo, $colNo + 3, $rowNo);
 		//date row
 		$rowNo++;
 		$colNo = $startColNo;
@@ -119,7 +119,7 @@ class ListController extends CRUDPageAbstract
 			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
 			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Date:')
 			->setCellValueByColumnAndRow($colNo++, $rowNo, UDate::now()->format('d/m/Y'))
-			->mergeCellsByColumnAndRow($colNo, $rowNo, $colNo + 3, $rowNo);
+			->mergeCellsByColumnAndRow($colNo - 1, $rowNo, $colNo + 3, $rowNo);
 		//title row
 		$rowNo++;
 		$colNo = $startColNo;
