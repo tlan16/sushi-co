@@ -34,7 +34,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 				try {
 					tmp.result = tmp.me.getResp(param, false, true);
 					if (tmp.result && tmp.result.email && tmp.result.asset) {
-						tmp.me.showModalBox('Success', '<b class="success">An email will be send to :' + tmp.result.email + '</b>With an attached excel: <a href="' + asset.url + '" target="__BLANK">' + asset.filename + '</a>' );
+						tmp.me.showModalBox('Success', '<b class="success">An email will be send to :' + tmp.result.email + '</b>With an attached excel: <a href="' + tmp.result.asset.url + '" target="__BLANK">' + tmp.result.asset.filename + '</a>' );
 					}
 				} catch (e) {
 					tmp.me.showModalBox('Error', '<pre>' + e + '</pre>');
