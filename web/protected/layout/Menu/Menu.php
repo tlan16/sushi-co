@@ -46,6 +46,7 @@ class Menu extends TTemplateControl
 				,'useraccounts' => array('url' => '/useraccounts.html', 'name' => 'User Accounts', 'icon' => '')
 				,'stores' => array('url' => '/stores.html', 'name' => 'Stores', 'icon' => '')
 				,'messages' => array('url' => '/messages.html', 'name' => 'Messages', 'icon' => '')
+				,'systemsettings' => array('url' => '/systemsettings.html', 'name' => 'System Settings', 'icon' => '')
 			);
 		}
 		$array['stocktake'] = array(
