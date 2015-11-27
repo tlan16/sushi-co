@@ -74,7 +74,7 @@ class ListController extends CRUDPageAbstract
 				);
 			}
 // 			array_unshift($result, array_keys($result[0])); // header row
-			$filePath = '/tmp/test.xls';
+			$filePath = '/tmp/Stocktake_' . str_replace(' ', "_", Core::getStore()->getName()) . '.xls';
 			$title = "Stock Take for [" . Core::getStore()->getName() . ']';
 			$this->_genFile($filePath, $title, $dataArray);
 			if(!is_file($filePath))
@@ -112,7 +112,7 @@ class ListController extends CRUDPageAbstract
 			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
 			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Store:')
 			->setCellValueByColumnAndRow($colNo++, $rowNo, Core::getStore()->getName())
-			->mergeCellsByColumnAndRow($colNo - 1, $rowNo, $colNo + 3, $rowNo);
+			->mergeCellsByColumnAndRow($colNo - 1, $rowNo, $colNo + 1, $rowNo);
 		//date row
 		$rowNo++;
 		$colNo = $startColNo;
@@ -120,7 +120,7 @@ class ListController extends CRUDPageAbstract
 			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
 			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Date:')
 			->setCellValueByColumnAndRow($colNo++, $rowNo, UDate::now()->format('d/m/Y'))
-			->mergeCellsByColumnAndRow($colNo - 1, $rowNo, $colNo + 3, $rowNo);
+			->mergeCellsByColumnAndRow($colNo - 1, $rowNo, $colNo + 1, $rowNo);
 		//title row
 		$rowNo++;
 		$colNo = $startColNo;
