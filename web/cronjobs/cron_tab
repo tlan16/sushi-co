@@ -1,1 +1,1 @@
-* * * * * /bin/sh /var/www/html/web/cronjobs/cronRunner.sh >> /tmp/cronRunner.log
+* * * * * /bin/sh /var/www/html/web/cronjobs/cronRunner.sh

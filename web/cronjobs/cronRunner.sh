@@ -6,7 +6,7 @@ echo -n "MessageSender is Already Running....... :: "
 date
 echo -n " "
 else
-/usr/bin/php /var/www/magentob2b/web/cronjobs/MessageSender.php >> /tmp/message.log
+/usr/bin/php /var/www/html/web/cronjobs/MessageSender.php >> /tmp/message.log
 fi
 
 ## clean the assets ########################################
@@ -15,5 +15,5 @@ echo -n "AssetCleaner is Already Running....... :: "
 date
 echo -n " "
 else
-/usr/bin/php /var/www/magentob2b/web/cronjobs/AssetCleaner.php >> /tmp/Asset_cleaner.log
+/usr/bin/php /var/www/html/web/cronjobs/AssetCleaner.php >> /tmp/Asset_cleaner.log
 fi
