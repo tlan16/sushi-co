@@ -211,11 +211,11 @@ abstract class LabelPrinter
      */
     private static function _getAllergentNames(Product $product) {
         $names = array();
-        foreach($product->getMaterials() as $item) {
+        foreach ($product->getMaterials() as $item) {
         	if(!isset($item['material']) || !($material = $item['material']) instanceof Material)
         		continue;
-            foreach($material->getIngredients() as $ingredient) {
-                foreach($ingredient->getAllergents() as $allergent) {
+            foreach ($material->getIngredients() as $ingredient) {
+                foreach ($ingredient->getAllergents() as $allergent) {
                     $names[] = $allergent->getName();
                 }
             }
@@ -231,10 +231,10 @@ abstract class LabelPrinter
      */
     private static function _getMaterialNutrions(Product $product) {
         $mNutritions = array();
-        foreach($product->getMaterials() as $item) {
+        foreach ($product->getMaterials() as $item) {
             if(!isset($item['material']) || !($material = $item['material']) instanceof Material)
         		continue;
-            foreach($material->getAllMaterialNutritions(true, null, DaoQuery::DEFAUTL_PAGE_SIZE, array('')) as $mNutrition) {
+            foreach ($material->getAllMaterialNutritions(true, null, DaoQuery::DEFAUTL_PAGE_SIZE, array('')) as $mNutrition) {
                 if(!$mNutrition->getNutrition() instanceof Nutrition || !$mNutrition->getServeMeasurement() instanceof ServeMeasurement)
                     continue;
                 $mNutritions[$mNutrition->getNutrition()->getId() . '|' . $mNutrition->getServeMeasurement()->getId() . '|' . intval($mNutrition->getQty())] = $mNutrition;

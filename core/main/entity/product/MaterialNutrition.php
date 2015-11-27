@@ -124,7 +124,7 @@ class MaterialNutrition extends BaseEntityAbstract
 
 	public static function sortMe(MaterialNutrition $a, MaterialNutrition $b)
 	{
-	    return $a->getNutrition()->getOrder() < $b->getNutrition()->getOrder();
+	    return $a->getNutrition()->getOrder() > $b->getNutrition()->getOrder();
 	}
 
 	/**

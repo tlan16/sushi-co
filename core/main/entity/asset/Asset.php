@@ -9,8 +9,6 @@
 class Asset extends BaseEntityAbstract
 {
 	const TYPE_TMP = 'TEMP';
-	const TYPE_PRODUCT_DEC = 'PRODUCT_DEC';
-	const TYPE_PRODUCT_IMG = 'PRODUCT_IMG';
 	/**
 	 * the type of the asset
 	 *
