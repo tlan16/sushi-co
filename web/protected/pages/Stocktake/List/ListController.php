@@ -81,8 +81,7 @@ class ListController extends CRUDPageAbstract
 			$to = 'helin16@gmail.com';
 			$subject = "Stock Take for [" . Core::getStore()->getName() . ']';
 			$body = $subject . "\n An Stocktake has been submitted by " . Core::getUser()->getPerson()->getFullName() . "\n Please see attached file for details.";
-			$assetId = Asset::registerAsset(basename($filePath), $filePath, Asset::TYPE_TMP);
-			$assets = Asset::getAllByCriteria('assetId = ?', array($assetId));
+			$assets = array(Asset::registerAsset(basename($filePath), file_get_contents($filePath), Asset::TYPE_TMP));
 			EmailSender::addEmail('', $to, $subject, $body, $assets);
 		}
 		catch(Exception $ex)
