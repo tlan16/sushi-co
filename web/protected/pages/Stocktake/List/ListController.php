@@ -78,7 +78,7 @@ class ListController extends CRUDPageAbstract
 
 			if(!is_file($filePath))
 			    throw new Exception("No file can't generated.");
-			$to = 'ljddfoodsupply@gmail.com';
+			$to = 'helin16@gmail.com';
 			$subject = "Stock Take for [" . Core::getStore()->getName() . ']';
 			$body = $subject . "\n An Stocktake has been submitted by " . Core::getUser()->getPerson()->getFullName() . "\n Please see attached file for details.";
 			$assetId = Asset::registerAsset(basename($filePath), $filePath, Asset::TYPE_TMP);
