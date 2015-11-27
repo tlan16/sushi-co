@@ -86,7 +86,8 @@ class ListController extends CRUDPageAbstract
 			EmailSender::addEmail('', $to, $subject, $body, $assets);
 			unlink($filePath);
 			
-			$result['success'] = true;
+			$result['email'] = $to;
+			$result['asset'] = $assets[0]->getJson();
 		}
 		catch(Exception $ex)
 		{
