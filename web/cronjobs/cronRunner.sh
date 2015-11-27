@@ -8,3 +8,12 @@ echo -n " "
 else
 /usr/bin/php /var/www/magentob2b/web/cronjobs/MessageSender.php >> /tmp/message.log
 fi
+
+## clean the assets ########################################
+if ps ax | grep -v grep | grep "AssetCleaner.php" > /dev/null; then
+echo -n "AssetCleaner is Already Running....... :: "
+date
+echo -n " "
+else
+/usr/bin/php /var/www/magentob2b/web/cronjobs/AssetCleaner.php >> /tmp/Asset_cleaner.log
+fi
