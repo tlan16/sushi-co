@@ -12,7 +12,7 @@ class ListController extends CRUDPageAbstract
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$menuItem
 	 */
-	public $menuItem = 'stocktake';
+	public $menuItem = 'restock';
 	protected $_focusEntity = 'RawMaterial';
 	/**
 	 * constructor

@@ -54,6 +54,11 @@ class Menu extends TTemplateControl
 		        'url' => '/stocktake.html',
 		        'icon' => '<span class="glyphicon glyphicon-tag"></span>'
 		);
+		$array['restock'] = array(
+		        'name' => 'Place Order',
+		        'url' => '/restock.html',
+		        'icon' => '<span class="glyphicon glyphicon-shopping-cart"></span>'
+		);
 		$array['help'] = array(
 			'name' => 'Help',
 			'url' => '/help.html',
