@@ -25,6 +25,8 @@
 
 			<!-- FrontEnd:: Stocktake list page -->
 			<url ServiceParameter="Stocktake.List.ListController" pattern="stocktake.html" />
+			<!-- FrontEnd:: Stocktake New page -->
+			<url ServiceParameter="Stocktake.New.ListController" pattern="restock.html" />
 
 			<!-- FrontEnd:: RawMaterial list page -->
 			<url ServiceParameter="RawMaterial.List.ListController" pattern="rawmaterials.html" />
