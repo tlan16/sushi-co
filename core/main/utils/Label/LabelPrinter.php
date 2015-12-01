@@ -26,7 +26,9 @@ abstract class LabelPrinter
             $html .= "</div>";
 
             $html .= "<div style='text-align: left; font-size: 16px; font-weight: bold;'>";
-                $html .= 'Use By: &nbsp;&nbsp;' . $label->getUseByDate()->setTimeZone(self::_getTimeZoneFromOffset($utcOffsetSeconds))->format('d / m / Y');
+                $timeZone = self::_getTimeZoneFromOffset($utcOffsetSeconds);
+                var_dump($timeZone);
+                $html .= 'Use By: &nbsp;&nbsp;' . $label->getUseByDate()->setTimeZone($timeZone)->format('d / m / Y');
             $html .= "</div>";
             $html .= "<div style='text-align: center; font-size: 12px;'>Keep Refrigerated</div>";
 
@@ -169,7 +171,6 @@ abstract class LabelPrinter
      */
     private static function _getTimeZoneFromOffset($utcOffsetSeconds = 0)
     {
-        var_dump($utcOffsetSeconds);
         $offset = $utcOffsetSeconds; // convert hour offset to seconds
         $abbrarray = timezone_abbreviations_list();
         foreach ($abbrarray as $abbr)
