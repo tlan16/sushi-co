@@ -40,15 +40,6 @@ class Menu extends TTemplateControl
 				,'rawmaterial' => array('url' => '/rawmaterials.html', 'name' => 'Raw Materials', 'icon' => '')
 			);
 		}
-		if (AccessControl::canAccessUserPage(Core::getRole()) === true) {
-    		$array['System'] = array(
-				'icon' => '<span class="glyphicon glyphicon-cog"></span>'
-				,'useraccounts' => array('url' => '/useraccounts.html', 'name' => 'User Accounts', 'icon' => '')
-				,'stores' => array('url' => '/stores.html', 'name' => 'Stores', 'icon' => '')
-				,'messages' => array('url' => '/messages.html', 'name' => 'Messages', 'icon' => '')
-				,'systemsettings' => array('url' => '/systemsettings.html', 'name' => 'System Settings', 'icon' => '')
-			);
-		}
 		$array['stocktake'] = array(
 		        'name' => 'Stocktake',
 		        'url' => '/stocktake.html',
@@ -59,6 +50,15 @@ class Menu extends TTemplateControl
 		        'url' => '/restock.html',
 		        'icon' => '<span class="glyphicon glyphicon-shopping-cart"></span>'
 		);
+		if (AccessControl::canAccessUserPage(Core::getRole()) === true) {
+    		$array['System'] = array(
+				'icon' => '<span class="glyphicon glyphicon-cog"></span>'
+				,'useraccounts' => array('url' => '/useraccounts.html', 'name' => 'User Accounts', 'icon' => '')
+				,'stores' => array('url' => '/stores.html', 'name' => 'Stores', 'icon' => '')
+				,'messages' => array('url' => '/messages.html', 'name' => 'Messages', 'icon' => '')
+				,'systemsettings' => array('url' => '/systemsettings.html', 'name' => 'System Settings', 'icon' => '')
+			);
+		}
 		$array['help'] = array(
 			'name' => 'Help',
 			'url' => '/help.html',
