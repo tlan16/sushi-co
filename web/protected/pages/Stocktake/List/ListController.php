@@ -79,8 +79,9 @@ class ListController extends CRUDPageAbstract
 			$this->_genFile($filePath, $title, $dataArray);
 			if(!is_file($filePath))
 			    throw new Exception("No file can't generated.");
+		    $from = SystemSettings::getByType(SystemSettings::TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL)->getValue();
 			$recipients = array('helin16@gmail.com');
-			if(($tmp1 = SystemSettings::getByType('system_email_recipients')) instanceof SystemSettings && is_array($tmp2 = explode(';', $tmp1->getValue())))
+			if(($tmp1 = SystemSettings::getByType(SystemSettings::TYPE_EMAIL_RECEIPIENTS)) instanceof SystemSettings && is_array($tmp2 = explode(';', $tmp1->getValue())))
 				$recipients = $tmp2;
 			$subject = $title;
 			$body = $subject . "\n An Stocktake has been submitted by " . Core::getUser()->getPerson()->getFullName() . "\n Please see attached file for details.";
@@ -88,7 +89,7 @@ class ListController extends CRUDPageAbstract
 			foreach ($recipients as $index => $recipient)
 			{
 				if(filter_var($recipient, FILTER_VALIDATE_EMAIL))
-					EmailSender::addEmail('', $recipient, $subject, $body, $assets);
+					EmailSender::addEmail($from, $recipient, $subject, $body, $assets);
 				else unset($recipients[$index]);
 			}
 			unlink($filePath);
