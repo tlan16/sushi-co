@@ -12,7 +12,7 @@ class ListController extends CRUDPageAbstract
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$menuItem
 	 */
-	public $menuItem = 'category';
+	public $menuItem = 'categories';
 	protected $_focusEntity = 'Category';
 	/**
 	 * constructor
@@ -20,8 +20,6 @@ class ListController extends CRUDPageAbstract
 	public function __construct()
 	{
 		parent::__construct();
-		if(!AccessControl::canAccessResourcePage(Core::getRole()))
-			die('You do NOT have access to this page');
 	}
 	/**
 	 * (non-PHPdoc)
@@ -30,6 +28,7 @@ class ListController extends CRUDPageAbstract
 	protected function _getEndJs()
 	{
 		$js = parent::_getEndJs();
+		$js .= "pageJs._setCanEdit(" . (AccessControl::isAdminUser(Core::getRole()) === true ? 'true' : 'false') . ");";
 		$js .= "pageJs.getResults(true, " . $this->pageSize . ");";
 		$js .= "pageJs.loadSelect2();";
 		$js .= "pageJs._bindSearchKey();";

@@ -3,7 +3,14 @@
  */
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new CRUDPageJs(), {
-	_getResultRow: function(row, isTitle) {
+	_canEdit: false
+	,_setCanEdit: function(canEdit) {
+		var tmp = {}
+		tmp.me = this;
+		tmp.me._canEdit = canEdit;
+		return tmp.me;
+	}
+	,_getResultRow: function(row, isTitle) {
 		var tmp = {};
 		tmp.me = this;
 		tmp.isTitle = (isTitle || false);
@@ -29,7 +36,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 								tmp.myWindow.location = '/products/category/' + row.id;
 							})
 						})
-						.insert({'bottom': tmp.editBtn = new Element('span', {'class': 'btn btn-primary', 'title': 'Edit'})
+						.insert({'bottom': tmp.me._canEdit === false ? '' : tmp.editBtn = new Element('span', {'class': 'btn btn-primary', 'title': 'Edit'})
 							.insert({'bottom': new Element('span', {'class': 'glyphicon glyphicon-pencil'}) })
 							.observe('click', function(){
 								tmp.me._openDetailsPage(row);
