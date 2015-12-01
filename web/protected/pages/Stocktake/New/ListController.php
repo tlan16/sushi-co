@@ -85,7 +85,6 @@ class ListController extends CRUDPageAbstract
 			$subject = $title;
 			$body = $subject . "\n An Stocktake has been submitted by " . Core::getUser()->getPerson()->getFullName() . "\n Please see attached file for details.";
 			$assets = array(Asset::registerAsset(basename($filePath), file_get_contents($filePath), Asset::TYPE_TMP));
-			EmailSender::addEmail('', $to, $subject, $body, $assets);
 			foreach ($recipients as $index => $recipient)
 			{
 				if(filter_var($recipient, FILTER_VALIDATE_EMAIL))
