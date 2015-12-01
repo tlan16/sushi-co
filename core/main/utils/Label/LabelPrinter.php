@@ -40,7 +40,7 @@ abstract class LabelPrinter
                 $topBoxHeight = $topBoxHeight + 16;
 
             $html .= "<div style='text-align: left; font-size: 16px; font-weight: bold;'>Ingredients: </div>";
-            $html .= "<div style='text-align: center; font-size: 10px; max-height: " . ($mheight = $height -  $topBoxHeight - $bottomBoxHeight) . "px; min-height: " . $mheight . "px;'>";
+            $html .= "<div style='text-align: center; font-size: 10px; min-height: " . ($mheight = $height -  $topBoxHeight - $bottomBoxHeight) . "px;'>";
                 $ingredientsTxtArr = self::_getIngredientNames($label->getProduct());
                 $html .= count($ingredientsTxtArr) > 0  ? (implode(', ', $ingredientsTxtArr)) : '&nbsp;';
             $html .= "</div>";
