@@ -163,6 +163,13 @@ class SystemSettings extends BaseEntityAbstract
 		DaoMap::createUniqueIndex('type');
 		DaoMap::commit();
 	}
+	/**
+	 * get by type
+	 * 
+	 * @param string $type
+	 * @param bool $activeOnly
+	 * @return SystemSettings
+	 */
 	public static function getByType($type, $activeOnly = true)
 	{
 		$type = trim($type);
