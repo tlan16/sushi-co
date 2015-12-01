@@ -113,6 +113,7 @@ abstract class LabelPrinter
         $startY = $yPos + $qrCodeImg_height + 10;
         $lineNo = 0;
         $ingredientsTxtArr = self::_getIngredientNames($label->getProduct());
+        $timeZone = self::_getTimeZoneFromOffset($utcOffsetSeconds);
         $now = UDate::now($timeZone);
         $days = 2;
         $name = strtolower(str_replace(' ', '', trim(implode(',', $ingredientsTxtArr))));
