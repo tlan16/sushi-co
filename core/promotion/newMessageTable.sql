@@ -22,3 +22,5 @@ CREATE TABLE `message` (
   KEY `to` (`to`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+INSERT INTO `sushico`.`systemsettings` (`id`, `type`, `value`, `description`, `active`, `created`, `createdById`, `updated`, `updatedById`) VALUES (NULL, 'system_email_recipients', 'helin16@gmail.com;franklan118@gmail.com;', '', '1', '2015-09-16 00:57:44', '10', '2015-09-15 14:57:44', '10')

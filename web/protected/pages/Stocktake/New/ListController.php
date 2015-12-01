@@ -79,14 +79,22 @@ class ListController extends CRUDPageAbstract
 			$this->_genFile($filePath, $title, $dataArray);
 			if(!is_file($filePath))
 			    throw new Exception("No file can't generated.");
-			$to = 'helin16@gmail.com';
+			$recipients = array('helin16@gmail.com');
+			if(($tmp1 = SystemSettings::getByType('system_email_recipients')) instanceof SystemSettings && is_array($tmp2 = explode(';', $tmp1->getValue())))
+				$recipients = $tmp2;
 			$subject = $title;
 			$body = $subject . "\n An Stocktake has been submitted by " . Core::getUser()->getPerson()->getFullName() . "\n Please see attached file for details.";
 			$assets = array(Asset::registerAsset(basename($filePath), file_get_contents($filePath), Asset::TYPE_TMP));
 			EmailSender::addEmail('', $to, $subject, $body, $assets);
+			foreach ($recipients as $index => $recipient)
+			{
+				if(filter_var($recipient, FILTER_VALIDATE_EMAIL))
+					EmailSender::addEmail('', $recipient, $subject, $body, $assets);
+				else unset($recipients[$index]);
+			}
 			unlink($filePath);
 			
-			$result['email'] = $to;
+			$result['email'] = json_encode($recipients);
 			$result['asset'] = $assets[0]->getJson();
 		}
 		catch(Exception $ex)
