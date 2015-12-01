@@ -21,7 +21,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 			.insert({'bottom': new Element(tmp.tag, {'class': 'updated col-sm-2 col-xs-12'}).update(row.updated) })
 			.insert({'bottom': new Element(tmp.tag, {'class': 'text-right btns col-sm-2 col-xs-12'}).update(
 				tmp.isTitle === true ?  
-					(new Element('span', {'class': 'btn btn-primary btn-xs', 'title': 'New'})
+					(new Element('span', {'class': 'btn btn-primary btn-xs hidden', 'title': 'New'})
 						.insert({'bottom': new Element('span', {'class': 'glyphicon glyphicon-plus'}) })
 						.insert({'bottom': ' NEW' })
 						.observe('click', function(){
