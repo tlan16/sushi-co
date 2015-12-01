@@ -112,7 +112,14 @@ abstract class LabelPrinter
         imagecopy($img, $qrCodeImg, ($width - $qrCodeImg_width)/2, $yPos, 0, 0, $qrCodeImg_width, $qrCodeImg_height);
         $startY = $yPos + $qrCodeImg_height + 10;
         $lineNo = 0;
-        imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Use By: ' . $label->getUseByDate()->setTimeZone(self::_getTimeZoneFromOffset($utcOffsetSeconds))->format('d/m/Y'));
+        $ingredientsTxtArr = self::_getIngredientNames($label->getProduct());
+        $now = UDate::now($timeZone);
+        $days = 2;
+        $name = strtolower(str_replace(' ', '', trim(implode(',', $ingredientsTxtArr))));
+        if (strpos($name, 'sushirice') !== false)
+            $days = 1;
+//         imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Use By: ' . $label->getUseByDate()->setTimeZone(self::_getTimeZoneFromOffset($utcOffsetSeconds))->format('d/m/Y'));
+        imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Use By: ' . $now->modify('+ ' . $days . ' day')->format('d / m / Y'));
         self::_imagecenteredstring($img, $baseFont +2, $width, $startY + $lineHeight * ($lineNo++), 'Keep Refrigerated', $black, $fontFile);
         imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Allergent Warning:');
         $alleNames = self::_getAllergentNames($label->getProduct());
@@ -122,7 +129,6 @@ abstract class LabelPrinter
         }
 
         imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Ingredients:');
-        $ingredientsTxtArr = self::_getIngredientNames($label->getProduct());
         $ingreText = wordwrap(implode(', ', $ingredientsTxtArr), 35, "\n");
         foreach(explode("\n", $ingreText) as $index => $textLine) {
 	        self::_imagecenteredstring($img, $baseFont, $width, $startY + $lineHeight * ($lineNo++) - ($index === 0 ? 5: 15), $textLine, $black, $fontFile);
