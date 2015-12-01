@@ -25,10 +25,16 @@ abstract class LabelPrinter
                 unlink($qrImgFile);
             $html .= "</div>";
 
+            $ingredientsTxtArr = self::_getIngredientNames($label->getProduct());
             $html .= "<div style='text-align: left; font-size: 16px; font-weight: bold;'>";
                 $timeZone = self::_getTimeZoneFromOffset($utcOffsetSeconds);
-                var_dump($timeZone);
-                $html .= 'Use By: &nbsp;&nbsp;' . $label->getUseByDate()->setTimeZone($timeZone)->format('d / m / Y');
+                $now = UDate::now($timeZone);
+                $days = 2;
+                $name = strtolower(str_replace(' ', '', trim(implode(',', $ingredientsTxtArr))));
+                if (strpos($name, 'sushirice') !== false)
+                    $days = 1;
+//                 $html .= 'Use By: &nbsp;&nbsp;' . $label->getUseByDate()->setTimeZone($timeZone)->format('d / m / Y');
+                $html .= 'Use By: &nbsp;&nbsp;' . $now->modify('+ ' . $days . ' day')->format('d / m / Y');
             $html .= "</div>";
             $html .= "<div style='text-align: center; font-size: 12px;'>Keep Refrigerated</div>";
 
@@ -43,7 +49,6 @@ abstract class LabelPrinter
 
             $html .= "<div style='text-align: left; font-size: 16px; font-weight: bold;'>Ingredients: </div>";
             $html .= "<div style='text-align: center; font-size: 10px; min-height: " . ($mheight = $height -  $topBoxHeight - $bottomBoxHeight) . "px;'>";
-                $ingredientsTxtArr = self::_getIngredientNames($label->getProduct());
                 $html .= count($ingredientsTxtArr) > 0  ? (implode(', ', $ingredientsTxtArr)) : '&nbsp;';
             $html .= "</div>";
 
@@ -107,7 +112,15 @@ abstract class LabelPrinter
         imagecopy($img, $qrCodeImg, ($width - $qrCodeImg_width)/2, $yPos, 0, 0, $qrCodeImg_width, $qrCodeImg_height);
         $startY = $yPos + $qrCodeImg_height + 10;
         $lineNo = 0;
-        imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Use By: ' . $label->getUseByDate()->setTimeZone(self::_getTimeZoneFromOffset($utcOffsetSeconds))->format('d/m/Y'));
+        $ingredientsTxtArr = self::_getIngredientNames($label->getProduct());
+        $timeZone = self::_getTimeZoneFromOffset($utcOffsetSeconds);
+        $now = UDate::now($timeZone);
+        $days = 2;
+        $name = strtolower(str_replace(' ', '', trim(implode(',', $ingredientsTxtArr))));
+        if (strpos($name, 'sushirice') !== false)
+            $days = 1;
+//         imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Use By: ' . $label->getUseByDate()->setTimeZone(self::_getTimeZoneFromOffset($utcOffsetSeconds))->format('d/m/Y'));
+        imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Use By: ' . $now->modify('+ ' . $days . ' day')->format('d / m / Y'));
         self::_imagecenteredstring($img, $baseFont +2, $width, $startY + $lineHeight * ($lineNo++), 'Keep Refrigerated', $black, $fontFile);
         imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Allergent Warning:');
         $alleNames = self::_getAllergentNames($label->getProduct());
@@ -117,7 +130,6 @@ abstract class LabelPrinter
         }
 
         imagettftext($img, $baseFont + 5, 0, $startX, $startY + $lineHeight * ($lineNo++), $black, $fontFile, 'Ingredients:');
-        $ingredientsTxtArr = self::_getIngredientNames($label->getProduct());
         $ingreText = wordwrap(implode(', ', $ingredientsTxtArr), 35, "\n");
         foreach(explode("\n", $ingreText) as $index => $textLine) {
 	        self::_imagecenteredstring($img, $baseFont, $width, $startY + $lineHeight * ($lineNo++) - ($index === 0 ? 5: 15), $textLine, $black, $fontFile);

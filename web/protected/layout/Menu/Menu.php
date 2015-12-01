@@ -20,6 +20,7 @@ class Menu extends TTemplateControl
 		$pageItem = trim($this->getPage()->menuItem);
 		$array = array(
 // 			'' => array('url' => '/', 'name' => 'Products', 'icon' => '<span class="glyphicon glyphicon-home"></span>')
+	        'categories' => array('url' => '/categories.html', 'name' => 'Category', 'icon' => '<span class="glyphicon glyphicon-tasks"></span>'),
 			'product' => array(
 				'name' => 'Products',
 				'url' => '/products.html',
@@ -36,7 +37,6 @@ class Menu extends TTemplateControl
 // 				,'labels' => array('url' => '/labels.html', 'name' => 'Labels', 'icon' => '')
 				,'materials' => array('url' => '/materials.html', 'name' => 'Materials', 'icon' => '')
 // 				,'addresses' => array('url' => '/addresses.html', 'name' => 'Addresses', 'icon' => '')
-				,'categorie' => array('url' => '/categories.html', 'name' => 'Category', 'icon' => '')
 				,'rawmaterial' => array('url' => '/rawmaterials.html', 'name' => 'Raw Materials', 'icon' => '')
 			);
 		}
