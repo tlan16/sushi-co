@@ -29,7 +29,8 @@ abstract class LabelPrinter
                 $timeZone = self::_getTimeZoneFromOffset($utcOffsetSeconds);
                 $now = UDate::now($timeZone);
                 $days = 2;
-                if (strpos($name = str_replace(' ', '', trim($label->getProduct()->getName()))) !== false)
+                $name = str_replace(' ', '', trim($label->getProduct()->getName()));
+                if (strpos($name, 'sushirice') !== false)
                     $days = 1;
 //                 $html .= 'Use By: &nbsp;&nbsp;' . $label->getUseByDate()->setTimeZone($timeZone)->format('d / m / Y');
                 $html .= 'Use By: &nbsp;&nbsp;' . $now->modify('+ ' . $days . ' day')->format('d / m / Y');
