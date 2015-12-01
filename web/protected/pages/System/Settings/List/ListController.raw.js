@@ -3,67 +3,52 @@
  */
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new CRUDPageJs(), {
-	_getTitleRowData: function() {
-		return {'description': "Description", 'type': 'Type', 'value': 'Value'};
-	}
-
-	,_getEditPanel: function(row) {
+	_getResultRow: function(row, isTitle) {
 		var tmp = {};
 		tmp.me = this;
-		tmp.newDiv = new Element('tr', {'class': 'save-item-panel info'}).store('data', row)
-			.insert({'bottom': new Element('input', {'type': 'hidden', 'save-item-panel': 'id', 'value': row.id ? row.id : ''}) })
-			.insert({'bottom': new Element('td')
-				.insert({'bottom': new Element('span').update( row.type ? row.type : '') })
-			})
-			.insert({'bottom': new Element('td', {'class': 'form-group'})
-				.insert({'bottom': new Element('input', {'required': true, 'class': 'form-control', 'placeholder': 'The value', 'save-item-panel': 'value', 'value': row.value ? row.value : ''}) })
-			})
-			.insert({'bottom': new Element('td', {'class': 'form-group'})
-				.insert({'bottom': new Element('span').update( row.description ? row.description : '') })
-			})
-			.insert({'bottom': new Element('td', {'class': 'text-right'})
-				.insert({'bottom':  new Element('span', {'class': 'btn-group btn-group-sm'})
-					.insert({'bottom': new Element('span', {'class': 'btn btn-success', 'title': 'Save'})
-						.insert({'bottom': new Element('span', {'class': 'glyphicon glyphicon-ok'}) })
-						.observe('click', function(){
-							tmp.btn = this;
-							tmp.me._saveItem(tmp.btn, $(tmp.btn).up('.save-item-panel'), 'save-item-panel');
-						})
-					})
-					.insert({'bottom': new Element('span', {'class': 'btn btn-danger', 'title': 'Delete'})
-						.insert({'bottom': new Element('span', {'class': 'glyphicon glyphicon-remove'}) })
-						.observe('click', function(){
-							if(row.id)
-								$(this).up('.save-item-panel').replace(tmp.me._getResultRow(row).addClassName('item_row').writeAttribute('item_id', row.id));
-							else
-								$(this).up('.save-item-panel').remove();
-						})
-					})
-				})
-			})
-		return tmp.newDiv;
-	}
-
-	,_getResultRow: function(row, isTitle) {
-		var tmp = {};
-		tmp.me = this;
-		tmp.tag = (tmp.isTitle === true ? 'th' : 'td');
 		tmp.isTitle = (isTitle || false);
-		tmp.row = new Element('tr', {'class': (tmp.isTitle === true ? '' : 'btn-hide-row')}).store('data', row)
-			.insert({'bottom': new Element(tmp.tag, {'class': 'type col-xs-2'}).update(row.type) })
-			.insert({'bottom': new Element(tmp.tag, {'class': 'value col-xs-4'}).update(row.value) })
-			.insert({'bottom': new Element(tmp.tag, {'class': 'description'}).update(row.description) })
-			.insert({'bottom': new Element(tmp.tag, {'class': 'text-right btns col-xs-2'}).update(
-				tmp.isTitle === true ? '' :
-				(
-					new Element('span', {'class': 'btn-group btn-group-xs'})
-					.insert({'bottom': new Element('span', {'class': 'btn btn-default', 'title': 'Edit'})
-						.insert({'bottom': new Element('span', {'class': 'glyphicon glyphicon-pencil'}) })
+		tmp.tag = (tmp.isTitle === true ? 'strong' : 'span');
+		tmp.row = new Element('span', {'class': 'row'})
+			.store('data', row)
+			.addClassName( (row.active === false && tmp.isTitle === false ) ? 'warning' : '')
+			.addClassName('list-group-item')
+			.addClassName('item_row')
+			.writeAttribute('item_id', row.id)
+			.insert({'bottom': new Element(tmp.tag, {'class': 'type col-sm-2 col-xs-12'}).update(row.type) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'value col-sm-2 col-xs-12'}).setStyle('word-break: break-all').update(row.value) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'description col-sm-2 col-xs-12'}).update(row.description) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'created col-sm-2 col-xs-12'}).update(row.created) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'updated col-sm-2 col-xs-12'}).update(row.updated) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'text-right btns col-sm-2 col-xs-12'}).update(
+				tmp.isTitle === true ?  
+					(new Element('span', {'class': 'btn btn-primary btn-xs', 'title': 'New'})
+						.insert({'bottom': new Element('span', {'class': 'glyphicon glyphicon-plus'}) })
+						.insert({'bottom': ' NEW' })
 						.observe('click', function(){
-							$(this).up('.item_row').replace(tmp.me._getEditPanel(row));
+							tmp.me._openDetailsPage();
 						})
-					})
-				) 
+					)
+				: 
+					(new Element('span', {'class': 'btn-group btn-group-xs'})
+						.insert({'bottom': tmp.editBtn = new Element('span', {'class': 'btn btn-primary', 'title': 'Delete'})
+							.insert({'bottom': new Element('span', {'class': 'glyphicon glyphicon-pencil'}) })
+							.observe('click', function(){
+								tmp.me._openDetailsPage(row);
+							})
+						})
+						.insert({'bottom': new Element('span')
+							.addClassName( (row.active === false && tmp.isTitle === false ) ? 'btn btn-success' : 'btn btn-danger')
+							.writeAttribute('title', ((row.active === false && tmp.isTitle === false ) ? 'Re-activate' : 'De-activate') )
+							.insert({'bottom': new Element('span') 
+								.addClassName( (row.active === false && tmp.isTitle === false ) ? 'glyphicon glyphicon-repeat' : 'glyphicon glyphicon-trash')
+							})
+							.observe('click', function(){
+								if(!confirm('Are you sure you want to ' + (row.active === true ? 'DE-ACTIVATE' : 'RE-ACTIVATE') +' this item?'))
+									return false;
+								tmp.me._deleteItem(row, row.active);
+							})
+						}) 
+					)
 			) })
 		;
 		return tmp.row;

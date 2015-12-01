@@ -104,6 +104,8 @@
 
 			<!-- FrontEnd:: system settings page -->
 			<url ServiceParameter="System.Settings.List.ListController" pattern="systemsettings.html" parameters.id="me"/>
+			<!-- FrontEnd:: system settings page -->
+			<url ServiceParameter="System.Settings.Details.DetailsController" pattern="systemsetting/{id}.html" parameters.id="\d+"/>
 
 			<!-- FrontEnd:: Log list page -->
 			<url ServiceParameter="Log.List.ListController" pattern="logs.html" />
