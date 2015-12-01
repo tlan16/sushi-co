@@ -25,11 +25,12 @@ abstract class LabelPrinter
                 unlink($qrImgFile);
             $html .= "</div>";
 
+            $ingredientsTxtArr = self::_getIngredientNames($label->getProduct());
             $html .= "<div style='text-align: left; font-size: 16px; font-weight: bold;'>";
                 $timeZone = self::_getTimeZoneFromOffset($utcOffsetSeconds);
                 $now = UDate::now($timeZone);
                 $days = 2;
-                $name = str_replace(' ', '', trim($label->getProduct()->getName()));
+                $name = strtolower(str_replace(' ', '', trim(implode(',', $ingredientsTxtArr))));
                 if (strpos($name, 'sushirice') !== false)
                     $days = 1;
 //                 $html .= 'Use By: &nbsp;&nbsp;' . $label->getUseByDate()->setTimeZone($timeZone)->format('d / m / Y');
@@ -48,7 +49,6 @@ abstract class LabelPrinter
 
             $html .= "<div style='text-align: left; font-size: 16px; font-weight: bold;'>Ingredients: </div>";
             $html .= "<div style='text-align: center; font-size: 10px; min-height: " . ($mheight = $height -  $topBoxHeight - $bottomBoxHeight) . "px;'>";
-                $ingredientsTxtArr = self::_getIngredientNames($label->getProduct());
                 $html .= count($ingredientsTxtArr) > 0  ? (implode(', ', $ingredientsTxtArr)) : '&nbsp;';
             $html .= "</div>";
 
