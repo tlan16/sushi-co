@@ -33,6 +33,8 @@ class ListController extends CRUDPageAbstract
 		$js .= "pageJs.getResults(true, " . $this->pageSize . ");";
 		$js .= "pageJs.loadSelect2();";
 		$js .= "pageJs._bindSearchKey();";
+		$js .= "pageJs._view = 'stockTake';";
+		$js .= "pageJs._view = 'placeOrder';";
 		$js .= 'pageJs.setCallbackId("stocktake", "' . $this->stocktakeBtn->getUniqueID(). '");';
 		return $js;
 	}

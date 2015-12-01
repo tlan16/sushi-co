@@ -3,11 +3,39 @@
  */
 var PageJs = new Class.create();
 PageJs.prototype = Object.extend(new CRUDPageJs(), {
-	init: function() {
+	_getTitleRowData: function() {
+		this._titleRowData.serverMeasurement = {'ServeMeasurement': {'name': 'Server Measurement'}};
+		this._titleRowData.unitPrice = 'Unit Price';
+		this._titleRowData.totalPrice = 'Total Price';
+		this._titleRowData.orderqty = 'Order QTY';
+		return this._titleRowData;
+	}
+	,init: function() {
 		var tmp = {};
 		tmp.me = this;
+		tmp.me._htmlIDs.totalRow = 'total-row';
 		
 		tmp.me._bindSubmitButton();
+		
+		return tmp.me;
+	}
+	,_priceCalc: function() {
+		var tmp = {};
+		tmp.me = this;
+		tmp.total = 0.0;
+		
+		$('item-list-body').getElementsBySelector('.item_row').each(function(row){
+			tmp.unitPrice = row.down('[save-item="unitPrice"]');
+			tmp.totalPrice = row.down('[save-item="totalPrice"]');
+			tmp.stocktakeShop = row.down('[save-item="stocktakeShop"]');
+			tmp.stocktakeStoreRoom = row.down('[save-item="stocktakeStoreRoom"]');
+			tmp.orderQty = row.down('[save-item="orderQty"]');
+			
+			tmp.totalPrice.setValue((accounting.unformat($F(tmp.stocktakeShop)) + accounting.unformat($F(tmp.stocktakeStoreRoom)) + accounting.unformat($F(tmp.orderQty))) * accounting.unformat($F(tmp.unitPrice)));
+			tmp.total += accounting.unformat($F(tmp.totalPrice));
+		});
+		
+		$(tmp.me._htmlIDs.totalRow).down('[save-item="totalPrice"]').setValue(tmp.total);
 		
 		return tmp.me;
 	}
@@ -56,16 +84,38 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		});
 		return tmp.data;
 	}
-	,_getTitleRowData: function() {
-		this._titleRowData.serverMeasurement = {'ServeMeasurement': {'name': 'Server Measurement'}};
-		this._titleRowData.unitPrice = 'Unit Price';
-		return this._titleRowData;
-	}
-	,_getInput: function(saveItem) {
+	,_getInput: function(saveItem, value, prefix, postfix, disabled) {
 		var tmp = {};
 		tmp.me = this;
-		tmp.newDiv = new Element('input', {'save-item': saveItem, 'type': 'number'}).setStyle('width: 100%');
+		tmp.newDiv = new Element('div', {'class': 'input-group'})
+			.insert({'bottom': new Element('input', {'class': 'form-control', 'save-item': saveItem, 'type': 'number', 'disabled': (disabled === true)}).setStyle('width: 100%').setValue(value) });
+		if(prefix)
+			tmp.newDiv.insert({'top': new Element('div', {'class': 'input-group-addon'}).update(prefix)});
+		if(postfix)
+			tmp.newDiv.insert({'bottom': new Element('div', {'class': 'input-group-addon'}).update(postfix)});
 		return tmp.newDiv;
+	}
+	,getResultsOnComplete: function() {
+		this._addTotalRow();
+	}
+	,_addTotalRow: function() {
+		var tmp = {};
+		tmp.me = this;
+		
+		if(jQuery('#total-row').length > 0)
+			return tmp.me;
+		
+		tmp.row = tmp.me._getTitleRowData();
+		tmp.row.name = '<b>Total</b>';
+		tmp.row.serverMeasurement = {'ServeMeasurement': {'name': null}};
+		
+		tmp.totalRow = tmp.me._getResultRow(tmp.row).writeAttribute('id', tmp.me._htmlIDs.totalRow);
+		
+		tmp.totalRow.getElementsBySelector('input').each(function(input){ input.writeAttribute('disabled', true); });
+		
+		$('item-list-body').insert({'bottom': tmp.totalRow});
+		
+		return tmp.me;
 	}
 	,_getResultRow: function(row, isTitle) {
 		var tmp = {};
@@ -78,11 +128,35 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 			.addClassName('list-group-item')
 			.addClassName('item_row')
 			.writeAttribute('item_id', row.id)
-			.insert({'bottom': new Element(tmp.tag, {'class': 'name col-sm-5 col-xs-12', 'title': row.description}).update(row.name) })
-			.insert({'bottom': new Element(tmp.tag, {'class': 'serverMeasurement col-sm-3 col-xs-12'}).update(row.serverMeasurement.ServeMeasurement.name) })
-			.insert({'bottom': new Element(tmp.tag, {'class': 'stocktakeShop col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Stocktake QTY (Shop)' : tmp.me._getInput('stocktakeShop')) })
-			.insert({'bottom': new Element(tmp.tag, {'class': 'stocktakeStoreRoom col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Stocktake QTY (Store Room)' : tmp.me._getInput('stocktakeStoreRoom')) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'name col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Name' : row.name) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'unitPrice col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? row.unitPrice : tmp.unitPrice = tmp.me._getInput('unitPrice', row.unitPrice, '$') ) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'totalPrice col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? row.totalPrice : tmp.totalPrice = tmp.me._getInput('totalPrice', null, '$', null, true)) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'stocktakeShop col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Stocktake QTY<br/>(Shop)' : tmp.stocktakeShop = tmp.me._getInput('stocktakeShop', null, null, row.serverMeasurement.ServeMeasurement.name)) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'stocktakeStoreRoom col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Stocktake QTY<br/>(Store Room)' : tmp.stocktakeStoreRoom = tmp.me._getInput('stocktakeStoreRoom', null, null, row.serverMeasurement.ServeMeasurement.name)) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'orderQty col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Order QTY' : tmp.orderQty = tmp.me._getInput('orderQty', null, null, row.serverMeasurement.ServeMeasurement.name)) })
 		;
+		if(tmp.isTitle === false) {
+			tmp.events = ['keyup', 'change', 'wheel'];
+			tmp.events.each(function(event) {
+				tmp.unitPrice.down('input').observe(event, function(){ tmp.me._priceCalc() });
+				tmp.stocktakeShop.down('input').observe(event, function(){ tmp.me._priceCalc() });
+				tmp.stocktakeStoreRoom.down('input').observe(event, function(){ tmp.me._priceCalc() });
+				tmp.orderQty.down('input').observe(event, function(){ tmp.me._priceCalc() });
+			});
+		}
+		if(tmp.me._view && tmp.me._view !== '') {
+			switch(tmp.me._view) {
+				case 'stockTake': {
+					tmp.row.down('.orderQty').hide();
+					break;
+				}
+				case 'placeOrder': {
+					tmp.row.down('.stocktakeShop').hide();
+					tmp.row.down('.stocktakeStoreRoom').hide();
+					break;
+				}
+			}
+		}
 		return tmp.row;
 	}
 });
