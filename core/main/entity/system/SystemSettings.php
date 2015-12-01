@@ -8,8 +8,9 @@
  */
 class SystemSettings extends BaseEntityAbstract
 {
-	const TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL = 'sys_email_addr';
+	const TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL = 'system_email_addr';
 	const TYPE_EMAIL_SENDING_SERVER = 'sending_server_conf';
+	const TYPE_EMAIL_RECEIPIENTS = 'system_email_recipients';
 	const TYPE_ASSET_ROOT_DIR = 'asset_root_dir';
 	/**
 	 * The value of the setting
