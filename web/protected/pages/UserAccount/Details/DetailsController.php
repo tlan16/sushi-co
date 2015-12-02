@@ -12,7 +12,7 @@ class DetailsController extends DetailsPageAbstract
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$menuItem
 	 */
-	public $menuItem = 'useraccount.detail';
+	public $menuItem = 'useraccounts';
 	/**
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$_focusEntityName

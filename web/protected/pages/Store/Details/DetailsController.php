@@ -12,7 +12,7 @@ class DetailsController extends DetailsPageAbstract
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$menuItem
 	 */
-	public $menuItem = 'store.detail';
+	public $menuItem = 'stores';
 	/**
 	 * (non-PHPdoc)
 	 * @see BPCPageAbstract::$_focusEntityName

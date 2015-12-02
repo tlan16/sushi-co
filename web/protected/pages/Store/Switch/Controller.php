@@ -1,7 +1,7 @@
 <?php
 class Controller extends BPCPageAbstract
 {
-	public $menuItem = 'switch.store';
+	public $menuItem = 'stores';
 	/**
 	 * constructor
 	 */
