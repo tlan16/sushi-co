@@ -51,6 +51,12 @@ class ListController extends CRUDPageAbstract
 			if(!is_array($data = $param->CallbackParameter) || count($data) === 0)
 				throw new Exception('Invalid Form Data');
 			$dataArray = array();
+			$totalArray =  array(
+					'Shop Qty' => 0,
+					'Store Room Qty' => 0,
+					'Order Qty' => 0,
+					'Total Price' => 0
+			);
 			foreach ($data as $row) {
 				if (!isset($row->item) || !isset($row->item->id)
 					|| !($rawMaterial = RawMaterial::get($row->item->id)) instanceof RawMaterial
@@ -60,10 +66,13 @@ class ListController extends CRUDPageAbstract
 				)
 					continue;
 
-				$unitPrice = StringUtilsAbstract::getCurrency($info->getValue());
 				$serveMeasurement = ServeMeasurement::get(intval($info->getEntityId()));
 				if($info->getEntityName() !== 'ServeMeasurement' || !$serveMeasurement instanceof ServeMeasurement)
 					continue;
+				
+				$unitPrice = StringUtilsAbstract::getValueFromCurrency($info->getValue());
+				if(isset($row->unitPrice))
+					$unitPrice = StringUtilsAbstract::getValueFromCurrency($row->unitPrice);
 
 				$stocktakeShop = 0;
 				if(isset($row->stocktakeShop))
@@ -82,29 +91,24 @@ class ListController extends CRUDPageAbstract
 									'Unit Price' => StringUtilsAbstract::getValueFromCurrency($unitPrice),
 									'Shop Qty' => $stocktakeShop,
 									'Store Room Qty' => $stocktakeStoreRoom,
-									'Order Qty' => $orderQty
+									'Order Qty' => $orderQty,
+									'Total Price' => ($stocktakeShop + $stocktakeStoreRoom + $orderQty) * $unitPrice
 				);
-// 				switch ($this->view)
-// 				{
-// 					case 'stocktake':
-// 						{
-// 							unset($newData['Order Qty']);
-// 							break;
-// 						}
-// 					case 'placeorder':
-// 						{
-// 							unset($newData['Shop Qty']);
-// 							unset($newData['Store Room Qty']);
-// 							break;
-// 						}
-// 				}
+				$totalArray['Shop Qty'] += $newData['Shop Qty'];
+				$totalArray['Store Room Qty'] += $newData['Store Room Qty'];
+				$totalArray['Order Qty'] += $newData['Order Qty'];
+				$totalArray['Total Price'] += $newData['Total Price'];
 				
 				$dataArray[] = $newData;
 			}
-// 			array_unshift($result, array_keys($result[0])); // header row
-			$filePath = '/tmp/Stocktake_' . str_replace(' ', "_", Core::getStore()->getName()) . '.xls';
+			
+			$fileName = implode('_', array($this->view, Core::getStore()->getName(), 'Timezone_' . UDate::TIME_ZONE_MELB, trim(UDate::now(UDate::TIME_ZONE_MELB)))) . '.xlsx';
+			$fileName = str_replace(' ', '_', $fileName);
+			$fileName = str_replace("/", '_', $fileName); // windows doesn't like "/" in filename
+			$fileName = str_replace(":", '_', $fileName); // windows doesn't like ":" in filename
+			$filePath = '/tmp/' . $fileName;
 			$title = "Stock Take for [" . Core::getStore()->getName() . ']';
-			$this->_genFile($filePath, $title, $dataArray);
+			$this->_genFile($filePath, $title, $dataArray, $totalArray);
 			if(!is_file($filePath))
 			    throw new Exception("No file can't generated.");
 		    $from = SystemSettings::getByType(SystemSettings::TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL)->getValue();
@@ -131,7 +135,18 @@ class ListController extends CRUDPageAbstract
 		}
 		$param->ResponseData = StringUtilsAbstract::getJson($result, $errors);
 	}
-	private function _genFile($filePath, $title, array $data = array())
+	private static function addExcelRow(PHPExcel &$objPHPExcel, $data, $activeSheetIndex = 0, $startColNo = 0)
+	{
+		$activeSheet = $objPHPExcel->setActiveSheetIndex(0);
+		$rowNo = intval($activeSheet->getHighestRow());
+		$rowNo++;
+		$colNo = $startColNo;
+		if(!is_array($data))
+			$data = array($data);
+		foreach ($data as $row)
+			$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, $row);
+	}
+	private function _genFile($filePath, $title, array $data = array(), array $totalArray = array())
 	{
 		$objPHPExcel = new PHPExcel();
 		$objPHPExcel->getProperties()
@@ -139,56 +154,45 @@ class ListController extends CRUDPageAbstract
 			->setSubject($title)
 			->setDescription($title);
 		
-		$activeSheet = $objPHPExcel->setActiveSheetIndex(0);
-		$startColNo = 1;
-		$rowNo = 1;
-		$colNo = $startColNo;
-		//store row
-		$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, 'SUSHI STOCKTAKE SHEET')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Store:')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, Core::getStore()->getName())
-			->mergeCellsByColumnAndRow($colNo - 1, $rowNo, $colNo + 1, $rowNo);
-		//date row
-		$rowNo++;
-		$colNo = $startColNo;
-		$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, '')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Date:')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, UDate::now()->format('d/m/Y'))
-			->mergeCellsByColumnAndRow($colNo - 1, $rowNo, $colNo + 1, $rowNo);
-		//title row
-		$rowNo++;
-		$colNo = $startColNo;
-		$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, 'Product')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Unit')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Cost')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Stocktak Qty (Shop)')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Stocktak Qty (Store Room)')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, 'Value');
-		$totalValueSum = 0;
-		foreach($data as $rowData) {
-			$rowNo++;
-			$colNo = $startColNo;
-			$unitPrice = StringUtilsAbstract::getValueFromCurrency($rowData['Unit']);
-			$totalValue = (intval($rowData['Shop Qty']) + intval($rowData['Store Room Qty'])) * $unitPrice;
-			$totalValueSum += $totalValue;
-			$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Raw Material'])
-				->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Unit'])
-				->setCellValueByColumnAndRow($colNo++, $rowNo, StringUtilsAbstract::getCurrency($unitPrice))
-				->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Shop Qty'])
-				->setCellValueByColumnAndRow($colNo++, $rowNo, $rowData['Store Room Qty'])
-				->setCellValueByColumnAndRow($colNo++, $rowNo, StringUtilsAbstract::getCurrency($totalValue));
+		switch ($this->view)
+		{
+			case 'stocktake':
+				{
+					foreach ($data as &$row)
+						unset($row['Order Qty']);
+					unset($totalArray['Order Qty']);
+					break;
+				}
+			case 'placeorder':
+				{
+					foreach ($data as $index => &$row)
+					{
+						if(doubleval($row['Order Qty']) === doubleval(0))
+							unset($data[$index]);
+						else 
+						{
+							unset($row['Shop Qty']);
+							unset($row['Store Room Qty']);
+						}
+					}
+					unset($totalArray['Shop Qty']);
+					unset($totalArray['Store Room Qty']);
+					break;
+				}
 		}
-		$rowNo++;
-		$colNo = $startColNo;
-		$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, 'Total')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, '')
-			->setCellValueByColumnAndRow($colNo++, $rowNo, StringUtilsAbstract::getCurrency($totalValueSum));
-	
+		
+		array_unshift($data, array_keys($data[0])); // add header row
+		foreach ($data as $row)
+			self::addExcelRow($objPHPExcel, $row);
+		
+		if(count($totalArray) > 0)
+		{
+			self::addExcelRow($objPHPExcel, '');
+			$totalArray = array(array_keys($totalArray), $totalArray);
+			foreach ($totalArray as $row)
+				self::addExcelRow($objPHPExcel, $row);
+		}
+			
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 		$objWriter->save($filePath);
 		return $this;
