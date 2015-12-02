@@ -14,12 +14,18 @@ class ListController extends CRUDPageAbstract
 	 */
 	public $menuItem = 'stocktake';
 	protected $_focusEntity = 'RawMaterial';
+	protected  $view = '';
 	/**
 	 * constructor
 	 */
 	public function __construct()
 	{
 		parent::__construct();
+		if(isset($this->Request['view']))
+		{
+			$this->view = trim($this->Request['view']);
+			$this->menuItem = $this->view;
+		}
 		if(!AccessControl::canAccessResourcePage(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
@@ -33,8 +39,7 @@ class ListController extends CRUDPageAbstract
 		$js .= "pageJs.getResults(true, " . $this->pageSize . ");";
 		$js .= "pageJs.loadSelect2();";
 		$js .= "pageJs._bindSearchKey();";
-		$js .= "pageJs._view = 'stockTake';";
-		$js .= "pageJs._view = 'placeOrder';";
+		$js .= "pageJs._view = '" . $this->view . "';";
 		$js .= 'pageJs.setCallbackId("stocktake", "' . $this->stocktakeBtn->getUniqueID(). '");';
 		return $js;
 	}

@@ -42,12 +42,12 @@ class Menu extends TTemplateControl
 		}
 		$array['stocktake'] = array(
 		        'name' => 'Stocktake',
-		        'url' => '/stocktake.html',
+		        'url' => '/stocktake.html?view=stocktake',
 		        'icon' => '<span class="glyphicon glyphicon-tag"></span>'
 		);
-		$array['restock'] = array(
+		$array['placeorder'] = array(
 		        'name' => 'Place Order',
-		        'url' => '/restock.html',
+		        'url' => '/restock.html?view=placeorder',
 		        'icon' => '<span class="glyphicon glyphicon-shopping-cart"></span>'
 		);
 		if (AccessControl::canAccessUserPage(Core::getRole()) === true) {
