@@ -191,18 +191,26 @@ class ListController extends CRUDPageAbstract
 		self::addExcelRow($objPHPExcel, array('Date', UDate::now(UDate::TIME_ZONE_MELB)->__toString() ));
 		self::addExcelRow($objPHPExcel, '');
 		
-		array_unshift($data, array_keys($data[0])); // add header row for data
-		foreach ($data as $row)
-			self::addExcelRow($objPHPExcel, $row);
-		
-		if(count($totalArray) > 0)
+		if(count($data) > 0)
 		{
-			self::addExcelRow($objPHPExcel, '');
-			$totalArray = array(array_keys($totalArray), $totalArray);
-			foreach ($totalArray as $row)
+			array_unshift($data, array_keys($data[0])); // add header row for data
+			foreach ($data as $row)
 				self::addExcelRow($objPHPExcel, $row);
-		}
 			
+			if(count($totalArray) > 0)
+			{
+				self::addExcelRow($objPHPExcel, '');
+				$totalArray = array(array_keys($totalArray), $totalArray);
+				foreach ($totalArray as $row)
+					self::addExcelRow($objPHPExcel, $row);
+			}
+		}
+		// auto column width
+		foreach(range('A','ZZ') as $columnID) {
+			$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+			->setAutoSize(true);
+		}
+		// export to file
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 		$objWriter->save($filePath);
 		return $this;
