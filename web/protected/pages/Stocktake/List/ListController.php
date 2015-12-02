@@ -109,7 +109,6 @@ class ListController extends CRUDPageAbstract
 			$fileName = str_replace("/", '_', $fileName); // windows doesn't like "/" in filename
 			$fileName = str_replace(":", '_', $fileName); // windows doesn't like ":" in filename
 			$filePath = '/tmp/' . $fileName;
-// 			$filePath = dirname(__FILE__) . DIRECTORY_SEPARATOR . $fileName;
 			$title = "Stock Take for [" . Core::getStore()->getName() . ']';
 			$this->_genFile($filePath, $title, $dataArray, $totalArray);
 			if(!is_file($filePath))
@@ -200,7 +199,7 @@ class ListController extends CRUDPageAbstract
 			if(count($totalArray) > 0)
 			{
 				self::addExcelRow($objPHPExcel, '');
-				$totalArray = array(array_keys($totalArray), $totalArray);
+				$totalArray = array(array_map(create_function('$a', 'return "Total " . $a;'), array_keys($totalArray)), $totalArray);
 				foreach ($totalArray as $row)
 					self::addExcelRow($objPHPExcel, $row);
 			}
