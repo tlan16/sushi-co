@@ -146,11 +146,11 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		}
 		if(tmp.me._view && tmp.me._view !== '') {
 			switch(tmp.me._view) {
-				case 'stockTake': {
+				case 'stocktake': {
 					tmp.row.down('.orderQty').hide();
 					break;
 				}
-				case 'placeOrder': {
+				case 'placeorder': {
 					tmp.row.down('.stocktakeShop').hide();
 					tmp.row.down('.stocktakeStoreRoom').hide();
 					break;
