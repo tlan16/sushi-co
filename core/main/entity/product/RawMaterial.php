@@ -27,7 +27,7 @@ class RawMaterial extends InfoEntityAbstract
 	 * @param int   $pageSize
 	 * @param array $orderBy
 	 * @param array $stats
-	 * @return Ambigous <Ambigous, multitype:, multitype:BaseEntityAbstract >
+	 * @return array ServeMeasurement
 	 */
 	public function getServeMeasurements($activeOnly = true, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array(), &$stats = array())
 	{
