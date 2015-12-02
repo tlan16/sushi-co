@@ -73,12 +73,33 @@ class ListController extends CRUDPageAbstract
 				if(isset($row->stocktakeStoreRoom))
 					$stocktakeStoreRoom = doubleval($row->stocktakeStoreRoom);
 
-				$dataArray[] = array('Raw Material' => $rawMaterial->getName(),
+				$orderQty = 0;
+				if(isset($row->orderQty))
+					$orderQty = doubleval($row->orderQty);
+
+				$newData =  array('Raw Material' => $rawMaterial->getName(),
 									'Unit' => $serveMeasurement->getName(),
 									'Unit Price' => StringUtilsAbstract::getValueFromCurrency($unitPrice),
 									'Shop Qty' => $stocktakeShop,
-									'Store Room Qty' => $stocktakeStoreRoom
+									'Store Room Qty' => $stocktakeStoreRoom,
+									'Order Qty' => $orderQty
 				);
+// 				switch ($this->view)
+// 				{
+// 					case 'stocktake':
+// 						{
+// 							unset($newData['Order Qty']);
+// 							break;
+// 						}
+// 					case 'placeorder':
+// 						{
+// 							unset($newData['Shop Qty']);
+// 							unset($newData['Store Room Qty']);
+// 							break;
+// 						}
+// 				}
+				
+				$dataArray[] = $newData;
 			}
 // 			array_unshift($result, array_keys($result[0])); // header row
 			$filePath = '/tmp/Stocktake_' . str_replace(' ', "_", Core::getStore()->getName()) . '.xls';
