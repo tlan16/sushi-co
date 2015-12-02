@@ -40,7 +40,7 @@
 			<div class="panel-heading" style="min-height:30px;">
 				<label class="hidden" id="total-found-count">0</label>
 				<i type="submit" class="pull-right btn btn-md btn-success" style="padding: 3px 9px; margin-top: -5px;">Submit</i>
-				Stock Take Form
+				<%= $this->view %> form
 			</div>
 			<div class="panel-body" style="padding: 0;">
                 <div id="item-list" style="margin-bottom: 0;"></div>
