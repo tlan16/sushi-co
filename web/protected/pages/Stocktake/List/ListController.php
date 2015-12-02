@@ -109,7 +109,7 @@ class ListController extends CRUDPageAbstract
 			$fileName = str_replace("/", '_', $fileName); // windows doesn't like "/" in filename
 			$fileName = str_replace(":", '_', $fileName); // windows doesn't like ":" in filename
 			$filePath = '/tmp/' . $fileName;
-			$filePath = dirname(__FILE__) . DIRECTORY_SEPARATOR . $fileName;
+// 			$filePath = dirname(__FILE__) . DIRECTORY_SEPARATOR . $fileName;
 			$title = "Stock Take for [" . Core::getStore()->getName() . ']';
 			$this->_genFile($filePath, $title, $dataArray, $totalArray);
 			if(!is_file($filePath))
