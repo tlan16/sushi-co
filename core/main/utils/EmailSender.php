@@ -4,7 +4,7 @@ abstract class EmailSender
 	public static function addEmail($from, $to, $subject, $body, array $attachments = array())
 	{
 		if(trim($from) === ''){
-			$fromSettings = SystemSettings::getSettings(SystemSettings::TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL);
+			$fromSettings = json_decode(SystemSettings::getSettings(SystemSettings::TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL), true);
 			$from = $fromSettings['addr'] . '<' . $fromSettings['name'] . '>';
 		}
 		return Message::create($from, $to, $subject, $body, Message::TYPE_EMAIL, $attachments);
