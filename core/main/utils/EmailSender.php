@@ -31,7 +31,7 @@ abstract class EmailSender
 		//Whether to use SMTP authentication
 		$mail->SMTPAuth = isset($settings['SMTPAuth']) ? $settings['SMTPAuth'] : true;
 		if($mail->SMTPAuth === true) {
-			$mail->SMTPSecure = isset($settings['SMTPSecure']) ? $settings['SMTPSecure'] : "tls"
+			$mail->SMTPSecure = isset($settings['SMTPSecure']) ? $settings['SMTPSecure'] : "tls";
 		}
 		//Username to use for SMTP authentication
 		$mail->Username = isset($settings['username']) ? $settings['username'] : "";
