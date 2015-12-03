@@ -17,7 +17,6 @@ class AssetCleaner
             Core::setUser(UserAccount::get(UserAccount::ID_SYSTEM_ACCOUNT));
             $start = self::_debug("Start to run " . __CLASS__ . ' =================== ');
             $assetIds = self::_findAllOverdueAssets();
-            $assetIds = array_merge($assetIds, self::_findAllZombieAssets());
             self::_deleteAssets($assetIds);
             self::_debug("Finished to run " . __CLASS__ . ' =================== ', self::NEW_LINE, "", $start);
             Dao::commitTransaction();
@@ -57,20 +56,6 @@ class AssetCleaner
     	    $assetIds[] = $result[$i]['assetId'];
 	    self::_debug(implode(', ', $assetIds));
 	    return $assetIds;
-	}
-	private  static function _findAllZombieAssets()
-	{
-	    $start = self::_debug("Start to run " . __FUNCTION__ . ' =================== ', self::NEW_LINE, "\t");
-	    $overDueDate = UDate::now()->format(self::ASSET_OVERDUE_TIME);
-	    $sql = "select a.assetId from asset a left join product p on (p.fullDescAssetId = a.assetId) where p.id is null and type in(?, ?) ";
-	    $result = Dao::getResultsNative($sql, array(trim(Asset::TYPE_PRODUCT_DEC), trim(Asset::TYPE_PRODUCT_IMG)));
-	    $resultCount = count($result);
-	    self::_debug("Found " . $resultCount . ': ', " ", "\t\t");
-	    $assetIds = array();
-	    for($i = 0; $i < $resultCount; $i++)
-	        $assetIds[] = $result[$i]['assetId'];
-        self::_debug(implode(', ', $assetIds));
-        return $assetIds;
 	}
 	private static function _deleteAssets($assetIds = array())
 	{
