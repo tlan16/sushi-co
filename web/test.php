@@ -12,8 +12,8 @@ $mail->SMTPSecure = 'TLS';
 $mail->From = $mail->Username;
 //$mail->FromName= 'SushiAndCo';
 $mail->isHTML(true);
-$mail->Subject = 'test';
-$mail->Body = 'test';
+$mail->Subject = 'a message from ' . $mail->Username;
+$mail->Body = $mail->Subject;
 $mail->addAddress('helin16@gmail.com');
 $mail->SMTPDebug = 1;
 
