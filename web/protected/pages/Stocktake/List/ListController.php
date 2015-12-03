@@ -160,21 +160,21 @@ class ListController extends CRUDPageAbstract
 		{
 			case 'stocktake':
 				{
-					foreach ($data as &$row)
-						unset($row['Order Qty']);
+					foreach ($data as $index => $row)
+						unset($data[$index]['Order Qty']);
 					unset($totalArray['Order Qty']);
 					break;
 				}
 			case 'placeorder':
 				{
-					foreach ($data as $index => &$row)
+					foreach ($data as $index => $row)
 					{
 						if(doubleval($row['Order Qty']) === doubleval(0))
 							unset($data[$index]);
 						else 
 						{
-							unset($row['Shop Qty']);
-							unset($row['Store Room Qty']);
+							unset($data[$index]['Shop Qty']);
+							unset($data[$index]['Store Room Qty']);
 						}
 					}
 					unset($totalArray['Shop Qty']);
@@ -193,9 +193,8 @@ class ListController extends CRUDPageAbstract
 		if(count($data) > 0)
 		{
 			array_unshift($data, array_keys($data[0])); // add header row for data
-			foreach ($data as $row)
-				self::addExcelRow($objPHPExcel, $row);
-			
+			foreach ($data as $index => $row)
+				self::addExcelRow($objPHPExcel, $data[$index]);
 			if(count($totalArray) > 0)
 			{
 				self::addExcelRow($objPHPExcel, '');
