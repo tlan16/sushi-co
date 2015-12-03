@@ -35,7 +35,7 @@ class AssetCleaner
 	 */
 	private static function _debug($msg = "", $newLine = self::NEW_LINE, $prefix = "", UDate $start = null)
 	{
-	    $now = UDate::now(SystemSettings::getSettings(SystemSettings::TYPE_SYSTEM_TIMEZONE));
+	    $now = UDate::now();
 		if(self::$_debug === true)
 			echo $prefix . '[' . $now . ']: ' . $msg . ($start instanceof UDate ? ('[ Took ' . ($now->getUnixTimeStamp() - $start->getUnixTimeStamp()) . ' second(s)]') : '') . $newLine;
 		return $now;
