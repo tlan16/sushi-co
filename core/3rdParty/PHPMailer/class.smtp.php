@@ -331,7 +331,7 @@ class SMTP
      * @access public
      * @return boolean
      */
-    /* public function startTLS()
+    public function startTLS()
     {
         if (!$this->sendCommand('STARTTLS', 'STARTTLS', 220)) {
             return false;
@@ -345,23 +345,6 @@ class SMTP
             return false;
         }
         return true;
-    } */
-    public function startTLS()
-    {
-    	if (!$this->sendCommand('STARTTLS', 'STARTTLS', 220)) {
-    		echo 'STARTTLS failed'; exit;
-    		return false;
-    	}
-    	// Begin encrypted connection
-    	if (!stream_socket_enable_crypto(
-    			$this->smtp_conn,
-    			true,
-    			STREAM_CRYPTO_METHOD_TLS_CLIENT
-    	)) {
-    		echo 'enable crypto failed'; exit;
-    		return false;
-    	}
-    	return true;
     }
 
     /**
