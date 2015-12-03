@@ -361,7 +361,6 @@ class SMTP
     		echo 'enable crypto failed'; exit;
     		return false;
     	}
-    	echo 'STARTTLS OK'; exit;
     	return true;
     }
 
