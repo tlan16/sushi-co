@@ -1,4 +1,5 @@
 <?php
+require 'bootstrap.php';
 $mail = new PHPMailer();
 $mail->IsSMTP();
 $mail->CharSet = 'UTF-8';
