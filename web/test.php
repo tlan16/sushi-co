@@ -3,12 +3,12 @@ require 'bootstrap.php';
 $mail = new PHPMailer();
 $mail->IsSMTP();
 $mail->CharSet = 'UTF-8';
-$mail->Host = "smtp.live.com";
+$mail->Host = "smtp-mail.outlook.com";
 $mail->SMTPAuth= true;
 $mail->Port = 587; // Or 587
 $mail->Username= 'ljddfoodsupply@outlook.com';
 $mail->Password= '24JubileeStreet';
-$mail->SMTPSecure = 'tls';
+$mail->SMTPSecure = 'TLS';
 $mail->From = 'ljddfoodsupply@outlook.com';
 $mail->FromName= 'SushiAndCo';
 $mail->isHTML(true);
