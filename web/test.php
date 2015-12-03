@@ -3,7 +3,7 @@ require 'bootstrap.php';
 $mail = new PHPMailer();
 $mail->IsSMTP();
 $mail->CharSet = 'UTF-8';
-$mail->Host = "smtp.gmail.com";
+$mail->Host = "smtp.live.com";
 $mail->SMTPAuth= true;
 $mail->Port = 587; // Or 587
 $mail->Username= 'ljddfoodsupply@outlook.com';
