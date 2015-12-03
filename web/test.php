@@ -15,7 +15,7 @@ $mail->isHTML(true);
 $mail->Subject = 'test';
 $mail->Body = 'test';
 $mail->addAddress('helin16@gmail.com');
-$mail->SMTPDebug = 2;
+$mail->SMTPDebug = 1;
 
 if(!$mail->send()){
 	echo "Mailer Error: " . $mail->ErrorInfo;
