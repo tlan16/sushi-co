@@ -104,7 +104,7 @@ class ListController extends CRUDPageAbstract
 				$dataArray[] = $newData;
 			}
 			
-			$fileName = implode('_', array($this->view, Core::getStore()->getName(), 'Timezone_' . UDate::TIME_ZONE_MELB, trim(UDate::now(UDate::TIME_ZONE_MELB)))) . '.xlsx';
+			$fileName = implode('_', array($this->view, Core::getStore()->getName(), 'Timezone_' . UDate::TIME_ZONE_MELB, trim(UDate::now(UDate::TIME_ZONE_MELB)))) . '.xls';
 			$fileName = str_replace(' ', '_', $fileName);
 			$fileName = str_replace("/", '_', $fileName); // windows doesn't like "/" in filename
 			$fileName = str_replace(":", '_', $fileName); // windows doesn't like ":" in filename
@@ -114,7 +114,7 @@ class ListController extends CRUDPageAbstract
 			if(!is_file($filePath))
 			    throw new Exception("No file can't generated.");
 		    $from = SystemSettings::getByType(SystemSettings::TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL)->getValue();
-			$recipients = array('helin16@gmail.com');
+			$recipients = array();
 			if(($tmp1 = SystemSettings::getByType(SystemSettings::TYPE_EMAIL_RECEIPIENTS)) instanceof SystemSettings && is_array($tmp2 = explode(';', $tmp1->getValue())))
 				$recipients = $tmp2;
 			$subject = $title;
@@ -209,7 +209,7 @@ class ListController extends CRUDPageAbstract
 			->setAutoSize(true);
 		}
 		// export to file
-		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save($filePath);
 		return $this;
 	}
