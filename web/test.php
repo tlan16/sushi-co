@@ -9,8 +9,8 @@ $mail->Port = 587; // Or 587
 $mail->Username= 'ljddfoodsupply@outlook.com';
 $mail->Password= '24JubileeStreet';
 $mail->SMTPSecure = 'TLS';
-$mail->From = 'ljddfoodsupply@outlook.com';
-$mail->FromName= 'SushiAndCo';
+$mail->From = $mail->Username;
+//$mail->FromName= 'SushiAndCo';
 $mail->isHTML(true);
 $mail->Subject = 'test';
 $mail->Body = 'test';
