@@ -4,18 +4,27 @@ abstract class EmailSender
 	public static function addEmail($from, $to, $subject, $body, array $attachments = array())
 	{
 		if(trim($from) === ''){
-			$from = SystemSettings::getSettings(SystemSettings::TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL);
+			$fromSettings = SystemSettings::getSettings(SystemSettings::TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL);
+			$from = $fromSettings['addr'] . '<' . $fromSettings['name'] . '>';
 		}
 		return Message::create($from, $to, $subject, $body, Message::TYPE_EMAIL, $attachments);
 	}
 	
 	public static function sendEmail($from, $to, $subject, $body, array $attachmentAssetIds = array())
 	{
+		$fromArr = explode('<', trim($from));
+		if(count($fromArr) === 2) {
+			$fromName = trim($fromArr[0]);
+			$fromAddr = trim(str_replace('>', '', $fromArr[1]));
+		} else  {
+			$fromAddr = $fromName = $from;
+		}
+		
 		$settings = json_decode(SystemSettings::getSettings(SystemSettings::TYPE_EMAIL_SENDING_SERVER), true);
 		//Create a new PHPMailer instance
 		$mail = new PHPMailer;
 		//Tell PHPMailer to use SMTP
-		$mail->isSMTP();
+		//$mail->isSMTP();
 		$mail->isHTML(true);
 		//Enable SMTP debugging
 		// 0 = off (for production use)
@@ -39,7 +48,8 @@ abstract class EmailSender
 		//Password to use for SMTP authentication
 		$mail->Password = isset($settings['password']) ? $settings['password'] : "";
 		//Set who the message is to be sent from
-		$mail->setFrom($from);
+		$mail->FromName = trim($fromName);
+		$mail->From = trim($fromAddr);
 		//Set an alternative reply-to address
 		//$mail->addReplyTo('replyto@example.com', 'First Last');
 		//Set who the message is to be sent to
