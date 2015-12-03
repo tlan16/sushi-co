@@ -22,6 +22,7 @@ abstract class EmailSender
 		// 1 = client messages
 		// 2 = client and server messages
 		$mail->SMTPDebug = isset($settings['SMTPDebug']) ? $settings['SMTPDebug'] : 2;
+		$mail->CharSet = isset($settings['CharSet']) ? $settings['CharSet'] : 'UTF-8';
 		//Ask for HTML-friendly debug output
 		$mail->Debugoutput = isset($settings['debugOutput']) ? $settings['debugOutput'] : 'html';
 		//Set the hostname of the mail server
