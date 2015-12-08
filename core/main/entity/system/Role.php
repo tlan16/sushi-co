@@ -14,10 +14,12 @@ class Role extends BaseEntityAbstract
      *
      * @var int
      */
-    const ID_SYSTEM_ADMIN = 5;
     const ID_SYSTEM_DEVELOPER = 1;
-    const ID_FORUM_USER = 6;
+    const ID_SYSTEM_ADMIN = 5;
+    const ID_FRONT_END_USER = 6;
     const ID_ADMIN_USER = 7;
+    const ID_STORE_MANAGER = 8;
+    const ID_MANAGER = 9;
     /**
      * The name of the role
      * @var string

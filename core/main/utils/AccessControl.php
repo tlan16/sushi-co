@@ -31,7 +31,7 @@ Abstract class AccessControl
 	}
 	public static function isStoreAdmin(Role $role)
 	{
-	  return in_array(intval($role->getId()), array(Role::ID_ADMIN_USER, Role::ID_SYSTEM_ADMIN, Role::ID_SYSTEM_DEVELOPER));
+	  return in_array(intval($role->getId()), array(Role::ID_STORE_MANAGER, Role::ID_MANAGER, Role::ID_ADMIN_USER, Role::ID_SYSTEM_ADMIN, Role::ID_SYSTEM_DEVELOPER));
 	}
 	public static function canAccessResourcePage(Role $role)
 	{
