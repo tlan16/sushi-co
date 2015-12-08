@@ -109,7 +109,7 @@ class ListController extends CRUDPageAbstract
 			$fileName = str_replace("/", '_', $fileName); // windows doesn't like "/" in filename
 			$fileName = str_replace(":", '_', $fileName); // windows doesn't like ":" in filename
 			$filePath = '/tmp/' . $fileName;
-			$title = "Stock Take for [" . Core::getStore()->getName() . ']';
+			$title = $this->view . " for [" . Core::getStore()->getName() . '] by ' . Core::getUser()->getPerson()->getFullName();
 			$this->_genFile($filePath, $title, $dataArray, $totalArray);
 			if(!is_file($filePath))
 			    throw new Exception("No file can't generated.");
@@ -117,7 +117,7 @@ class ListController extends CRUDPageAbstract
 			if(($tmp1 = SystemSettings::getByType(SystemSettings::TYPE_EMAIL_RECEIPIENTS)) instanceof SystemSettings && is_array($tmp2 = explode(';', $tmp1->getValue())))
 				$recipients = $tmp2;
 			$subject = $title;
-			$body = $subject . "\n An Stocktake has been submitted by " . Core::getUser()->getPerson()->getFullName() . "\n Please see attached file for details.";
+			$body = $subject . "\n An " . $this->view . " has been submitted by " . Core::getUser()->getPerson()->getFullName() . "\n Please see attached file for details.";
 			$assets = array(Asset::registerAsset(basename($filePath), file_get_contents($filePath), Asset::TYPE_TMP));
 			foreach ($recipients as $index => $recipient)
 			{
