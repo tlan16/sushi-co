@@ -40,16 +40,18 @@ class Menu extends TTemplateControl
 				,'rawmaterial' => array('url' => '/rawmaterials.html', 'name' => 'Raw Materials', 'icon' => '')
 			);
 		}
-		$array['stocktake'] = array(
-		        'name' => 'Stocktake',
-		        'url' => '/stocktake.html?view=stocktake',
-		        'icon' => '<span class="glyphicon glyphicon-tag"></span>'
-		);
-		$array['placeorder'] = array(
-		        'name' => 'Place Order',
-		        'url' => '/restock.html?view=placeorder',
-		        'icon' => '<span class="glyphicon glyphicon-shopping-cart"></span>'
-		);
+		if (AccessControl::isStoreAdmin(Core::getRole()) === true) {
+  		$array['stocktake'] = array(
+  		        'name' => 'Stocktake',
+  		        'url' => '/stocktake.html?view=stocktake',
+  		        'icon' => '<span class="glyphicon glyphicon-tag"></span>'
+  		);
+  		$array['placeorder'] = array(
+  		        'name' => 'Place Order',
+  		        'url' => '/restock.html?view=placeorder',
+  		        'icon' => '<span class="glyphicon glyphicon-shopping-cart"></span>'
+  		);
+		}
 		if (AccessControl::canAccessUserPage(Core::getRole()) === true) {
     		$array['System'] = array(
 				'icon' => '<span class="glyphicon glyphicon-cog"></span>'

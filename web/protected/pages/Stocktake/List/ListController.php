@@ -26,7 +26,7 @@ class ListController extends CRUDPageAbstract
 			$this->view = trim($this->Request['view']);
 			$this->menuItem = $this->view;
 		}
-		if(!AccessControl::canAccessResourcePage(Core::getRole()))
+		if(!AccessControl::isStoreAdmin(Core::getRole()))
 			die('You do NOT have access to this page');
 	}
 	/**
