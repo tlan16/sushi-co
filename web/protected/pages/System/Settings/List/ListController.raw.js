@@ -9,10 +9,20 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		tmp.isTitle = (isTitle || false);
 		tmp.tag = (tmp.isTitle === true ? 'strong' : 'span');
 		
-		// extra for EMAIL RECEIPIENTS
+		// validate EMAIL RECEIPIENTS
 		tmp.value = row.value;
-		if(row.type === tmp.me.preData.TYPE_EMAIL_RECEIPIENTS)
-			tmp.value = tmp.value.replace(/;/g, "<br/>");
+		if(row.type === tmp.me.preData.TYPE_EMAIL_RECEIPIENTS) {
+			tmp.tmp = tmp.value.split(";");
+			tmp.value = "";
+			tmp.hasError = false;
+			tmp.tmp.each(function(email){
+				tmp.value += "<span" + (tmp.me.validateEmail(email) ? '' : ' class="text-danger"') + ">" + email + "</span><br/>";
+				if(!tmp.me.validateEmail(email))
+					tmp.hasError = true;
+			});
+			if(tmp.hasError)
+				tmp.value += "<br/><i class='glyphicon glyphicon-warning-sign text-danger'>  possible error in the email addresses</i>"
+		}
 			
 		tmp.row = new Element('span', {'class': 'row'})
 			.store('data', row)
