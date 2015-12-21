@@ -5,6 +5,7 @@ var CRUDPageJs = new Class.create();
 CRUDPageJs.prototype = Object.extend(new BPCPageJs(), {
 	resultDivId: '' //the html id of the result div
 	,searchDivId: '' //the html id of the search div
+	,preData: {}
 	,totalNoOfItemsId: '' //the html if of the total no of items
 	,_pagination: {'pageNo': 1, 'pageSize': 30} //the pagination details
 	,_searchCriteria: {} //the searching criteria
@@ -27,7 +28,10 @@ CRUDPageJs.prototype = Object.extend(new BPCPageJs(), {
 		this.totalNoOfItemsId = totalNoOfItemsId;
 		return this;
 	}
-
+	,_setPreData:function(data) {
+		this.preData = data;
+		return this;
+	}
 	,_getTitleRowData: function() {
 		return this._titleRowData;
 	}
@@ -139,6 +143,8 @@ CRUDPageJs.prototype = Object.extend(new BPCPageJs(), {
  		});
 		return tmp.me;
 	}
+	,getResultsOnComplete: function() {
+	}
 	,getResults: function(reset, pageSize) {
 		var tmp = {};
 		tmp.me = this;
@@ -204,6 +210,7 @@ CRUDPageJs.prototype = Object.extend(new BPCPageJs(), {
 				tmp.resultDiv.getElementsBySelector('.loading-img').each(function(item){
 					item.remove();
 				});
+				tmp.me.getResultsOnComplete();
 				return tmp.me;
 			}
 		});
