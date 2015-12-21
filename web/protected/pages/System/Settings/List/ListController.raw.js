@@ -8,6 +8,12 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		tmp.me = this;
 		tmp.isTitle = (isTitle || false);
 		tmp.tag = (tmp.isTitle === true ? 'strong' : 'span');
+		
+		// extra for EMAIL RECEIPIENTS
+		tmp.value = row.value;
+		if(row.type === tmp.me.preData.TYPE_EMAIL_RECEIPIENTS)
+			tmp.value = tmp.value.replace(";", "<br/>");
+			
 		tmp.row = new Element('span', {'class': 'row'})
 			.store('data', row)
 			.addClassName( (row.active === false && tmp.isTitle === false ) ? 'warning' : '')
@@ -15,7 +21,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 			.addClassName('item_row')
 			.writeAttribute('item_id', row.id)
 			.insert({'bottom': new Element(tmp.tag, {'class': 'type col-sm-2 col-xs-12'}).update(row.type) })
-			.insert({'bottom': new Element(tmp.tag, {'class': 'value col-sm-2 col-xs-12'}).setStyle('word-break: break-all').update(row.value) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'value col-sm-2 col-xs-12'}).setStyle('word-break: break-all').update(tmp.value) })
 			.insert({'bottom': new Element(tmp.tag, {'class': 'description col-sm-2 col-xs-12'}).update(row.description) })
 			.insert({'bottom': new Element(tmp.tag, {'class': 'created col-sm-2 col-xs-12'}).update(row.created) })
 			.insert({'bottom': new Element(tmp.tag, {'class': 'updated col-sm-2 col-xs-12'}).update(row.updated) })

@@ -30,8 +30,8 @@ class ListController extends CRUDPageAbstract
 	protected function _getEndJs()
 	{
 		$js = parent::_getEndJs();
-		$js .= 'pageJs';
-		$js .= ".getResults(true, " . $this->pageSize . ");";
+		$js .= "pageJs.getResults(true, " . $this->pageSize . ");";
+		$js .= "pageJs._setPreData(" . json_encode(array('TYPE_EMAIL_RECEIPIENTS' => SystemSettings::TYPE_EMAIL_RECEIPIENTS)) . ");";
 		return $js;
 	}
 	/**
