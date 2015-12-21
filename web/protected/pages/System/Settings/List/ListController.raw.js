@@ -12,7 +12,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		// extra for EMAIL RECEIPIENTS
 		tmp.value = row.value;
 		if(row.type === tmp.me.preData.TYPE_EMAIL_RECEIPIENTS)
-			tmp.value = tmp.value.replace(";", "<br/>");
+			tmp.value = tmp.value.replace(/;/g, "<br/>");
 			
 		tmp.row = new Element('span', {'class': 'row'})
 			.store('data', row)
