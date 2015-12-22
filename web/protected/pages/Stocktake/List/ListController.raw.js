@@ -135,6 +135,9 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 			.insert({'bottom': new Element(tmp.tag, {'class': 'stocktakeStoreRoom col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Stocktake QTY<br/>(Store Room)' : tmp.stocktakeStoreRoom = tmp.me._getInput('stocktakeStoreRoom', null, null, row.serverMeasurement.ServeMeasurement.name)) })
 			.insert({'bottom': new Element(tmp.tag, {'class': 'orderQty col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Order QTY' : tmp.orderQty = tmp.me._getInput('orderQty', null, null, row.serverMeasurement.ServeMeasurement.name)) })
 		;
+		// validate can edit unit price
+		if(tmp.isTitle === false && tmp.me.preData.canEditUnitPrice === false)
+			tmp.unitPrice.down('input').disable();
 		if(tmp.isTitle === false) {
 			tmp.events = ['keyup', 'change', 'wheel'];
 			tmp.events.each(function(event) {
