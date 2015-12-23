@@ -88,7 +88,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		var tmp = {};
 		tmp.me = this;
 		tmp.newDiv = new Element('div', {'class': 'input-group'})
-			.insert({'bottom': new Element('input', {'class': 'form-control', 'save-item': saveItem, 'type': 'number', 'disabled': (disabled === true)}).setStyle('width: 100%').setValue(value) });
+			.insert({'bottom': new Element('input', {'class': 'form-control', 'save-item': saveItem, 'type': 'text', 'disabled': (disabled === true)}).setStyle('width: 100%').setValue(value) });
 		if(prefix)
 			tmp.newDiv.insert({'top': new Element('div', {'class': 'input-group-addon'}).update(prefix)});
 		if(postfix)
@@ -129,7 +129,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 			.addClassName('item_row')
 			.writeAttribute('item_id', row.id)
 			.insert({'bottom': new Element(tmp.tag, {'class': 'name col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Name' : row.name) })
-			.insert({'bottom': new Element(tmp.tag, {'class': 'unitPrice col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? row.unitPrice : tmp.unitPrice = tmp.me._getInput('unitPrice', row.unitPrice, '$') ) })
+			.insert({'bottom': new Element(tmp.tag, {'class': 'unitPrice col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? row.unitPrice : tmp.unitPrice = tmp.me._getInput('unitPrice', accounting.formatMoney(row.unitPrice, "", 2, "", "."), '$') ) })
 			.insert({'bottom': new Element(tmp.tag, {'class': 'totalPrice col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? row.totalPrice : tmp.totalPrice = tmp.me._getInput('totalPrice', null, '$', null, true)) })
 			.insert({'bottom': new Element(tmp.tag, {'class': 'stocktakeShop col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Stocktake QTY<br/>(Shop)' : tmp.stocktakeShop = tmp.me._getInput('stocktakeShop', null, null, row.serverMeasurement.ServeMeasurement.name)) })
 			.insert({'bottom': new Element(tmp.tag, {'class': 'stocktakeStoreRoom col-sm-2 col-xs-12'}).update(tmp.isTitle === true ? 'Stocktake QTY<br/>(Store Room)' : tmp.stocktakeStoreRoom = tmp.me._getInput('stocktakeStoreRoom', null, null, row.serverMeasurement.ServeMeasurement.name)) })

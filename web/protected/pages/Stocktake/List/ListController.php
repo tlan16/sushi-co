@@ -232,7 +232,7 @@ class ListController extends CRUDPageAbstract
 
 			$stats = array();
 
-			$objects = RawMaterial::getAll(true);
+			$objects = RawMaterial::getAll($activeOnly = ($this->view !== 'stocktake'), $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array('name' =>'asc'));
 			$results['pageStats'] = $stats;
 			$results['items'] = array();
 			foreach($objects as $obj)
