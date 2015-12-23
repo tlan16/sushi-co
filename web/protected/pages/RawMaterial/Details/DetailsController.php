@@ -41,6 +41,7 @@ class DetailsController extends DetailsPageAbstract
 				,'description' => 'description_div'
 				,'serverMeasurement' => 'serverMeasurement_div'
 				,'unitPrice' => 'unitPrice_div'
+				,'position' => 'position_div'
 				,'comments' => 'comments_div'
 				,'saveBtn' => 'save_btn'
 		)) . ";";
@@ -71,15 +72,22 @@ class DetailsController extends DetailsPageAbstract
 			
 			if (!isset ( $params->CallbackParameter->name ) || ($name = trim ( $params->CallbackParameter->name )) === '')
 				throw new Exception ( 'System Error: invalid name passed in.' );
+			
 			if(!isset($params->CallbackParameter->serveMeasurement) || !($serveMeasurement = ServeMeasurement::get(intval($params->CallbackParameter->serveMeasurement))) instanceof ServeMeasurement)
 				throw new Exception ( 'System Error: invalid Serve Measurement (unit) passed in.' );
+			
 			$description = '';
 			if (isset ( $params->CallbackParameter->description ) )
 				$description = trim($params->CallbackParameter->description);
+			
 			$unitPrice = doubleval(0);
 			if (isset ( $params->CallbackParameter->unitPrice ) )
 				$unitPrice = StringUtilsAbstract::getValueFromCurrency($params->CallbackParameter->unitPrice);
 			
+			$position = 0;
+			if (isset ( $params->CallbackParameter->position ) )
+				$position = intval($params->CallbackParameter->position);
+				
 			Dao::beginTransaction();
 
 			if(!isset($entity) || !$entity instanceof $focusEntity)
@@ -88,6 +96,7 @@ class DetailsController extends DetailsPageAbstract
 				$entity->setName($name)->setDescription($description);
 			
 			$entity->clearServeMeasurements()->addServeMeasurement($serveMeasurement, $unitPrice);
+			$entity->setPosition($position);
 
 			$results ['item'] = $entity->save()->getJson ();
 			Dao::commitTransaction ();

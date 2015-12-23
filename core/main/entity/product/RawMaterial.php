@@ -7,6 +7,26 @@
  */
 class RawMaterial extends InfoEntityAbstract
 {
+	private $position = 0;
+	/**
+	 * getter for position
+	 *
+	 * @return int
+	 */
+	public function getPosition()
+	{
+	    return $this->position;
+	}
+	/**
+	 * Setter for position
+	 *
+	 * @return RawMaterial
+	 */
+	public function setPosition($position)
+	{
+	    $this->position = $position;
+	    return $this;
+	}
 	/**
 	 * (non-PHPdoc)
 	 * @see BaseEntity::__loadDaoMap()
@@ -14,8 +34,10 @@ class RawMaterial extends InfoEntityAbstract
 	public function __loadDaoMap()
 	{
 		DaoMap::begin($this, 'raw_mat');
-
+		
 		parent::__loadDaoMap();
+		
+		DaoMap::setIntType('position','int', 8);
 
 		DaoMap::commit();
 	}
