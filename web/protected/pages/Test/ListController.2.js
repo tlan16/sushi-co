@@ -7,8 +7,6 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 	,init: function() {
 		var tmp = {};
 		tmp.me = this;
-		console.debug('_preData:');
-		console.debug(tmp.me._preData);
 		return tmp.me;
 	}
 	,getListingDev: function(data) {

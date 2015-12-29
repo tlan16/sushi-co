@@ -19,7 +19,6 @@ class WebUser extends TUser
 	{
 		if(!empty($data))
 		{
-//			var_dump(unserialize($data));
 			list($coreStuff, $str) = unserialize($data);
 			Core::unserialize($coreStuff);
 
