@@ -147,8 +147,12 @@ class ListController extends CRUDPageAbstract
 		$colNo = $startColNo;
 		if(!is_array($data))
 			$data = array($data);
-		foreach ($data as $row)
-			$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, $row);
+		foreach ($data as $index => $colData) {
+			if(in_array($index, array('Unit Price', 'Total Price'))) {
+				$colData = StringUtilsAbstract::getCurrency($colData);
+			}
+			$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, $colData);
+		}
 	}
 	private function _genFile($filePath, $title, array $data = array(), array $totalArray = array())
 	{
@@ -187,7 +191,7 @@ class ListController extends CRUDPageAbstract
 		
 		// beginning rows
 		self::addExcelRow($objPHPExcel, trim($this->view));
-		self::addExcelRow($objPHPExcel, array('User', Core::getUser()->getPerson()->__toString(), Core::getStore() instanceof Store ? Core::getStore()->getName() : '', Core::getRole() instanceof Role ? Core::getRole()->getName() : ''));
+		self::addExcelRow($objPHPExcel, array('User', Core::getUser()->getPerson()->__toString(), Core::getStore() instanceof Store ? Core::getStore()->getName() : '', ''));
 		self::addExcelRow($objPHPExcel, array('Time Zone', UDate::TIME_ZONE_MELB));
 		self::addExcelRow($objPHPExcel, array('Date', UDate::now(UDate::TIME_ZONE_MELB)->__toString() ));
 		self::addExcelRow($objPHPExcel, '');
