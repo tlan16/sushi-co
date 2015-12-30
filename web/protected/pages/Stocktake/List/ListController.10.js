@@ -88,7 +88,6 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
                         tmp.resultBox = new Element('div')
                             .insert({'bottom': new Element('b', {'class': "success"}).update('An email will be send to :' + tmp.result.email)
                             .insert({'bottom': 'With an attached excel: '})
-                            .insert({'bottom': new Element('a', {'href': tmp.result.asset.url, "target": "__BLANK"}).update(tmp.result.asset.filename)})
                             .insert({'bottom': new Element('a', {'href': tmp.result.asset.url, "target": "__BLANK"}).update(tmp.result.asset.filename)});
                         tmp.resultFooter = new Element('div', {'class': 'text-center'})
                             .insert({'bottom': new Element('span', {'class': 'btn btn-default'})
@@ -97,7 +96,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
                                     window.location = document.URL;
                                 })
                             });
-                        tmp.me.showModalBox('Success', tmp.resultBox, false, null, true);
+                        tmp.me.showModalBox('Success', tmp.resultBox, false, tmp.resultFooter, true);
                     }
                 } catch (e) {
                     tmp.me.showModalBox('Error', '<pre>' + e + '</pre>');
