@@ -53,13 +53,14 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
     ,_preSubmit: function(data, btn) {
         var tmp = {};
         tmp.me = this;
+        tmp.btn = (btn || null);
         tmp.confirmBoxContent = new Element('div', {'class': 'pre-submit-box'})
             .insert({'bottom': new Element('h4').update('Once you submit these data, then you will NOT be able to changed it any more.') });
         tmp.confirmBoxFooter = new Element('div', {'class': 'row pre-submit-box-footer'})
             .insert({'bottom': new Element('span', {'class': 'btn btn-primary col-sm-3'})
                 .update('YES, continue.')
                 .observe('click', function() {
-                    if(!tmp.btn.readAttribute('disabled'))
+                    if(tmp.btn && !tmp.btn.readAttribute('disabled'))
                         tmp.btn.writeAttribute('disabled', true);
                     $$('.pre-submit-box-footer btn').each(function(item) {
                         item.writeAttribute('disabled', true);
