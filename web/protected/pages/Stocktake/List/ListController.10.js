@@ -72,9 +72,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
                     tmp.me.hideModalBox();
                 })
             });
-        tmp.me.showModalBox('Please confirm', tmp.confirmBoxContent, false, tmp.confirmBoxFooter, {'hide.bs.modal': function() {
-            window.location = document.URL;
-        }})
+        tmp.me.showModalBox('Please confirm', tmp.confirmBoxContent, false, tmp.confirmBoxFooter, true);
         return tmp.me;
     }
     ,_submit: function(data, btn) {
@@ -87,7 +85,19 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
                 try {
                     tmp.result = tmp.me.getResp(param, false, true);
                     if (tmp.result && tmp.result.email && tmp.result.asset) {
-                        tmp.me.showModalBox('Success', '<b class="success">An email will be send to :' + tmp.result.email + '</b>With an attached excel: <a href="' + tmp.result.asset.url + '" target="__BLANK">' + tmp.result.asset.filename + '</a>' );
+                        tmp.resultBox = new Element('div')
+                            .insert({'bottom': new Element('b', {'class': "success"}).update('An email will be send to :' + tmp.result.email)
+                            .insert({'bottom': 'With an attached excel: '})
+                            .insert({'bottom': new Element('a', {'href': tmp.result.asset.url, "target": "__BLANK"}).update(tmp.result.asset.filename)})
+                            .insert({'bottom': new Element('a', {'href': tmp.result.asset.url, "target": "__BLANK"}).update(tmp.result.asset.filename)});
+                        tmp.resultFooter = new Element('div', {'class': 'text-center'})
+                            .insert({'bottom': new Element('span', {'class': 'btn btn-default'})
+                                .update('OK')
+                                .observe('click', function() {
+                                    window.location = document.URL;
+                                })
+                            });
+                        tmp.me.showModalBox('Success', tmp.resultBox, false, null, true);
                     }
                 } catch (e) {
                     tmp.me.showModalBox('Error', '<pre>' + e + '</pre>');
