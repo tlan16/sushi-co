@@ -72,7 +72,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
                     tmp.me.hideModalBox();
                 })
             });
-        tmp.showModalBox('Please confirm', tmp.confirmBoxContent, false, tmp.confirmBoxFooter, {'hide.bs.modal': function() {
+        tmp.me.showModalBox('Please confirm', tmp.confirmBoxContent, false, tmp.confirmBoxFooter, {'hide.bs.modal': function() {
             window.location = document.URL;
         }})
         return tmp.me;
