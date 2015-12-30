@@ -148,7 +148,7 @@ class ListController extends CRUDPageAbstract
 		if(!is_array($data))
 			$data = array($data);
 		foreach ($data as $index => $colData) {
-			if(in_array($index, array('Unit Price', 'Total Price'))) {
+			if(in_array($index, array('Unit Price', 'Total Price')) && is_numeric($colData)) {
 				$colData = StringUtilsAbstract::getCurrency($colData);
 			}
 			$activeSheet->setCellValueByColumnAndRow($colNo++, $rowNo, $colData);
