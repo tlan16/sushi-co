@@ -65,11 +65,11 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
                 .observe('click', function() {
                     if(tmp.btn) {
                         tmp.me._signRandID(tmp.btn);
-                        jQuery('#' + tmp.btn.id).botton('loading');
+                        jQuery('#' + tmp.btn.id).button('loading');
                     }
                     $$('.pre-submit-box-footer btn').each(function(item) {
                         tmp.me._signRandID(item);
-                        jQuery('#' + item.id).botton('loading');
+                        jQuery('#' + item.id).button('loading');
                     });
                     tmp.me._submit(data, tmp.btn);
                 })
@@ -114,11 +114,11 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
                     }
                     if(tmp.btn !== null) {
                         tmp.me._signRandID(tmp.btn);
-                        jQuery('#' + tmp.btn.id).botton('reset');
+                        jQuery('#' + tmp.btn.id).button('reset');
                     }
                     $$('.pre-submit-box-footer btn').each(function(item) {
                         tmp.me._signRandID(item);
-                        jQuery('#' + item.id).botton('reset');
+                        jQuery('#' + item.id).button('reset');
                     });
                 }
             }
