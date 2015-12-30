@@ -204,6 +204,9 @@ class ListController extends CRUDPageAbstract
 			if(count($totalArray) > 0)
 			{
 				self::addExcelRow($objPHPExcel, '');
+				array_unshift($totalArray, '');
+				array_unshift($totalArray, '');
+				array_unshift($totalArray, '');
 				$totalArray = array(array_map(create_function('$a', 'return "Total " . $a;'), array_keys($totalArray)), $totalArray);
 				foreach ($totalArray as $row)
 					self::addExcelRow($objPHPExcel, $row);
