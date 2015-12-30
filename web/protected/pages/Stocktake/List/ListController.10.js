@@ -43,6 +43,9 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
         var tmp = {};
         tmp.me = this;
         tmp.btn = $('item-list').up('.panel').down('[type="submit"]');
+        if(!tmp.btn.readAttribute('data-loading-text')) {
+            tmp.btn.writeAttribute('data-loading-text', '<i class="fa fa-spinner fa-spin"></i>');
+        }
         if(!tmp.btn)
             return tmp.me;
         tmp.btn.observe('click', function(){
@@ -57,18 +60,21 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
         tmp.confirmBoxContent = new Element('div', {'class': 'pre-submit-box'})
             .insert({'bottom': new Element('h4').update('Once you submit these data, then you will NOT be able to changed it any more.') });
         tmp.confirmBoxFooter = new Element('div', {'class': 'row pre-submit-box-footer'})
-            .insert({'bottom': new Element('span', {'class': 'btn btn-primary col-sm-3'})
+            .insert({'bottom': new Element('span', {'class': 'btn btn-primary col-sm-3', 'data-loading-text': '<i class="fa fa-spinner fa-spin"></i>'})
                 .update('YES, continue.')
                 .observe('click', function() {
-                    if(tmp.btn && !tmp.btn.readAttribute('disabled'))
-                        tmp.btn.writeAttribute('disabled', true);
+                    if(tmp.btn) {
+                        tmp.me._signRandID(tmp.btn);
+                        jQuery('#' + tmp.btn.id).botton('loading');
+                    }
                     $$('.pre-submit-box-footer btn').each(function(item) {
-                        item.writeAttribute('disabled', true);
+                        tmp.me._signRandID(item);
+                        jQuery('#' + item.id).botton('loading');
                     });
                     tmp.me._submit(data, tmp.btn);
                 })
             })
-            .insert({'bottom': new Element('span', {'class': 'btn btn-default col-sm-3 pull-right'})
+            .insert({'bottom': new Element('span', {'class': 'btn btn-default col-sm-3 pull-right', 'data-loading-text': '<i class="fa fa-spinner fa-spin"></i>'})
                 .update('No, let me review it again.')
                 .observe('click', function(){
                     tmp.me.hideModalBox();
@@ -101,9 +107,19 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
                         tmp.me.showModalBox('Success', tmp.resultBox, false, tmp.resultFooter, true);
                     }
                 } catch (e) {
-                    tmp.me.showModalBox('Error', '<pre>' + e + '</pre>');
-                    if(tmp.btn !== null)
-                        tmp.btn.writeAttribute('disabled', false);
+                    if($$('.pre-submit-box').size() > 0) {
+                        $$('.pre-submit-box').first().insert({'bottom': tmp.me.getAlertBox('Err', e).addClassName('alert-danger')})
+                    } else {
+                        tmp.me.showModalBox('Error', '<pre>' + e + '</pre>');
+                    }
+                    if(tmp.btn !== null) {
+                        tmp.me._signRandID(tmp.btn);
+                        jQuery('#' + tmp.btn.id).botton('reset');
+                    }
+                    $$('.pre-submit-box-footer btn').each(function(item) {
+                        tmp.me._signRandID(item);
+                        jQuery('#' + item.id).botton('reset');
+                    });
                 }
             }
             ,'onComplete': function() {
