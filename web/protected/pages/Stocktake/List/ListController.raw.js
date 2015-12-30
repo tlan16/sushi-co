@@ -31,11 +31,12 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 			tmp.stocktakeStoreRoom = row.down('[save-item="stocktakeStoreRoom"]');
 			tmp.orderQty = row.down('[save-item="orderQty"]');
 
-			tmp.totalPrice.setValue((accounting.unformat($F(tmp.stocktakeShop)) + accounting.unformat($F(tmp.stocktakeStoreRoom)) + accounting.unformat($F(tmp.orderQty))) * accounting.unformat($F(tmp.unitPrice)));
+			tmp.totalPriceValue = (accounting.unformat($F(tmp.stocktakeShop)) + accounting.unformat($F(tmp.stocktakeStoreRoom)) + accounting.unformat($F(tmp.orderQty))) * accounting.unformat($F(tmp.unitPrice));
+			tmp.totalPrice.setValue(accounting.formatMoney(tmp.totalPriceValue, "", 2, "", "."));
 			tmp.total += accounting.unformat($F(tmp.totalPrice));
 		});
 
-		$(tmp.me._htmlIDs.totalRow).down('[save-item="totalPrice"]').setValue(tmp.total);
+		$(tmp.me._htmlIDs.totalRow).down('[save-item="totalPrice"]').setValue(accounting.formatMoney(tmp.total, "", 2, "", "."));
 
 		return tmp.me;
 	}
