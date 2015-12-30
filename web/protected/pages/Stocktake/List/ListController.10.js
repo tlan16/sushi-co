@@ -86,7 +86,7 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
                     tmp.result = tmp.me.getResp(param, false, true);
                     if (tmp.result && tmp.result.email && tmp.result.asset) {
                         tmp.resultBox = new Element('div')
-                            .insert({'bottom': new Element('b', {'class': "success"}).update('An email will be send to :' + tmp.result.email)
+                            .insert({'bottom': new Element('b', {'class': "success"}).update('An email will be send to :' + tmp.result.email) })
                             .insert({'bottom': 'With an attached excel: '})
                             .insert({'bottom': new Element('a', {'href': tmp.result.asset.url, "target": "__BLANK"}).update(tmp.result.asset.filename)});
                         tmp.resultFooter = new Element('div', {'class': 'text-center'})
