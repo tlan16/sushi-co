@@ -64,7 +64,8 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
                         tmp.btn.writeAttribute('disabled', true);
                     $$('.pre-submit-box-footer btn').each(function(item) {
                         item.writeAttribute('disabled', true);
-                    })
+                    });
+                    tmp.me._submit(data, tmp.btn);
                 })
             })
             .insert({'bottom': new Element('span', {'class': 'btn btn-default col-sm-3 pull-right'})
