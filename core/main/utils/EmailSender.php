@@ -24,7 +24,7 @@ abstract class EmailSender
 		//Create a new PHPMailer instance
 		$mail = new PHPMailer;
 		//Tell PHPMailer to use SMTP
-		//$mail->isSMTP();
+		$mail->isSMTP();
 		$mail->isHTML(true);
 		//Enable SMTP debugging
 		// 0 = off (for production use)
