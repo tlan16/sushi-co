@@ -14,29 +14,29 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		var tmp = {};
 		tmp.me = this;
 		tmp.me._htmlIDs.totalRow = 'total-row';
-		
+
 		tmp.me._bindSubmitButton();
-		
+
 		return tmp.me;
 	}
 	,_priceCalc: function() {
 		var tmp = {};
 		tmp.me = this;
 		tmp.total = 0.0;
-		
+
 		$('item-list-body').getElementsBySelector('.item_row').each(function(row){
 			tmp.unitPrice = row.down('[save-item="unitPrice"]');
 			tmp.totalPrice = row.down('[save-item="totalPrice"]');
 			tmp.stocktakeShop = row.down('[save-item="stocktakeShop"]');
 			tmp.stocktakeStoreRoom = row.down('[save-item="stocktakeStoreRoom"]');
 			tmp.orderQty = row.down('[save-item="orderQty"]');
-			
+
 			tmp.totalPrice.setValue((accounting.unformat($F(tmp.stocktakeShop)) + accounting.unformat($F(tmp.stocktakeStoreRoom)) + accounting.unformat($F(tmp.orderQty))) * accounting.unformat($F(tmp.unitPrice)));
 			tmp.total += accounting.unformat($F(tmp.totalPrice));
 		});
-		
+
 		$(tmp.me._htmlIDs.totalRow).down('[save-item="totalPrice"]').setValue(tmp.total);
-		
+
 		return tmp.me;
 	}
 	,_bindSubmitButton: function() {
@@ -46,16 +46,41 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		if(!tmp.btn)
 			return tmp.me;
 		tmp.btn.observe('click', function(){
-			if(tmp.btn.readAttribute('disabled'))
-				return tmp.me;
-			tmp.btn.writeAttribute('disabled', true);
-			tmp.me._submit(tmp.me._collectData());
+			tmp.me._preSubmit(tmp.me._collectData(), tmp.btn);
 		});
 		return tmp.me;
 	}
-	,_submit: function(data) {
+	,_preSubmit: function(data, btn) {
 		var tmp = {};
 		tmp.me = this;
+		tmp.confirmBoxContent = new Element('div', {'class': 'pre-submit-box'})
+			.insert({'bottom': new Element('h4').update('Once you submit these data, then you will NOT be able to changed it any more.') });
+		tmp.confirmBoxFooter = new Element('div', {'class': 'row pre-submit-box-footer'})
+			.insert({'bottom': new Element('span', {'class': 'btn btn-primary col-sm-3'})
+				.update('YES, continue.')
+				.observe('click', function() {
+					if(!tmp.btn.readAttribute('disabled'))
+						tmp.btn.writeAttribute('disabled', true);
+					$$('.pre-submit-box-footer btn').each(function(item) {
+						item.writeAttribute('disabled', true);
+					})
+				})
+			})
+			.insert({'bottom': new Element('span', {'class': 'btn btn-default col-sm-3 pull-right'})
+				.update('No, let me review it again.')
+				.observe('click', function(){
+					tmp.me.hideModalBox();
+				})
+			});
+		tmp.showModalBox('Please confirm', tmp.confirmBoxContent, false, tmp.confirmBoxFooter, {'hide.bs.modal': function() {
+			window.location = document.URL;
+		}})
+		return tmp.me;
+	}
+	,_submit: function(data, btn) {
+		var tmp = {};
+		tmp.me = this;
+		tmp.btn = (btn || null);
 
 		tmp.me.postAjax(tmp.me.getCallbackId('stocktake'), data, {
 			'onSuccess': function (sender, param) {
@@ -66,6 +91,8 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 					}
 				} catch (e) {
 					tmp.me.showModalBox('Error', '<pre>' + e + '</pre>');
+					if(tmp.btn !== null)
+						tmp.btn.writeAttribute('disabled', false);
 				}
 			}
 			,'onComplete': function() {
@@ -101,20 +128,20 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 	,_addTotalRow: function() {
 		var tmp = {};
 		tmp.me = this;
-		
+
 		if(jQuery('#total-row').length > 0)
 			return tmp.me;
-		
+
 		tmp.row = tmp.me._getTitleRowData();
 		tmp.row.name = '<b>Total</b>';
 		tmp.row.serverMeasurement = {'ServeMeasurement': {'name': null}};
-		
+
 		tmp.totalRow = tmp.me._getResultRow(tmp.row).writeAttribute('id', tmp.me._htmlIDs.totalRow);
-		
+
 		tmp.totalRow.getElementsBySelector('input').each(function(input){ input.writeAttribute('disabled', true); });
-		
+
 		$('item-list-body').insert({'bottom': tmp.totalRow});
-		
+
 		return tmp.me;
 	}
 	,_getResultRow: function(row, isTitle) {
