@@ -43,6 +43,9 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 		var tmp = {};
 		tmp.me = this;
 		tmp.btn = $('item-list').up('.panel').down('[type="submit"]');
+		if(!tmp.btn.readAttribute('data-loading-text')) {
+			tmp.btn.writeAttribute('data-loading-text', '<i class="fa fa-spinner fa-spin"></i>');
+		}
 		if(!tmp.btn)
 			return tmp.me;
 		tmp.btn.observe('click', function(){
@@ -53,20 +56,25 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 	,_preSubmit: function(data, btn) {
 		var tmp = {};
 		tmp.me = this;
+		tmp.btn = (btn || null);
 		tmp.confirmBoxContent = new Element('div', {'class': 'pre-submit-box'})
 			.insert({'bottom': new Element('h4').update('Once you submit these data, then you will NOT be able to changed it any more.') });
 		tmp.confirmBoxFooter = new Element('div', {'class': 'row pre-submit-box-footer'})
-			.insert({'bottom': new Element('span', {'class': 'btn btn-primary col-sm-3'})
+			.insert({'bottom': new Element('span', {'class': 'btn btn-primary col-sm-3', 'data-loading-text': '<i class="fa fa-spinner fa-spin"></i>'})
 				.update('YES, continue.')
 				.observe('click', function() {
-					if(!tmp.btn.readAttribute('disabled'))
-						tmp.btn.writeAttribute('disabled', true);
-					$$('.pre-submit-box-footer btn').each(function(item) {
-						item.writeAttribute('disabled', true);
-					})
+					if(tmp.btn) {
+						tmp.me._signRandID(tmp.btn);
+						jQuery('#' + tmp.btn.id).button('loading');
+					}
+					$$('.pre-submit-box-footer .btn').each(function(item) {
+						tmp.me._signRandID(item);
+						jQuery('#' + item.id).button('loading');
+					});
+					tmp.me._submit(data, tmp.btn);
 				})
 			})
-			.insert({'bottom': new Element('span', {'class': 'btn btn-default col-sm-3 pull-right'})
+			.insert({'bottom': new Element('span', {'class': 'btn btn-default col-sm-3 pull-right', 'data-loading-text': '<i class="fa fa-spinner fa-spin"></i>'})
 				.update('No, let me review it again.')
 				.observe('click', function(){
 					tmp.me.hideModalBox();
@@ -86,10 +94,9 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 					tmp.result = tmp.me.getResp(param, false, true);
 					if (tmp.result && tmp.result.email && tmp.result.asset) {
 						tmp.resultBox = new Element('div')
-							.insert({'bottom': new Element('b', {'class': "success"}).update('An email will be send to :' + tmp.result.email)
-								.insert({'bottom': 'With an attached excel: '})
-								.insert({'bottom': new Element('a', {'href': tmp.result.asset.url, "target": "__BLANK"}).update(tmp.result.asset.filename)})
-								.insert({'bottom': new Element('a', {'href': tmp.result.asset.url, "target": "__BLANK"}).update(tmp.result.asset.filename)});
+							.insert({'bottom': new Element('b', {'class': "success"}).update('An email will be send to :' + tmp.result.email) })
+							.insert({'bottom': 'With an attached excel: '})
+							.insert({'bottom': new Element('a', {'href': tmp.result.asset.url, "target": "__BLANK"}).update(tmp.result.asset.filename)});
 						tmp.resultFooter = new Element('div', {'class': 'text-center'})
 							.insert({'bottom': new Element('span', {'class': 'btn btn-default'})
 								.update('OK')
@@ -97,17 +104,27 @@ PageJs.prototype = Object.extend(new CRUDPageJs(), {
 									window.location = document.URL;
 								})
 							});
-						tmp.me.showModalBox('Success', tmp.resultBox, false, null, true);
+						tmp.me.showModalBox('Success', tmp.resultBox, false, tmp.resultFooter, true);
 					}
-					} catch (e) {
+				} catch (e) {
+					if($$('.pre-submit-box').size() > 0) {
+						$$('.pre-submit-box').first().insert({'bottom': tmp.me.getAlertBox('Err', e).addClassName('alert-danger')})
+					} else {
 						tmp.me.showModalBox('Error', '<pre>' + e + '</pre>');
-						if(tmp.btn !== null)
-							tmp.btn.writeAttribute('disabled', false);
 					}
+					if(tmp.btn !== null) {
+						tmp.me._signRandID(tmp.btn);
+						jQuery('#' + tmp.btn.id).button('reset');
+					}
+					$$('.pre-submit-box-footer .btn').each(function(item) {
+						tmp.me._signRandID(item);
+						jQuery('#' + item.id).button('reset');
+					});
 				}
-				,'onComplete': function() {
-				}
-			});
+			}
+			,'onComplete': function() {
+			}
+		});
 		return tmp.me;
 	}
 	,_collectData: function() {
