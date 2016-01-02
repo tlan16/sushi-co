@@ -112,7 +112,7 @@ class DetailsController extends DetailsPageAbstract
 					throw new Exception('System Error: cannot find person for userAccount[' . $entity->getId() . ']');
 				$person->setFirstName($firstName)->setLastName($lastName)->save();
 				if(trim($password) !== '')
-					$entity->setPassword($password);
+					$entity->setPassword(password_hash($password, PASSWORD_DEFAULT));
 			}
 
 			$entity->clearRoles();
