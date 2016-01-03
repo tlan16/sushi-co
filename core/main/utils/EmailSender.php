@@ -40,9 +40,9 @@ abstract class EmailSender
 		//Password to use for SMTP authentication
 		$mail->Password = isset($settings['password']) ? $settings['password'] : "";
 		//Set who the message is to be sent from
+		$fromAddr = $from;
 		$mail->From = trim($fromAddr);
 		$fromSettings = json_decode(SystemSettings::getSettings(SystemSettings::TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL), true);
-		$fromAddr = $from;
 		if(isset($fromSettings['name']) && isset($fromSettings['addr']) && $fromAddr === $fromSettings['addr']) {
 			$mail->FromName = trim($fromSettings['name']);
 		}
