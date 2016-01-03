@@ -48,7 +48,7 @@ class AssetCleaner
 	{
 	    $start = self::_debug("Start to run " . __FUNCTION__ . ' =================== ', self::NEW_LINE, "\t");
 	    $overDueDate = UDate::now()->format(self::ASSET_OVERDUE_TIME);
-	    $result = Dao::getResultsNative("select assetId from asset where created > ? and type = ?", array(trim($overDueDate), trim(Asset::TYPE_TMP)));
+	    $result = Dao::getResultsNative("select assetId from asset where created <= ? and type = ?", array(trim($overDueDate), trim(Asset::TYPE_TMP)));
 	    $resultCount = count($result);
 	    self::_debug("Found " . $resultCount . ': ', " ", "\t\t");
 	    $assetIds = array();
