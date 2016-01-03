@@ -5,21 +5,13 @@ abstract class EmailSender
 	{
 		if(trim($from) === ''){
 			$fromSettings = json_decode(SystemSettings::getSettings(SystemSettings::TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL), true);
-			$from = $fromSettings['addr'] . '<' . $fromSettings['name'] . '>';
+			$from = $fromSettings['addr'];
 		}
 		return Message::create($from, $to, $subject, $body, Message::TYPE_EMAIL, $attachments);
 	}
 	
 	public static function sendEmail($from, $to, $subject, $body, array $attachmentAssetIds = array())
 	{
-		$fromArr = explode('<', trim($from));
-		if(count($fromArr) === 2) {
-			$fromName = trim($fromArr[0]);
-			$fromAddr = trim(str_replace('>', '', $fromArr[1]));
-		} else  {
-			$fromAddr = $fromName = $from;
-		}
-		
 		$settings = json_decode(SystemSettings::getSettings(SystemSettings::TYPE_EMAIL_SENDING_SERVER), true);
 		//Create a new PHPMailer instance
 		$mail = new PHPMailer;
@@ -48,8 +40,12 @@ abstract class EmailSender
 		//Password to use for SMTP authentication
 		$mail->Password = isset($settings['password']) ? $settings['password'] : "";
 		//Set who the message is to be sent from
-		$mail->FromName = trim($fromName);
 		$mail->From = trim($fromAddr);
+		$fromSettings = json_decode(SystemSettings::getSettings(SystemSettings::TYPE_EMAIL_DEFAULT_SYSTEM_EMAIL), true);
+		$fromAddr = $from;
+		if(isset($fromSettings['name']) && isset($fromSettings['addr']) && $fromAddr === $fromSettings['addr']) {
+			$mail->FromName = trim($fromSettings['name']);
+		}
 		//Set an alternative reply-to address
 		//$mail->addReplyTo('replyto@example.com', 'First Last');
 		//Set who the message is to be sent to
