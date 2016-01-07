@@ -8,6 +8,8 @@
 class RawMaterial extends InfoEntityAbstract
 {
 	private $position = 0;
+	private $showInStocktake = true;
+    private $showInPlaceOrder = true;
 	/**
 	 * getter for position
 	 *
@@ -28,6 +30,44 @@ class RawMaterial extends InfoEntityAbstract
 	    return $this;
 	}
 	/**
+	 * getter for showInStocktake
+	 *
+	 * @return bool
+	 */
+	public function getShowInStocktake()
+	{
+		return $this->showInStocktake;
+	}
+	/**
+	 * Setter for showInStocktake
+	 *
+	 * @return RawMaterial
+	 */
+	public function setShowInStocktake($showInStocktake)
+	{
+		$this->showInStocktake = $showInStocktake;
+		return $this;
+	}
+	/**
+	 * getter for showInPlaceOrder
+	 *
+	 * @return bool
+	 */
+	public function getShowInPlaceOrder()
+	{
+		return $this->showInPlaceOrder;
+	}
+	/**
+	 * Setter for showInPlaceOrder
+	 *
+	 * @return RawMaterial
+	 */
+	public function setShowInPlaceOrder($showInPlaceOrder)
+	{
+		$this->showInPlaceOrder = $showInPlaceOrder;
+		return $this;
+	}
+	/**
 	 * (non-PHPdoc)
 	 * @see BaseEntity::__loadDaoMap()
 	 */
@@ -38,6 +78,8 @@ class RawMaterial extends InfoEntityAbstract
 		parent::__loadDaoMap();
 		
 		DaoMap::setIntType('position','int', 8);
+		DaoMap::setBoolType('showInStockTake','bool', 1);
+		DaoMap::setBoolType('showInPlaceOrder','bool', 1);
 
 		DaoMap::commit();
 	}
