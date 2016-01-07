@@ -104,10 +104,10 @@ BPCPageJs.prototype = {
 		tmp.thousandPoint = (thousandPoint == undefined ? "," : thousandPoint);
 		tmp.sign = (number < 0 ? "-" : "");
 		tmp.format = (format || "%s%v");
-		
+
 		if(typeof accounting === 'object' && typeof accounting.formatMoney === 'function')
 			return accounting.formatMoney(number,tmp.dollar,tmp.decimal,tmp.thousandPoint,tmp.decimalPoint,tmp.format);
-		
+
 		tmp.Int = parseInt(number = Math.abs(+number || 0).toFixed(tmp.decimal)) + "";
 		tmp.j = (tmp.j = tmp.Int.length) > 3 ? tmp.j % 3 : 0;
 		return tmp.dollar + tmp.sign + (tmp.j ? tmp.Int.substr(0, tmp.j) + tmp.thousandPoint : "") + tmp.Int.substr(tmp.j).replace(/(\d{3})(?=\d)/g, "$1" + tmp.thousandPoint) + (tmp.decimal ? tmp.decimalPoint + Math.abs(number - tmp.Int).toFixed(tmp.decimal).slice(2) : "");
@@ -119,13 +119,13 @@ BPCPageJs.prototype = {
 		var tmp = {};
 		tmp.currency = (currency || '');
 		tmp.decimalSeparator = (decimalSeparator || '.');
-		
+
 		if(tmp.currency === '')
 			return tmp.currency;
-		
+
 		if(typeof accounting === 'object' && typeof accounting.unformat === 'function')
 			return accounting.unformat(tmp.currency, tmp.decimalSeparator);
-		
+
 		tmp.reg = /^-?\d*[\.]?\d+$/;
 		tmp.result =  (tmp.currency + '').replace(/\s*/g, '').replace(/\$/g, '').replace(/,/g, '');
 		tmp.result = tmp.reg.exec(tmp.result);
@@ -151,12 +151,12 @@ BPCPageJs.prototype = {
 	//getting the error message box
 	,getAlertBox: function(title, msg) {
 		return new Element('div', {'class': 'alert alert-dismissible', 'role': 'alert'})
-		.insert({'bottom': new Element('button', {'class': '', 'data-dismiss': 'alert'})
-			.insert({'bottom': new Element('span', {'aria-hidden': 'true'}).update('&times;') })
-			.insert({'bottom': new Element('span', {'class': 'sr-only'}).update('Close') })
-		})
-		.insert({'bottom': new Element('strong').update(title) })
-		.insert({'bottom': msg });
+			.insert({'bottom': new Element('button', {'class': '', 'data-dismiss': 'alert'})
+				.insert({'bottom': new Element('span', {'aria-hidden': 'true'}).update('&times;') })
+				.insert({'bottom': new Element('span', {'class': 'sr-only'}).update('Close') })
+			})
+			.insert({'bottom': new Element('strong').update(title) })
+			.insert({'bottom': msg });
 	}
 	/**
 	 * give the input box a random id
@@ -177,21 +177,21 @@ BPCPageJs.prototype = {
 		tmp.visible = input.visible();
 		if(input.up('.form-group')) {
 			input.store('clearErrFunc', function(btn) {
-				input.up('.form-group').removeClassName('has-error');
-				jQuery('#' + input.id).tooltip('hide').tooltip('destroy').show();
-			})
-			.up('.form-group').addClassName('has-error');
+					input.up('.form-group').removeClassName('has-error');
+					jQuery('#' + input.id).tooltip('hide').tooltip('destroy').show();
+				})
+				.up('.form-group').addClassName('has-error');
 			tmp.me._signRandID(input);
 			jQuery('#' + input.id).tooltip({
-				'trigger': 'manual'
-				,'placement': 'auto'
-				,'container': 'body'
-				,'placement': 'bottom'
-				,'html': true
-				,'title': errMsg
-				,'content': errMsg
-			})
-			.tooltip('show');
+					'trigger': 'manual'
+					,'placement': 'auto'
+					,'container': 'body'
+					,'placement': 'bottom'
+					,'html': true
+					,'title': errMsg
+					,'content': errMsg
+				})
+				.tooltip('show');
 			jQuery('#' + input.id).on('keyup change dp.change', function(){
 				tmp.func = $(input).retrieve('clearErrFunc');
 				if(typeof(tmp.func) === 'function')
@@ -338,7 +338,7 @@ BPCPageJs.prototype = {
 					if(typeof clickFunc === 'function') {
 						clickFunc(event);
 					}
-		        },300));
+				},300));
 			}
 		});
 		return tmp.me;
@@ -349,10 +349,10 @@ BPCPageJs.prototype = {
 	,getUrlParam: function (name) {
 		var tmp = {};
 		tmp.me = this;
-	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-	        results = regex.exec(location.search);
-	    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 	}
 	/**
 	 * open url in new tab
@@ -367,7 +367,7 @@ BPCPageJs.prototype = {
 	,sleep: function(sleepDuration, func) {
 		var tmp = {};
 		tmp.now = new Date().getTime();
-		while (new Date().getTime() < tmp.now + sleepDuration){ 
+		while (new Date().getTime() < tmp.now + sleepDuration){
 			if(typeof func === 'function')
 				func(new Date().getTime());
 		}
@@ -417,7 +417,7 @@ BPCPageJs.prototype = {
 		return tmp.result;
 	}
 	/**
-	 * disable all buttons, input fields etc.. 
+	 * disable all buttons, input fields etc..
 	 */
 	,_disableAll: function(container, selector) {
 		var tmp = {};
@@ -431,7 +431,11 @@ BPCPageJs.prototype = {
 			tmp.container.find(tmp.selector).prop('disabled', true).attr('disabled', true);
 	}
 	,validateEmail: function(email) {
-	    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	    return re.test(email);
+		var tmp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return tmp.test(email);
+	}
+	,decamelize: function(str, delimiter) {
+		delimiter = (delimiter || ' ');
+		return str.replace((/([a-z\d])([A-Z])/g), '$1' + delimiter + '$2').toLowerCase();
 	}
 };
