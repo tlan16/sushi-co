@@ -27,9 +27,9 @@
 						<div class="form-group form-group-sm input-group">
                            <label for="raw_mat.active" class="control-label input-group-addon">Active?</label>
                            <select class="form-control input-sm select2" search_field="raw_mat.active" data-minimum-results-for-search="Infinity" data-width="100%">
-                           		<option value="3">ALL</option>
                            		<option value="1">YES</option>
                            		<option value="0">NO</option>
+                           		<option value="3">ALL</option>
                            </select>
                        </div>
 					</div>

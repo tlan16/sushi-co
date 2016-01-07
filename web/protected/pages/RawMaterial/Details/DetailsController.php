@@ -42,6 +42,8 @@ class DetailsController extends DetailsPageAbstract
 				,'serverMeasurement' => 'serverMeasurement_div'
 				,'unitPrice' => 'unitPrice_div'
 				,'position' => 'position_div'
+				,'showInPlaceOrder' => 'showInPlaceOrder_div'
+				,'showInStockTake' => 'showInStockTake_div'
 				,'comments' => 'comments_div'
 				,'saveBtn' => 'save_btn'
 		)) . ";";
@@ -60,7 +62,7 @@ class DetailsController extends DetailsPageAbstract
 	 */
 	public function saveItem($sender, $params)
 	{
-
+//		die(var_dump($params->CallbackParameter));
 		$results = $errors = array();
 		try
 		{
@@ -83,11 +85,19 @@ class DetailsController extends DetailsPageAbstract
 			$unitPrice = doubleval(0);
 			if (isset ( $params->CallbackParameter->unitPrice ) )
 				$unitPrice = StringUtilsAbstract::getValueFromCurrency($params->CallbackParameter->unitPrice);
-			
+
 			$position = 0;
 			if (isset ( $params->CallbackParameter->position ) )
 				$position = intval($params->CallbackParameter->position);
-				
+
+			$showInPlaceOrder = true;
+			if (isset ( $params->CallbackParameter->showInPlaceOrder ) )
+				$showInPlaceOrder = boolval($params->CallbackParameter->showInPlaceOrder);
+
+			$showInStockTake = true;
+			if (isset ( $params->CallbackParameter->showInStockTake ) )
+				$showInStockTake = boolval($params->CallbackParameter->showInStockTake);
+
 			Dao::beginTransaction();
 
 			if(!isset($entity) || !$entity instanceof $focusEntity)
@@ -96,7 +106,7 @@ class DetailsController extends DetailsPageAbstract
 				$entity->setName($name)->setDescription($description);
 			
 			$entity->clearServeMeasurements()->addServeMeasurement($serveMeasurement, $unitPrice);
-			$entity->setPosition($position);
+			$entity->setPosition($position)->setShowInPlaceOrder(intval($showInPlaceOrder))->setShowInStocktake(intval($showInStockTake));
 
 			$results ['item'] = $entity->save()->getJson ();
 			Dao::commitTransaction ();

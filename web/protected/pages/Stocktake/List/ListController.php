@@ -15,6 +15,8 @@ class ListController extends CRUDPageAbstract
 	public $menuItem = 'stocktake';
 	protected $_focusEntity = 'RawMaterial';
 	protected  $view = '';
+	const VIEW_STOCKTAKE = 'stocktake';
+	const VIEW_PLACEORDER = 'placeorder';
 	/**
 	 * constructor
 	 */
@@ -164,14 +166,14 @@ class ListController extends CRUDPageAbstract
 		
 		switch ($this->view)
 		{
-			case 'stocktake':
+			case self::VIEW_STOCKTAKE:
 				{
 					foreach ($data as $index => $row)
 						unset($data[$index]['Order Qty']);
 					unset($totalArray['Order Qty']);
 					break;
 				}
-			case 'placeorder':
+			case self::VIEW_STOCKTAKE:
 				{
 					foreach ($data as $index => $row)
 					{
@@ -233,14 +235,31 @@ class ListController extends CRUDPageAbstract
 	 */
 	public function getItems($sender, $param)
 	{
-		$results = $errors = array();
+		$criteria = '';
+		$results = $errors = $params = array();
 		try
 		{
 			$class = trim($this->_focusEntity);
 
 			$stats = array();
 
-			$objects = RawMaterial::getAll($activeOnly = ($this->view !== 'stocktake'), $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array('position' => 'asc', 'name' => 'asc'));
+			switch($this->view)
+			{
+				case self::VIEW_STOCKTAKE:
+				{
+					$criteria .= 'showInStockTake = :showInStockTake';
+					$params['showInStockTake'] = true;
+					break;
+				}
+				case self::VIEW_PLACEORDER:
+				{
+					$criteria .= 'showInPlaceOrder = :showInPlaceOrder';
+					$params['showInPlaceOrder'] = true;
+					break;
+				}
+			}
+
+			$objects = RawMaterial::getAllByCriteria($criteria, $params, $activeOnly = true, $pageNo = null, $pageSize = DaoQuery::DEFAUTL_PAGE_SIZE, $orderBy = array('position' => 'asc', 'name' => 'asc'));
 			$results['pageStats'] = $stats;
 			$results['items'] = array();
 			foreach($objects as $obj)
