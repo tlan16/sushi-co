@@ -105,7 +105,7 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 				,'dirty': false
 			})
 			.setValue(value || '')
-			;
+		;
 
 		tmp.container.update(tmp.me._getFormGroup(tmp.title, tmp.input).addClassName(tmp.className) );
 
@@ -144,15 +144,16 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 			return null;
 		return tmp.container;
 	}
-	,_getInputDiv:function(saveItem, value, container, title, required, className, isCurrency, placeholder) {
+	,_getInputDiv:function(saveItem, value, container, title, required, className, isCurrency, placeholder, type) {
 		var tmp = {};
 		tmp.me = this;
 		tmp.container = tmp.me.__validateContainer(container);
-		tmp.title = (title || tmp.me.ucfirst(saveItem));
+		tmp.title = (title || tmp.me.ucfirst(tmp.me.decamelize(saveItem)));
 		tmp.required = (required === true);
 		tmp.className = (className || 'col-xs-12');
 		tmp.isCurrency = (isCurrency === true);
 		tmp.placeholder = (placeholder || '');
+		tmp.type = (type || 'text');
 
 		if(!tmp.container)
 			return tmp.me;
@@ -163,6 +164,7 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 				,'save-item': saveItem
 				,'placeholder': (tmp.placeholder !== '' ? tmp.placeholder : tmp.title)
 				,'dirty': false
+				,'type': tmp.type
 			})
 			.setValue(value || '')
 			.observe('change',function(e){
@@ -171,6 +173,10 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 			})
 			.observe('keyup',function(e){
 				tmp.input.writeAttribute('dirty', value !== (tmp.isCurrency === true ? tmp.me.getValueFromCurrency($F(tmp.input)) : $F(tmp.input) ) );
+				tmp.me._refreshDirty()._getSaveBtn();
+			})
+			.observe('click',function(e){
+				tmp.input.writeAttribute('dirty', value !== (tmp.input.type === 'checkbox' ? tmp.input.checked : (tmp.isCurrency === true ? tmp.me.getValueFromCurrency($F(tmp.input)) : $F(tmp.input) ) ) );
 				tmp.me._refreshDirty()._getSaveBtn();
 			});
 
