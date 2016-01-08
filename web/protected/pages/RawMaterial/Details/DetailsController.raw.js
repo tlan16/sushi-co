@@ -30,8 +30,8 @@ PageJs.prototype = Object.extend(new DetailsPageJs(), {
 			}
 			,cache: true
 			,escapeMarkup: function (markup) { return markup; } // let our custom formatter work
-			};
-		
+		};
+
 		$(tmp.me.getHTMLID('itemDiv')).addClassName('row');
 		tmp.me
 			._getInputDiv('name', (tmp.me._item.name || ''), $(tmp.me._containerIds.name), null ,true)
@@ -39,6 +39,8 @@ PageJs.prototype = Object.extend(new DetailsPageJs(), {
 			._getSelect2Div('ServeMeasurement', 'serveMeasurement', (tmp.serverMeasurement ? {'id': tmp.serverMeasurement.id, 'text': tmp.serverMeasurement.name, 'data': tmp.serverMeasurement} : null), $(tmp.me._containerIds.serverMeasurement), 'Serve Measurement', true, tmp.serveMeasurementSelect2Options)
 			._getInputDiv('unitPrice', (tmp.me._item.unitPrice || ''), $(tmp.me._containerIds.unitPrice), 'Unit Price')
 			._getInputDiv('position', (tmp.me._item.position || 0), $(tmp.me._containerIds.position), 'Position')
+			._getInputDiv('showInPlaceOrder', (tmp.me._item.showInPlaceOrder || true), $(tmp.me._containerIds.showInPlaceOrder), null, null, null, null, null, 'checkbox')
+			._getInputDiv('showInStockTake', (tmp.me._item.showInStockTake || true), $(tmp.me._containerIds.showInStockTake), null, null, null, null, null, 'checkbox')
 			._getSaveBtn()
 		;
 		return tmp.me;
