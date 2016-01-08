@@ -180,6 +180,9 @@ DetailsPageJs.prototype = Object.extend(new BPCPageJs(), {
 				tmp.me._refreshDirty()._getSaveBtn();
 			});
 
+		if(tmp.type === 'checkbox')
+			tmp.input.writeAttribute('checked', value);
+
 		tmp.container.update(tmp.me._getFormGroup(tmp.title, tmp.input).addClassName(tmp.className) );
 
 		return tmp.me;
